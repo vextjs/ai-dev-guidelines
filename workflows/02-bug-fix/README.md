@@ -183,6 +183,29 @@ projects/chat-service/bugs/BUG-chat-001-message-loss/
 
 ---
 
+## ✅ Bug 修复专属验证
+
+完成修复后，执行以下验证：
+
+```yaml
+Bug 修复验证清单:
+  问题验证:
+    ✅ 复现确认: 修复前能复现问题
+    ✅ 修复有效: 修复后问题不再出现
+    ✅ 根因明确: 问题原因已清晰记录
+  
+  副作用检查:
+    ✅ 无新问题: 修复未引入新 Bug
+    ✅ 功能完整: 相关功能未受影响
+    ✅ 性能稳定: 无明显性能下降
+  
+  回滚准备:
+    ✅ 回滚方案: 有明确的回滚步骤
+    ✅ 数据安全: 数据修复有回滚脚本
+```
+
+---
+
 **相关文档**:
 - [Bug 分析模板](../../templates/core/bug-analysis-template.md)
 - [实施记录模板](../../templates/core/implementation-template.md)

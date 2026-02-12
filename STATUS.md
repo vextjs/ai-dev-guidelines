@@ -2,8 +2,35 @@
 
 > Dev-Docs 项目完成度和版本路线图
 
-**当前版本**: v1.3.0  
+**当前版本**: v2.0.0  
 **最后更新**: 2026-02-12
+
+---
+
+## 🆕 v2.0 重大更新
+
+### 核心改进
+
+| 改进项 | 说明 |
+|-------|------|
+| 🎯 执行模式 | 新增快速/完整两种模式 |
+| 📝 精简模板 | 新增 `templates/lite/` 目录 |
+| 🔄 工作流优化 | 重构需求开发流程，支持模式切换 |
+| ✅ 预检查简化 | 从 5+ 项精简为 3 项必做 |
+| 📋 项目规范 | 新增统一的 PROJECT.md 模板 |
+| 🔍 快速索引 | 新增 best-practices/WHEN-TO-USE.md |
+
+### 新增文件
+
+- `templates/lite/README.md`
+- `templates/lite/technical-lite.md`
+- `templates/lite/requirement-lite.md`
+- `templates/lite/implementation-lite.md`
+- `templates/lite/bug-analysis-lite.md`
+- `projects/_template/PROJECT.md`
+- `workflows/01-requirement-dev/README-v2.md`
+- `workflows/00-pre-check/README-v2.md`
+- `best-practices/WHEN-TO-USE.md`
 
 ---
 
@@ -11,34 +38,35 @@
 
 | 模块 | 完成度 | 状态 | 说明 |
 |------|--------|------|------|
-| workflows/ | 85% | 🟢 稳定 | 核心3个+通用完成，扩展5个待验证 |
-| standards/ | 95% | 🟢 完善 | 8个规范文件完整（新增2个） |
+| workflows/ | 90% | 🟢 稳定 | 核心工作流 v2 完成，支持双模式 |
+| standards/ | 95% | 🟢 完善 | 8个规范文件完整 |
+| templates/lite/ | 100% | 🟢 完成 | 🆕 4个精简模板 |
 | templates/core/ | 100% | 🟢 完成 | 8个核心模板齐全 |
 | templates/extended/ | 100% | 🟢 完成 | 5个扩展模板齐全 |
 | templates/common/ | 100% | 🟢 完成 | 7个通用组件齐全 |
-| best-practices/ | 90% | 🟢 完善 | 10个最佳实践文件 |
+| best-practices/ | 95% | 🟢 完善 | 🆕 新增快速索引 |
 | examples/ | 50% | 🟡 进行中 | README完善，内容示例待补充 |
 | tools/ | 70% | 🟡 进行中 | 2个可执行脚本+README |
-| projects/_template/ | 90% | 🟢 完善 | 项目模板完善 |
+| projects/_template/ | 95% | 🟢 完善 | 🆕 新增 PROJECT.md 统一模板 |
 
-**总体完成度**: 87%
+**总体完成度**: 90%
 
 ---
 
 ## 🎯 核心工作流完成情况
 
-| 工作流 | 状态 | 核心文件 | 验证 |
-|--------|------|---------|------|
-| 00-pre-check/ | ✅ 完成 | README, checklist, examples | ✅ |
-| 00-task-identification/ | ✅ 完成 | README | ✅ |
-| 01-requirement-dev/ | ✅ 完成 | README | ✅ |
-| 02-bug-fix/ | ✅ 完成 | README | ✅ |
-| 03-optimization/ | ✅ 完成 | README | ✅ |
-| 04-research/ | 🟡 待验证 | README | ⏳ |
-| 05-refactoring/ | 🟡 待验证 | README | ⏳ |
-| 06-database/ | 🟡 待验证 | README | ⏳ |
-| 07-security/ | 🟡 待验证 | README | ⏳ |
-| 08-incident/ | 🟡 待验证 | README | ⏳ |
+| 工作流 | 状态 | 说明 |
+|--------|------|------|
+| 00-pre-check/ | ✅ 完成 | 简化为 3 项必做检查 |
+| 00-task-identification/ | ✅ 完成 | - |
+| 01-requirement-dev/ | ✅ 完成 | 支持快速/完整模式 |
+| 02-bug-fix/ | ✅ 完成 | - |
+| 03-optimization/ | ✅ 完成 | - |
+| 04-research/ | 🟡 待验证 | - |
+| 05-refactoring/ | 🟡 待验证 | - |
+| 06-database/ | 🟡 待验证 | - |
+| 07-security/ | 🟡 待验证 | - |
+| 08-incident/ | 🟡 待验证 | - |
 
 ---
 

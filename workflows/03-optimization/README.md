@@ -205,6 +205,29 @@ projects/payment-service/optimization/OPT-payment-db-001/
 
 ---
 
+## ✅ 性能优化专属验证
+
+完成优化后，执行以下验证：
+
+```yaml
+性能优化验证清单:
+  数据验证:
+    ✅ 基线数据: 有优化前的性能数据
+    ✅ 对比数据: 有优化后的性能数据
+    ✅ 多次测试: 数据来自多次测试取平均
+  
+  效果验证:
+    ✅ 达到目标: 性能提升达到预期
+    ✅ 稳定性: 多次测试结果一致
+    ✅ 无退化: 其他指标未明显下降
+  
+  功能验证:
+    ✅ 功能正常: 优化未破坏原有功能
+    ✅ 边界情况: 极端情况下仍能正常工作
+```
+
+---
+
 **相关文档**:
 - [优化方案模板](../../templates/core/optimization-template.md)
 - [实施记录模板](../../templates/core/implementation-template.md)

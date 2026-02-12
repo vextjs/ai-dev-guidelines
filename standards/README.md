@@ -6,16 +6,16 @@
 
 ## 📂 规范目录
 
-| 规范文件 | 说明 | 适用场景 |
-|---------|------|---------|
-| [code-standards.md](./code-standards.md) | 代码规范 | 所有代码生成 |
-| [test-standards.md](./test-standards.md) | 测试规范 | 测试用例生成 |
-| [doc-standards.md](./doc-standards.md) | 文档规范 | 文档生成 |
-| [api-standards.md](./api-standards.md) | API 规范 | API 开发 |
-| [script-standards.md](./script-standards.md) | 脚本规范 | 脚本开发 |
-| [security-standards.md](./security-standards.md) | 安全规范 | 所有代码 |
-| [config-standards.md](./config-standards.md) | 配置规范 | 配置管理 |
-| [tool-standards.md](./tool-standards.md) | 工具规范 | AI 工具调用 |
+| 规范文件 | 说明 | 适用场景 | 可被项目覆盖 |
+|---------|------|---------|-------------|
+| [code-standards.md](./code-standards.md) | 代码规范 | 所有代码生成 | ✅ 可覆盖 |
+| [test-standards.md](./test-standards.md) | 测试规范 | 测试用例生成 | ✅ 可覆盖 |
+| [doc-standards.md](./doc-standards.md) | 文档规范 | 文档生成 | ✅ 可覆盖 |
+| [api-standards.md](./api-standards.md) | API 规范 | API 开发 | ✅ 可覆盖 |
+| [script-standards.md](./script-standards.md) | 脚本规范 | 脚本开发 | ✅ 可覆盖 |
+| [security-standards.md](./security-standards.md) | 安全规范 | 所有代码 | ❌ 不可覆盖 |
+| [config-standards.md](./config-standards.md) | 配置规范 | 配置管理 | ✅ 可覆盖 |
+| [tool-standards.md](./tool-standards.md) | 工具规范 | AI 工具调用 | ❌ 不可覆盖 |
 
 ---
 
@@ -25,6 +25,7 @@
 优先级（从高到低）:
   1. 项目规范 (projects/<project>/CODE-STANDARDS.md)
      - 最高优先级，项目特定约束
+     - 只能覆盖"可覆盖"的规范
   
   2. 通用规范 (standards/)
      - 项目规范未定义时使用
@@ -32,9 +33,27 @@
   3. 行业最佳实践
      - 以上都未定义时参考
 
-冲突处理:
-  - 项目规范优先于通用规范
-  - 明确的规范优先于隐含的规范
+冲突处理规则:
+  - 项目规范优先于通用规范（仅限可覆盖项）
+  - 安全规范和工具规范不可被项目覆盖
+  - 遇到冲突时，以更严格的规范为准
+```
+
+### 覆盖规则说明
+
+```yaml
+✅ 可覆盖:
+  - 命名规范（驼峰/下划线）
+  - 缩进风格（2空格/4空格）
+  - 测试框架选择
+  - API 返回格式
+  - 文档格式偏好
+
+❌ 不可覆盖:
+  - 敏感信息处理（必须环境变量）
+  - 错误处理要求（必须有 try-catch）
+  - 工具权限边界（禁止访问 .env）
+  - Git 操作限制（commit 需确认）
 ```
 
 ---

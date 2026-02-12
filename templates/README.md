@@ -9,7 +9,13 @@
 ```
 templates/
 ├── README.md              # 本文件
-├── core/                  # 核心模板（Tier 1 任务）
+├── lite/                  # 🆕 精简模板（快速模式）
+│   ├── README.md
+│   ├── technical-lite.md
+│   ├── requirement-lite.md
+│   ├── implementation-lite.md
+│   └── bug-analysis-lite.md
+├── core/                  # 核心模板（完整模式）
 │   ├── requirement-template.md
 │   ├── technical-template.md
 │   ├── implementation-template.md
@@ -31,7 +37,39 @@ templates/
 
 ---
 
+## 🎯 模板选择指南（v2.0 新增）
+
+### 何时使用 Lite 模板（精简版）
+
+| 条件 | 说明 |
+|-----|------|
+| ✅ 简单需求 | 涉及文件 < 5 个 |
+| ✅ 快速迭代 | 时间紧迫，快速产出 |
+| ✅ 内部文档 | 非正式交付 |
+| ✅ 用户要求 | 用户说"简单"、"快速" |
+
+### 何时使用 Core 模板（完整版）
+
+| 条件 | 说明 |
+|-----|------|
+| ✅ 复杂需求 | 涉及多模块、多文件 |
+| ✅ 正式交付 | 需要评审、归档 |
+| ✅ 核心功能 | 重要业务逻辑 |
+| ✅ 用户要求 | 用户说"完整"、"详细" |
+
+---
+
 ## 🎯 模板分类
+
+### Lite Templates（精简模板）🆕
+用于快速模式，章节数 3-5 个：
+
+| 模板文件 | 用途 | 章节数 |
+|---------|------|-------|
+| `technical-lite.md` | 技术方案 | 4-5 |
+| `requirement-lite.md` | 需求文档 | 3-4 |
+| `implementation-lite.md` | 实施记录 | 3-4 |
+| `bug-analysis-lite.md` | Bug 分析 | 4 |
 
 ### Core Templates（核心模板）
 用于 Tier 1 任务，使用频率 80%：

@@ -9,6 +9,7 @@
 
 | 版本 | 日期 | 变更摘要 | 详细 |
 |------|------|---------|------|
+| [v2.0.0](./changelogs/v2.0.0.md) | 2026-02-12 | 🎉 重大重构：快速/完整双模式 + 精简模板 + 工作流优化 | [查看](./changelogs/v2.0.0.md) |
 | [v1.3.0](./changelogs/v1.3.0.md) | 2026-02-12 | 🔧 全面修复：6个规范文件补全 + 新增配置/工具规范 + 状态追踪 | [查看](./changelogs/v1.3.0.md) |
 | [v1.2.0](./changelogs/v1.2.0.md) | 2026-02-12 | 🔧 优化：确认点机制增强 + 文档同步规范 + 模板优化 | [查看](./changelogs/v1.2.0.md) |
 | [v1.1.0](./changelogs/v1.1.0.md) | 2026-02-12 | 🎉 重大功能：强制启动协议 + 三轮验证 + 确认点机制 | [查看](./changelogs/v1.1.0.md) |
@@ -17,6 +18,44 @@
 ---
 
 ## 🚨 重要更新
+
+### v2.0.0 - 重大重构：轻量化与灵活性 🆕
+
+**发布日期**: 2026-02-12  
+**版本类型**: Major Release  
+**重要性**: ⭐⭐⭐⭐⭐
+
+#### 设计理念转变
+
+| 之前 | 现在 |
+|-----|------|
+| 完整流程优先 | 快速模式优先 |
+| 追求完整性 | 追求实用性 |
+| 复杂模板 | 精简+完整双模板 |
+| 形式化检查 | 聚焦有价值检查 |
+
+#### 核心变更
+
+- ✅ **执行模式**: 新增快速/完整两种模式，默认快速模式
+- ✅ **精简模板**: 新增 `templates/lite/` 目录，4 个精简模板
+- ✅ **工作流优化**: 重构需求开发流程，支持模式切换
+- ✅ **预检查简化**: 从 5+ 项精简为 3 项必做检查
+- ✅ **项目规范**: 新增统一的 PROJECT.md 模板
+- ✅ **快速索引**: 新增 best-practices/WHEN-TO-USE.md
+
+#### 新增文件
+
+- `templates/lite/README.md` - 精简模板说明
+- `templates/lite/technical-lite.md` - 精简技术方案
+- `templates/lite/requirement-lite.md` - 精简需求文档
+- `templates/lite/implementation-lite.md` - 精简实施记录
+- `templates/lite/bug-analysis-lite.md` - 精简 Bug 分析
+- `projects/_template/PROJECT.md` - 统一项目规范模板
+- `workflows/01-requirement-dev/README-v2.md` - v2 需求开发流程
+- `workflows/00-pre-check/README-v2.md` - v2 简化预检查
+- `best-practices/WHEN-TO-USE.md` - 最佳实践快速索引
+
+---
 
 ### v1.3.0 - 全面修复与优化增强
 

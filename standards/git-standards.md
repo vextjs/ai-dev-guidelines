@@ -309,5 +309,66 @@ git revert <commit>
 
 ---
 
+## 🤖 AI 辅助 Git 操作
+
+### AI 生成 Commit Message
+
+AI 根据代码变更自动生成 commit message：
+
+```yaml
+生成规则:
+  1. 分析 git diff 内容
+  2. 识别变更类型（feat/fix/refactor/...）
+  3. 提取变更范围（scope）
+  4. 总结核心变更（subject）
+  5. 列出详细变更点（body）
+
+输出格式:
+  <type>(<scope>): <一句话总结>
+  
+  - 变更点 1
+  - 变更点 2
+  - 变更点 3
+```
+
+### AI 生成 Commit Message 示例
+
+```bash
+# 输入: git diff 显示修改了 rate-limit.ts 和 config.ts
+
+# AI 生成:
+feat(middleware): 添加 API 限流功能
+
+- 新增 rate-limit.ts 中间件，实现滑动窗口限流
+- 添加 Redis 存储支持
+- config.ts 新增限流配置项（RATE_LIMIT_*）
+- 限流触发时返回 429 状态码
+```
+
+### AI 辅助 PR 描述
+
+```markdown
+## 变更说明
+[AI 自动生成的变更摘要]
+
+## 变更类型
+- [ ] feat: 新功能
+- [x] fix: Bug 修复
+- [ ] refactor: 重构
+
+## 测试清单
+- [ ] 单元测试通过
+- [ ] 集成测试通过
+- [ ] 手动测试通过
+
+## 影响范围
+[AI 分析的影响模块]
+
+## 关联 Issue
+Closes #xxx
+```
+
+---
+
 **最后更新**: 2026-02-12
 
