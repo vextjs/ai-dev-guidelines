@@ -371,9 +371,9 @@ volumes:
 
 - [MONITORING-METRICS.md](./MONITORING-METRICS.md) - 关键指标定义
 - [MONITORING-ALERTS.md](./MONITORING-ALERTS.md) - 告警规则
-- [CI-CD.md](./CI-CD.md) - CI/CD 规范
+- [CI-CD-OVERVIEW.md](./CI-CD-OVERVIEW.md) - CI/CD 规范
 
 ---
 
-**最后更新**: 2026-02-11  
+**最后更新**: 2026-02-12  
 **维护者**: [需要项目团队确定]

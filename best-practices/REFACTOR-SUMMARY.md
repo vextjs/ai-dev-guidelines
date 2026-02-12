@@ -324,13 +324,14 @@ class CustomMemoryStore extends MemoryManager {
 
 ## 🔗 相关文档
 
-- [Best Practices 导航](./best-practices/README.md)
+- [Best Practices 导航](./README.md)
 - [完整项目结构](../README.md)
 - [工作流定义](../workflows/)
 - [项目规范](../projects/)
 
 ---
 
-**生成时间**: 2026-02-11
-**版本**: v1.0
+**生成时间**: 2026-02-11  
+**更新时间**: 2026-02-12  
+**版本**: v1.1  
 **维护者**: AI 开发规范项目

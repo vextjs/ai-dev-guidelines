@@ -1,0 +1,57 @@
+# AI 不需要读取的文件和目录
+# 用于优化 AI 的上下文加载
+
+# 版本控制
+.git/
+.gitignore
+
+# 系统文件
+.DS_Store
+Thumbs.db
+*.log
+
+# 依赖目录
+node_modules/
+vendor/
+.venv/
+__pycache__/
+
+# 环境配置（敏感信息）
+.env
+.env.*
+!.env.example
+
+# IDE 配置
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 大型输出目录（按需加载，不全量扫描）
+projects/*/requirements/*/scripts/*.log
+projects/*/bugs/*/scripts/*.log
+
+# 报告目录（按需加载）
+reports/*.json
+reports/*/
+
+# 临时文件
+*.tmp
+*.temp
+.temp/
+.cache/
+
+# 测试覆盖率报告
+coverage/
+.nyc_output/
+
+# 构建产物
+dist/
+build/
+out/
+
+# 锁文件（通常不需要 AI 读取）
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+

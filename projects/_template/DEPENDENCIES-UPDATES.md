@@ -401,9 +401,9 @@ const users = users.map(u => ({ id: u.id }));  // 用原生 JS
 ## 相关文档
 
 - [DEPENDENCIES-VERSION.md](./DEPENDENCIES-VERSION.md) - 版本策略
-- [CI-CD.md](./CI-CD.md) - CI/CD 规范
+- [CI-CD-OVERVIEW.md](./CI-CD-OVERVIEW.md) - CI/CD 概览
 
 ---
 
-**最后更新**: 2026-02-11  
+**最后更新**: 2026-02-12  
 **维护者**: [需要项目团队确定]

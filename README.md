@@ -108,27 +108,8 @@ dev-docs/
 │       ├── footer.md
 │       └── checklist.md
 │
-├── outputs/                           # 📦 保留目录（历史原因，推荐使用 projects/）
+├── outputs/                           # 📦 保留目录（历史兼容，推荐使用 projects/）
 │   └── README.md                     # 说明文档
-│
-├── projects/                          # 🗂️ 项目特定规范和输出（推荐）
-│   ├── README.md                     # 项目规范说明
-│   ├── _template/                    # 项目规范模板
-│   │   └── ...                       # 各类模板文件
-│   │
-│   ├── <project-name>/               # 具体项目目录
-│   │   ├── requirements/             # 需求开发输出
-│   │   │   └── <task-id>/
-│   │   │       ├── 01-requirement.md
-│   │   │       ├── 02-technical.md
-│   │   │       └── 03-implementation.md
-│   │   │
-│   │   ├── bugs/                     # Bug 修复输出
-│   │   │   └── <bug-id>/
-│   │   │       ├── 01-analysis.md
-│   │   │       └── 02-solution.md
-│   │   │
-│   │   └── ...                       # 其他类型输出
 │
 ├── tools/                             # 🔧 AI 可用工具说明
 │   └── README.md                     # 工具使用手册（包含所有工具说明）
@@ -152,10 +133,10 @@ dev-docs/
 
 | 目录 | 用途 | AI 使用频率 |
 |------|------|------------|
-| `projects/` | **项目规范** - 特定项目的技术约束和规范 | ⭐⭐⭐⭐⭐ 每次必读 |
+| `projects/` | **项目规范+输出** - 特定项目的技术约束、规范和文档输出 | ⭐⭐⭐⭐⭐ 每次必读+写入 |
 | `workflows/` | **执行步骤** - AI 按此执行任务（通用流程） | ⭐⭐⭐⭐⭐ 每次必读 |
 | `templates/` | **文档骨架** - AI 生成文档的基础 | ⭐⭐⭐⭐ 生成文档时读 |
-| `outputs/` | **输出目录** - AI 把生成的文档放这里 | ⭐⭐⭐⭐ 每次写入 |
+| `outputs/` | **保留目录** - 历史兼容，推荐使用 `projects/` | ⭐ 仅兼容 |
 | `tools/` | **工具手册** - AI 可用的工具和使用方法 | ⭐⭐⭐ 需要时查阅 |
 | `examples/` | **学习材料** - AI 参考的完整示例 | ⭐⭐ 不确定时学习 |
 | `best-practices/` | **高级场景** - 边界处理、优化策略 | ⭐⭐ 遇到复杂问题时 |
@@ -178,8 +159,7 @@ dev-docs/
 5. **架构重构流程** - 现状分析 → 目标设计 → 分步实施 → 灰度上线
 6. **数据库变更流程** - 变更设计 → 迁移脚本 → 灰度执行 → 验证回滚
 7. **安全加固流程** - 漏洞识别 → 修复方案 → 测试验证 → 安全审计
-8. **事故复盘流程** - 故障分析 → 根因定位 → 改进措施 → 复盘报告
-10. **事故复盘流程** - 时间线梳理 → 根因分析 → 影响评估 → 改进措施
+8. **事故复盘流程** - 时间线梳理 → 根因分析 → 影响评估 → 改进措施 → 复盘报告
 
 ---
 
@@ -335,10 +315,16 @@ projects/user-service/refactoring/REF-user-auth-20260211/
 ├── 01-current.md              # 现状: 单体架构问题
 ├── 02-target.md               # 目标: 微服务拆分
 ├── 03-plan.md                 # 计划: 分 3 个阶段
-└── 04-rollout.md              # 上线: 灰度 → 全量te.md projects/<project-name>/refactoring/<refactor-id>/01-current
+└── 04-rollout.md              # 上线: 灰度 → 全量
+```
+
+### 创建 Bug 文档
+```bash
+# 1. 创建 Bug 目录
+mkdir -p projects/<project-name>/bugs/<bug-id>
 
 # 2. 复制模板
-cp templates/bug-analysis-template.md projects/<project-name>/bugs/<bug-id>/01-analysis.md
+cp templates/core/bug-analysis-template.md projects/<project-name>/bugs/<bug-id>/01-analysis.md
 ```
 
 ### 创建优化文档
@@ -367,68 +353,11 @@ projects/user-service/requirements/20260211-rate-limit/
 ```
 
 ### Bug 修复示例
-```⚠️ AI 必须遵守的规则
-
-### 规则 1: 永远先读工作流
 ```
-❌ 错误: 收到请求后直接开始写代码
-✅ 正确: 先读 workflows/<task-type>.md，按步骤执行
-```
-
-### 规则 2: 严格按模板生成文档
-```
-❌ 错误� AI 学习路径
-
-### Level 1: 基础（必须掌握）
-1. ✅ 阅读 `README.md`（本文件）
-2. ✅ 理解 `projects/` 和 `workflows/` 的区别
-3. ✅ 阅读 `workflows/00-task-identification/`
-4. ✅ 阅读 `workflows/01-requirement-dev/`
-5. ✅ 学习 `examples/requirement-example/`
-
-### Level 2: 进阶（推荐掌握）
-6. ✅ 阅读特定项目规范（如 `projects/user-service/`）
-7. ✅ 阅读 `workflows/02-bug-fix/`
-8. ✅ 阅读 `workflows/03-optimization/`
-9. ✅ 学习 `examples/bug-fix-example/`
-
-### Level 3: 高级（可选掌握）
-10. ✅ 阅读 `best-practices/` 边界处理
-11. ✅ 阅读其他 `workflows/` 文件
-12. ✅ 学习所有 `examples/` 示例
-13. ✅ 理解 `tools/` 中的工具使用
-
----
-
-## 📞 项目信息
-
-- **目标用户**: AI Agent（GitHub Copilot / Claude / GPT）
-- **核心价值**: 标准化 AI 开发流程，提升代码质量和文档完整性
-- **创建日期**: 2026-02-11
-- **版本**: v1.0
-- **下一步**: 创建 `workflows/` 和 `examples/` 目录内容
-```
-❌ 错误: 生成一大段自然语言描述
-✅ 正确: 使用表格、列表、代码块等结构化格式
-```
-
-### 规则 4: 任务 ID 必须唯一
-```
-❌ 错误: 使用模糊的名称如 "bug-fix"
-✅ 正确: 生成唯一 ID 如 "BUG-user-20260211-login-timeout"
-```
-
-### 规则 5: 所有输出必须保存
-```
-❌ 错误: 只告诉用户答案，不生成文档
-✅ 正确: 生成完整文档并保存到 outputs/ 目录
-```
-
-### 规则 6: 验证后再报告完成
-```
-❌ 错误: 代码写完就说"任务完成"
-✅ 正确: 执行验证步骤，确认无错误才报告完成
-```
+projects/chat-service/bugs/BUG-chat-001-message-loss/
+├── 01-analysis.md             # 分析: 复现步骤 + 根因
+├── 02-solution.md             # 方案: 修复代码 + 测试
+└── scripts/
     └── fix-message-queue.sql  # 数据库修复脚本
 ```
 
@@ -436,10 +365,8 @@ projects/user-service/requirements/20260211-rate-limit/
 
 ## 🔗 相关项目
 
-- [guidelines](../guidelines/) - AI 开发规范主仓库
-- [monSQLize](../monSQLize/) - MongoDB ORM 库
-- [rate-limit](../rate-limit/) - 限流中间件
-- [jrpc](../jrpc/) - JSON-RPC 协议库
+- [guidelines](https://github.com/rockyshi1993/guidelines) - AI 开发规范主仓库（已由本项目重构替代）
+- [specs](https://github.com/rockyshi1993/specs) - 产品需求与技术方案仓库
 
 ---
 
@@ -455,6 +382,7 @@ projects/user-service/requirements/20260211-rate-limit/
 
 ## 📞 维护者
 
-- 项目负责人: [您的名字]
+- 项目负责人: rockyshi1993
 - 创建日期: 2026-02-11
-- 最后更新: 2026-02-11
+- 最后更新: 2026-02-12
+- 版本: v1.1

@@ -386,9 +386,9 @@ systemctl restart api-service
 
 - [MONITORING-METRICS.md](./MONITORING-METRICS.md) - 关键指标定义
 - [MONITORING-DASHBOARD.md](./MONITORING-DASHBOARD.md) - 仪表板和数据收集
-- [CI-CD.md](./CI-CD.md) - CI/CD 规范
+- [CI-CD-OVERVIEW.md](./CI-CD-OVERVIEW.md) - CI/CD 规范
 
 ---
 
-**最后更新**: 2026-02-11  
+**最后更新**: 2026-02-12  
 **维护者**: [需要项目团队确定]

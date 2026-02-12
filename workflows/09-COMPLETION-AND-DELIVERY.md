@@ -816,13 +816,13 @@ Step 10 - 交付清单:
 
 ## 📚 相关文档
 
-- [workflows/README.md](../README.md) - 工作流概述
-- [workflows/00-pre-check/README.md](../00-pre-check/README.md) - 前置检查
-- [templates/README.md](../../templates/README.md) - 文档模板
+- [workflows/README.md](./README.md) - 工作流概述
+- [00-pre-check/README.md](./00-pre-check/README.md) - 前置检查
+- [../templates/](../templates/) - 文档模板
 
 ---
 
 **流程编码**: WF-09-10  
-**最后更新**: 2026-02-11  
-**版本**: 1.0  
+**最后更新**: 2026-02-12  
+**版本**: 1.1  
 **维护者**: AI 规范团队

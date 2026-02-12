@@ -258,12 +258,12 @@ get_errors:             1 次   # 验证质量
 - [tools/README.md](../../tools/README.md) - 工具使用手册
 
 ### 代码示例
-- [code-changes/after/](./code-changes/after/) - 完整的代码实现
 - [outputs/scripts/](./outputs/scripts/) - 安装和测试脚本
+- [outputs/](./outputs/) - 完整的文档输出
 
 ### 下一步学习
-- [bug-fix-example/](../bug-fix-example/) - Bug 修复流程
-- [optimization-example/](../optimization-example/) - 性能优化方法
+- 参考 `workflows/02-bug-fix/` - Bug 修复流程
+- 参考 `workflows/03-optimization/` - 性能优化方法
 
 ---
 

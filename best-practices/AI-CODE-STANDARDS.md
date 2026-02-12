@@ -468,12 +468,12 @@ describe('API integration', () => {
 ## 参考资源
 
 - [项目 README](../README.md) - 项目概况
-- [CODE-STANDARDS.md](./CODE-STANDARDS.md) - 代码规范
-- [TESTING.md](./TESTING.md) - 测试规范
-- [CI-CD.md](./CI-CD.md) - 自动化检查
+- [code-standards.md](../standards/code-standards.md) - 代码规范
+- [test-standards.md](../standards/test-standards.md) - 测试规范
+- [TESTING.md](../projects/_template/TESTING.md) - 测试配置模板
 
 ---
 
-**最后更新**: 2026-02-11  
+**最后更新**: 2026-02-12  
 **维护者**: AI 规范委员会  
 **违规举报**: 看到 AI 盲目猜测，请和用户沟通确认

@@ -579,13 +579,13 @@ git checkout -b hotfix/payment-crash
 
 ## 相关文档
 
-- [dev-docs/README.md](../README.md) - 整体工作流说明
-- [workflows/00-pre-check/README.md](../workflows/00-pre-check/README.md) - 前置检查
-- [workflows/COMPLETION-AND-DELIVERY.md](../workflows/COMPLETION-AND-DELIVERY.md) - 交付验证
-- [FILE-ARCHIVE-MANAGEMENT.md](../FILE-ARCHIVE-MANAGEMENT.md) - 文件组织
+- [../README.md](../README.md) - 整体项目说明
+- [./README.md](./README.md) - 工作流说明
+- [./00-pre-check/README.md](./00-pre-check/README.md) - 前置检查
+- [./09-COMPLETION-AND-DELIVERY.md](./09-COMPLETION-AND-DELIVERY.md) - 交付验证
 
 ---
 
-**最后更新**: 2026-02-11  
+**最后更新**: 2026-02-12  
 **维护者**: 流程委员会  
 **反馈**: 欢迎通过 GitHub Discussions 讨论工作流的改进

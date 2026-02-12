@@ -279,9 +279,9 @@ git commit -m "feat: add express-validator for input validation"
 ## 相关文档
 
 - [DEPENDENCIES-UPDATES.md](./DEPENDENCIES-UPDATES.md) - 更新和安全
-- [CI-CD.md](./CI-CD.md) - CI/CD 规范（包括依赖检查）
+- [CI-CD-QUALITY-GATES.md](./CI-CD-QUALITY-GATES.md) - CI/CD 质量门禁（包括依赖检查）
 
 ---
 
-**最后更新**: 2026-02-11  
+**最后更新**: 2026-02-12  
 **维护者**: [需要项目团队确定]

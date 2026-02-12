@@ -500,3 +500,81 @@ await grep_search({
 - [VS Code API 文档](https://code.visualstudio.com/api)
 - [Node.js fs 模块](https://nodejs.org/api/fs.html)
 - [Git 命令手册](https://git-scm.com/docs)
+
+---
+
+## 🛠️ dev-docs 验证脚本
+
+### validate-links.js
+
+验证 Markdown 文件中的内部链接是否有效。
+
+```bash
+# 运行验证
+node tools/validate-links.js
+
+# 显示建议修复
+node tools/validate-links.js --fix
+```
+
+**功能**:
+- 检测所有 `.md` 文件中的相对链接
+- 验证链接目标是否存在
+- 报告断链和建议修复
+
+**输出示例**:
+```
+🔍 开始验证 Markdown 链接...
+📁 找到 107 个 Markdown 文件
+
+📊 验证结果:
+   总链接数: 256
+   有效链接: 254
+   断开链接: 2
+
+❌ 发现以下断链:
+📄 some-file.md
+   ❌ [不存在的链接](./missing-file.md)
+```
+
+> 注意：示例中的链接是演示用途，实际运行时会显示真实的断链。
+
+### validate-structure.js
+
+验证目录结构与 README 描述是否一致。
+
+```bash
+# 运行验证
+node tools/validate-structure.js
+```
+
+**功能**:
+- 检测 README.md 中声明的文件/目录是否存在
+- 检测实际存在但 README 中未声明的文件
+- 验证关键目录结构完整性
+
+**输出示例**:
+```
+🔍 开始验证目录结构...
+
+📄 检查根目录文件:
+   ✅ README.md
+   ✅ CHANGELOG.md
+   ✅ CONSTRAINTS.md
+
+📁 检查目录结构:
+   ✅ workflows/
+      ✅ 00-pre-check/
+      ✅ 01-requirement-dev/
+
+📊 文件统计:
+   Markdown 文件: 107
+   YAML 文件: 1
+   JavaScript 文件: 2
+
+✅ 所有必需文件/目录都存在!
+```
+
+---
+
+**最后更新**: 2026-02-12

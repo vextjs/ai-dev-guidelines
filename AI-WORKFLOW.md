@@ -350,8 +350,8 @@ scripts/
 ## 📚 参考资料
 
 ### 内部规范
-- [AI 开发规范 v4](../guidelines/guidelines/v4.md)
-- [项目 Profile 配置](../guidelines/profiles/)
+- [代码标准](./standards/code-standards.md)
+- [项目 Profile 模板](./projects/_template/TECH-STACK.md)
 
 ### 文档模板
 - [需求文档模板](./templates/core/requirement-template.md)

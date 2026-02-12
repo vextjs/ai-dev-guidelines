@@ -3,7 +3,28 @@
 > **用途**: 定义项目的测试规范  
 > **所属**: projects/<project-name>/TESTING.md  
 > **维护**: 项目技术负责人  
-> **最后更新**: 2026-02-11
+> **最后更新**: 2026-02-12
+
+---
+
+## 📌 文档定位
+
+```yaml
+本文档 (项目 TESTING.md):
+  定位: 项目特定的测试配置
+  内容: 框架配置、CI 集成、mock 策略、环境配置
+  优先级: 高（覆盖通用规范）
+
+通用测试规范:
+  位置: standards/test-standards.md
+  内容: 覆盖率要求、命名规范、分层策略
+  优先级: 低（作为基础规范）
+
+使用方式:
+  1. 首先遵守 standards/test-standards.md 的通用原则
+  2. 然后按本文档配置项目特定的测试环境
+  3. 项目配置优先于通用规范
+```
 
 ---
 
@@ -359,13 +380,13 @@ outputs/<project>/<task-id>/reports/
 
 ## 🔗 相关文档
 
-- [CI-CD.md](./CI-CD.md) - 持续集成规范
+- [CI-CD-QUALITY-GATES.md](./CI-CD-QUALITY-GATES.md) - 持续集成质量门禁
 - [CODE-STANDARDS.md](./CODE-STANDARDS.md) - 代码规范
 - [PROJECT-PROFILE.md](./PROJECT-PROFILE.md) - 项目概述
 
 ---
 
 **文件**: projects/<project>/TESTING.md  
-**版本**: 1.0  
-**最后更新**: 2026-02-11  
+**版本**: 1.1  
+**最后更新**: 2026-02-12  
 **维护者**: 项目技术负责人

@@ -58,7 +58,7 @@ function generateTaskId(projectName: string, description: string): string {
 
 ### 目录结构
 ```
-outputs/
+projects/
 └── <project-name>/
     └── requirements/
         └── <task-id>/

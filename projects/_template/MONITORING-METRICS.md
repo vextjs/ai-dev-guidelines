@@ -272,9 +272,9 @@ Web 服务器日志:
 
 - [MONITORING-ALERTS.md](./MONITORING-ALERTS.md) - 告警规则定义
 - [MONITORING-DASHBOARD.md](./MONITORING-DASHBOARD.md) - 仪表板和数据收集
-- [CI-CD.md](./CI-CD.md) - CI/CD 规范（包括部署监控）
+- [CI-CD-IMPLEMENTATION.md](./CI-CD-IMPLEMENTATION.md) - CI/CD 实施（包括部署监控）
 
 ---
 
-**最后更新**: 2026-02-11  
+**最后更新**: 2026-02-12  
 **维护者**: [需要项目团队确定]

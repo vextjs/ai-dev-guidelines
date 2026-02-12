@@ -327,11 +327,10 @@ AI 流程:
 
 ## 📚 参考资源
 
-- [_template/](./template/) - 项目规范模板
-- [user-service/](./user-service/) - 示例项目规范（如果存在）
+- [_template/](./_template/) - 项目规范模板
 - [../workflows/](../workflows/) - 通用开发流程
 - [../templates/](../templates/) - 通用文档模板
 
 ---
 
-**最后更新**: 2026-02-11
+**最后更新**: 2026-02-12

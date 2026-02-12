@@ -1,0 +1,291 @@
+# AI 决策树配置文件 v1.0.0
+# 用于快速场景识别和任务路由
+# 基于: guidelines decision-tree.yaml 精简版
+
+version: "1.0.0"
+last_updated: "2026-02-12"
+description: "dev-docs AI 执行规范的结构化决策树"
+
+# ===========================================
+# 任务类型识别
+# ===========================================
+task_identification:
+  # 关键词权重表
+  keywords:
+    requirement_dev:
+      weight: 10
+      patterns: ["实现", "开发", "添加", "新增", "集成", "对接", "接入", "新功能", "新特性"]
+
+    bug_fix:
+      weight: 10
+      patterns: ["修复", "解决", "Bug", "bug", "问题", "错误", "报错", "异常", "崩溃", "不工作", "失败"]
+
+    optimization:
+      weight: 10
+      patterns: ["优化", "提升", "加速", "慢", "卡顿", "延迟", "性能", "效率"]
+
+    research:
+      weight: 8
+      patterns: ["调研", "选型", "对比", "评估", "分析"]
+
+    refactoring:
+      weight: 8
+      patterns: ["重构", "重写", "改造", "迁移", "升级"]
+
+    database:
+      weight: 9
+      patterns: ["数据库", "Schema", "索引", "迁移", "表结构"]
+
+    security:
+      weight: 9
+      patterns: ["漏洞", "安全", "注入", "XSS", "CSRF", "加密"]
+
+    incident:
+      weight: 9
+      patterns: ["故障", "复盘", "宕机", "事故", "P0", "紧急"]
+
+  # 任务类型到工作流映射
+  workflow_mapping:
+    requirement_dev: "workflows/01-requirement-dev/"
+    bug_fix: "workflows/02-bug-fix/"
+    optimization: "workflows/03-optimization/"
+    research: "workflows/04-research/"
+    refactoring: "workflows/05-refactoring/"
+    database: "workflows/06-database/"
+    security: "workflows/07-security/"
+    incident: "workflows/08-incident/"
+
+# ===========================================
+# 强制预检查
+# ===========================================
+mandatory_precheck:
+  name: "强制启动协议"
+  priority: "P0"
+
+  steps:
+    - step: 1
+      action: "识别项目名称"
+      sources:
+        - "用户明确提到"
+        - "当前工作目录"
+        - "文件路径"
+        - "询问用户"
+
+    - step: 2
+      action: "加载项目规范"
+      target: "projects/<project>/PROJECT-PROFILE.md"
+      fallback: "projects/_template/PROJECT-PROFILE.md"
+
+    - step: 3
+      action: "识别任务类型"
+      method: "关键词权重匹配"
+      ambiguous_handling: "询问用户确认"
+
+    - step: 4
+      action: "评估风险等级"
+      levels:
+        P0: ["数据库变更", "生产环境", "核心功能"]
+        P1: ["新功能", "API变更", "配置修改"]
+        P2: ["文档更新", "代码重构", "测试补充"]
+
+    - step: 5
+      action: "确定输出目录"
+      pattern: "projects/<project>/<task-type>/<task-id>/"
+
+  output_format: |
+    🔴 预检查清单:
+    ✅ 1. 工作区: <路径>
+    ✅ 2. 项目规范: ✅ 已加载 / ⚠️ 未找到
+    ✅ 3. 任务类型: <类型>
+    ✅ 4. 风险等级: <P0/P1/P2>
+    ✅ 5. 输出目录: <路径>
+
+  failure_handling:
+    condition: "任何步骤失败"
+    action: "HALT"
+    message: "预检查失败，请确认后重试"
+
+# ===========================================
+# 确认点定义
+# ===========================================
+confirmation_points:
+  CP1:
+    name: "需求理解确认"
+    timing: "需求分析完成后"
+    must_show: ["需求复述", "改造清单", "影响范围"]
+    options: ["确认", "修改", "取消"]
+
+  CP2:
+    name: "方案确认"
+    timing: "技术方案设计后"
+    must_show: ["技术方案摘要", "P0操作清单", "回滚方案"]
+    options: ["Continue", "Modify", "Stop", "Cancel"]
+
+  CP3:
+    name: "代码确认"
+    timing: "代码实现完成后"
+    must_show: ["修改文件清单", "代码变更摘要"]
+    options: ["确认", "修改", "取消"]
+
+  CP4:
+    name: "测试确认"
+    timing: "测试执行完成后"
+    must_show: ["测试结果", "覆盖率", "失败用例"]
+    options: ["确认继续", "重新测试", "跳过"]
+
+  CP5:
+    name: "文档确认"
+    timing: "文档生成完成后"
+    must_show: ["文档清单", "内容摘要"]
+    options: ["确认", "修改"]
+
+  CP6:
+    name: "项目文档更新确认"
+    timing: "任务完成前"
+    must_show: ["STATUS.md更新", "CHANGELOG.md更新"]
+    options: ["Continue", "Modify", "Skip"]
+
+# ===========================================
+# 询问点定义
+# ===========================================
+inquiry_points:
+  IP1:
+    name: "测试产物选择"
+    timing: "CP3之后"
+    options:
+      - "1: 单元测试"
+      - "2: HTTP测试文件"
+      - "3: OpenAPI文档"
+      - "A: 全部生成"
+      - "S: 跳过"
+
+  IP2:
+    name: "文档产物选择"
+    timing: "CP4之后"
+    options:
+      - "1: README.md"
+      - "2: CHANGELOG.md"
+      - "3: 脚本文档"
+      - "4: API文档"
+      - "A: 全部生成"
+      - "S: 跳过"
+
+# ===========================================
+# 禁止项
+# ===========================================
+constraints:
+  absolute_forbidden:
+    - id: 1
+      rule: "禁止跳过预检查"
+      violation: "看到需求就直接写代码"
+
+    - id: 2
+      rule: "禁止未确认删除"
+      violation: "删除代码/文件前未获得用户确认"
+
+    - id: 3
+      rule: "禁止假设用户同意"
+      violation: "没有等待用户响应就继续执行"
+
+    - id: 4
+      rule: "禁止硬编码敏感信息"
+      violation: "代码中出现密码、密钥、Token"
+
+    - id: 5
+      rule: "禁止跳过验证"
+      violation: "代码写完不运行验证"
+
+    - id: 6
+      rule: "禁止凭想象设计"
+      violation: "未读代码就设计方案"
+
+  conditional_forbidden:
+    - id: 7
+      rule: "禁止删除 STATUS/CHANGELOG"
+      condition: "任何情况"
+
+    - id: 8
+      rule: "禁止删除测试文件"
+      condition: "除非用户明确要求"
+
+# ===========================================
+# 三轮验证
+# ===========================================
+three_round_validation:
+  round_1:
+    name: "逻辑验证"
+    items:
+      - "需求覆盖: 所有需求点有对应实现"
+      - "边界处理: null/undefined/空值处理"
+      - "错误处理: async函数有try-catch"
+      - "逻辑完整: if有else，switch有default"
+      - "流程正确: 业务流程符合需求"
+      - "返回值: 类型和结构正确"
+
+  round_2:
+    name: "技术验证"
+    items:
+      - "代码规范: 命名、格式、注释"
+      - "安全检测: 无敏感信息硬编码"
+      - "性能考量: 无N+1查询、有分页、有索引"
+      - "并发安全: 竞态条件处理"
+      - "数据库规则: 按项目规范使用ORM"
+
+  round_3:
+    name: "完整性验证"
+    items:
+      - "文件完整: 所有规划文件已生成"
+      - "测试覆盖: ≥80%"
+      - "README同步: 功能/配置说明更新"
+      - "STATUS同步: 版本/需求状态更新"
+      - "CHANGELOG同步: 变更记录添加"
+      - "依赖声明: 新依赖已添加"
+
+# ===========================================
+# 输出路径规范
+# ===========================================
+output_paths:
+  requirement:
+    pattern: "projects/<project>/requirements/<YYYYMMDD>-<feature>/"
+    files:
+      - "01-requirement.md"
+      - "02-technical.md"
+      - "03-implementation.md"
+      - "scripts/"
+
+  bug:
+    pattern: "projects/<project>/bugs/<BUG-project-id>/"
+    files:
+      - "01-analysis.md"
+      - "02-solution.md"
+
+  optimization:
+    pattern: "projects/<project>/optimizations/<OPT-module-id>/"
+    files:
+      - "01-baseline.md"
+      - "02-optimization.md"
+      - "03-results.md"
+
+# ===========================================
+# 文档编号规范
+# ===========================================
+document_naming:
+  requirement: "YYYYMMDD-<feature>"
+  bug: "BUG-<project>-<id>-<desc>"
+  optimization: "OPT-<module>-<id>"
+  refactoring: "REF-<module>-<date>"
+  database: "DB-<change>-<date>"
+  security: "SEC-<vuln>-<date>"
+  incident: "INC-<date>-<level>-<desc>"
+
+# ===========================================
+# 相关文档引用
+# ===========================================
+references:
+  precheck: "workflows/00-pre-check/README.md"
+  task_identification: "workflows/00-task-identification/README.md"
+  confirmation_points: "workflows/common/confirmation-points.md"
+  validation: "best-practices/validation/README.md"
+  constraints: "CONSTRAINTS.md"
+  quick_reference: "QUICK-REFERENCE.md"
+
