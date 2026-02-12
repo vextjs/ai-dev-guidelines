@@ -1,0 +1,82 @@
+# 技术调研流程
+
+> **任务类型**: 技术调研  
+> **使用场景**: 技术选型、方案对比、POC 验证  
+> **输出目录**: `projects/<project-name>/research/<research-id>/`  
+
+---
+
+## 📋 流程概览
+
+```
+背景分析 → 方案收集 → 方案对比 → POC 验证 → 结论建议
+```
+
+---
+
+## 🎯 执行步骤
+
+### Step 1: 背景分析
+- 收集调研需求和背景
+- 明确调研目标
+- 确定评估维度
+
+**输出**: `01-background.md`
+
+### Step 2: 方案收集
+- 调研可选技术方案
+- 收集官方文档和社区评价
+- 列出候选方案清单
+
+**输出**: 更新 `01-background.md`
+
+### Step 3: 方案对比
+- 从多个维度对比方案
+- 列出各方案优劣
+- 标注适用场景
+
+**输出**: `02-comparison.md`
+
+### Step 4: POC 验证
+- 编写 POC 代码
+- 测试关键功能
+- 记录测试结果
+
+**输出**: `03-poc.md` 和 `scripts/poc-*.js`
+
+### Step 5: 结论建议
+- 综合评估
+- 给出推荐方案
+- 说明选择理由
+
+**输出**: `04-conclusion.md`
+
+---
+
+## 📦 输出示例
+
+```
+projects/payment-service/research/RES-cache-selection-20260211/
+├── 01-background.md           # 背景: 为什么需要缓存
+├── 02-comparison.md           # 对比: Redis vs Memcached
+├── 03-poc.md                  # POC: 性能测试结果
+├── 04-conclusion.md           # 结论: 选择 Redis
+└── scripts/
+    ├── redis-poc.js           # Redis POC
+    └── memcached-poc.js       # Memcached POC
+```
+
+---
+
+## ✅ 完成检查清单
+
+- [ ] 调研背景已明确
+- [ ] 至少对比 2 个方案
+- [ ] POC 已完成
+- [ ] 给出明确推荐
+- [ ] 所有文档已生成
+
+---
+
+**相关模板**: [研究调研模板](../../templates/extended/research-template.md)
+

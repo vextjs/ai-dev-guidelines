@@ -354,10 +354,12 @@ scripts/
 - [项目 Profile 配置](../guidelines/profiles/)
 
 ### 文档模板
-- [需求文档模板](./templates/requirement-template.md)
-- [技术方案模板](./templates/technical-template.md)
-- [Bug 分析模板](./templates/bug-analysis-template.md)
-- [优化方案模板](./templates/optimization-template.md)
+- [需求文档模板](./templates/core/requirement-template.md)
+- [技术方案模板](./templates/core/technical-template.md)
+- [Bug 分析模板](./templates/core/bug-analysis-template.md)
+- [优化方案模板](./templates/core/optimization-template.md)
+- [实施记录模板](./templates/core/implementation-template.md)
+- [系统对接模板](./templates/core/integration-template.md)
 
 ---
 

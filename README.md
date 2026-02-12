@@ -52,7 +52,7 @@
 
 ### 什么是"输出"（Output）？
 - **定义**: AI 执行任务后生成的文档
-- **位置**: `outputs/<project-name>/<task-type>/<task-id>/`
+- **位置**: `projects/<project-name>/<task-type>/<task-id>/`
 - **内容**: 基于模板填充的完整文档
 - **用途**: 任务的永久记录
 
@@ -108,8 +108,15 @@ dev-docs/
 │       ├── footer.md
 │       └── checklist.md
 │
-├── outputs/                           # 📦 AI 生成的文档输出
-│   ├── <project-name>/               # 按项目分类
+├── outputs/                           # 📦 保留目录（历史原因，推荐使用 projects/）
+│   └── README.md                     # 说明文档
+│
+├── projects/                          # 🗂️ 项目特定规范和输出（推荐）
+│   ├── README.md                     # 项目规范说明
+│   ├── _template/                    # 项目规范模板
+│   │   └── ...                       # 各类模板文件
+│   │
+│   ├── <project-name>/               # 具体项目目录
 │   │   ├── requirements/             # 需求开发输出
 │   │   │   └── <task-id>/
 │   │   │       ├── 01-requirement.md
@@ -160,17 +167,18 @@ dev-docs/
 请参阅 [AI-WORKFLOW.md](./AI-WORKFLOW.md)，包含：
 
 ### 核心流程
-1. **需求开发流程** - 需求分析 → 技术方案 → 实施计划 → 脚本编写 → 对接文档
+1. **需求开发流程** - 需求分析 → 技术方案 → 实施计划 → 脚本编写 → (对接文档)*
 2. **Bug 修复流程** - 问题复现 → 原因分析 → 解决方案 → 验证测试 → 文档归档
 3. **性能优化流程** - 性能基线 → 瓶颈识别 → 优化方案 → 效果验证 → 对比报告
-4. **系统对接流程** - 需求确认 → 接口设计 → 联调测试 → 文档编写 → 上线验证
+
+> **说明**: *对接文档仅在需求涉及第三方系统时生成
 
 ### 扩展流程
-5. **技术调研流程** - 背景分析 → 方案对比 → POC 验证 → 结论建议
-6. **架构重构流程** - 现状分析 → 目标设计 → 分步实施 → 灰度上线
-7. **数据库变更流程** - 变更设计 → 迁移脚本 → 灰度执行 → 验证回滚
-8. **安全加固流程** - 漏洞识别 → 修复方案 → 测试验证 → 安全审计
-9. **依赖升级流程** - 升级评估 → 兼容性测试 → 灰度升级 → 回滚预案
+4. **技术调研流程** - 背景分析 → 方案对比 → POC 验证 → 结论建议
+5. **架构重构流程** - 现状分析 → 目标设计 → 分步实施 → 灰度上线
+6. **数据库变更流程** - 变更设计 → 迁移脚本 → 灰度执行 → 验证回滚
+7. **安全加固流程** - 漏洞识别 → 修复方案 → 测试验证 → 安全审计
+8. **事故复盘流程** - 故障分析 → 根因定位 → 改进措施 → 复盘报告
 10. **事故复盘流程** - 时间线梳理 → 根因分析 → 影响评估 → 改进措施
 
 ---
@@ -186,7 +194,8 @@ dev-docs/
 - 示例: `20260211-rate-limit-integration`
 
 ### Bug 命名
-- 格式: `BUG-<project>-<id>-
+- 格式: `BUG-<project>-<id>-<description>`
+- 示例: `BUG-user-001-login-timeout`
 
 ### 调研命名
 - 格式: `RES-<topic>-<YYYYMMDD>`
@@ -198,8 +207,7 @@ dev-docs/
 
 ### 事故命名
 - 格式: `INC-<YYYYMMDD>-<severity>-<brief-desc>`
-- 示例: `INC-20260211-P0-database-outage`<brief-desc>`
-- 示例: `BUG-user-001-login-timeout`
+- 示例: `INC-20260211-P0-database-outage`
 
 ### 优化命名
 - 格式: `OPT-<project>-<area>-<id>`
@@ -215,9 +223,9 @@ dev-docs/
 mkdir -p projects/<project-name>/requirements/<feature-name>/scripts
 
 # 2. 复制模板
-cp templates/requirement-template.md projects/<project-name>/requirements/<feature-name>/01-requirement.md
-cp templates/technical-template.md projects/<project-name>/requirements/<feature-name>/02-technical.md
-cp templates/implementation-template.md projects/<project-name>/requirements/<feature-name>/03-implementation.md
+cp templates/core/requirement-template.md projects/<project-name>/requirements/<feature-name>/01-requirement.md
+cp templates/core/technical-template.md projects/<project-name>/requirements/<feature-name>/02-technical.md
+cp templates/core/implementation-template.md projects/<project-name>/requirements/<feature-name>/03-implementation.md
 
 # 3. 开始编辑文档
 ```
@@ -225,63 +233,85 @@ cp templates/implementation-template.md projects/<project-name>/requirements/<fe
 ### 创建 Bug 修复文档
 ```bash
 # 1. 创建 Bug 目录
-mkd🤖 AI 执行流程（核心）
+mkdir -p projects/<project-name>/bugs/<bug-id>/scripts
 
-### Step 0: 接收用户请求后立即执行
+# 2. 复制模板
+cp templates/core/bug-analysis-template.md projects/<project-name>/bugs/<bug-id>/01-analysis.md
+
+# 3. 开始编辑文档
+```
+
+---
+
+## 🤖 AI 执行流程
+
+### 核心流程概述
 
 ```
 用户输入
     ↓
-读取 workflows/00-task-identification.md
+读取 workflows/00-task-identification/README.md
     ↓
-识别任务类型（需求/Bug/优化/对接/...）
+识别任务类型（需求/Bug/优化/调研/...）
     ↓
 读取对应的 workflow 文件
     ↓
 按步骤执行
     ↓
-生成文档并保存到 outputs/
+生成文档并保存到 projects/
     ↓
 向用户报告完成
 ```
 
-### 工作流清单（按优先级）
-核心工作流（必须掌握）
+### 工作流清单
+
+#### Tier 1: 核心工作流（必须掌握）
+
 | 流程文件 | 任务类型 | 关键步骤 | 输出文档 | 使用频率 |
 |---------|---------|---------|---------|----------|
-| `01-requirement-dev.md` | 需求开发 | 分析→设计→实现→验证 | 3-4 个文档 | 40% |
-| `02-bug-fix.md` | Bug 修复 | 复现→分析→修复→验证 | 3 个文档 | 30% |
-| `03-optimization.md` | 性能优化 | 基线→优化→验证→对比 | 4 个文档 | 10% |
+| `01-requirement-dev/` | 需求开发 | 分析→设计→实现→验证 | 3-4 个文档 | 40% |
+| `02-bug-fix/` | Bug 修复 | 复现→分析→修复→验证 | 3 个文档 | 30% |
+| `03-optimization/` | 性能优化 | 基线→优化→验证→对比 | 4 个文档 | 10% |
 
 > **说明**: 需求开发如果涉及第三方系统对接，会多生成 `04-integration.md` 文档
 
 #### Tier 2: 扩展工作流（可选掌握）
+
 | 流程文件 | 任务类型 | 使用场景 | 使用频率 |
 |---------|---------|---------|----------|
-| `04-research.md` | 技术调研 | 技术选型、方案对比 | 10% |
-| `05-refactoring.md` | 架构重构 | 大型代码重构 | 5% |
-| `06-database.md` | 数据库变更 | Schema 变更、迁移 | 3% |
-| `07-security.md` | 安全修复 | 漏洞修复、加固 | 1% |
-| `08-incident.md` | 事故复盘 | 生产故障分析 | 1%固 |
-| `09-incident.md` | 事故复盘 | 生产故障分析 |
+| `04-research/` | 技术调研 | 技术选型、方案对比 | 10% |
+| `05-refactoring/` | 架构重构 | 大型代码重构 | 5% |
+| `06-database/` | 数据库变更 | Schema 变更、迁移 | 3% |
+| `07-security/` | 安全修复 | 漏洞修复、加固 | 1% |
+| `08-incident/` | 事故复盘 | 生产故障分析 | 1% |
+
+---
+
+## 📚 输出示例
+
+### 需求开发示例
+```
+projects/user-service/requirements/20260211-rate-limit-integration/
+├── 01-requirement.md          # 需求: 集成限流功能
+├── 02-technical.md            # 方案: 技术设计
+├── 03-implementation.md       # 实施: 代码实现记录
+├── 04-integration.md          # 对接: 第三方系统对接说明
+└── scripts/
     ├── install.sh             # 安装脚本
     └── test-rate-limit.js     # 测试脚本
 ```
 
-#### Bug 修复示例
+### Bug 修复示例
 ```
 projects/chat-service/bugs/BUG-chat-001-message-loss/
 ├── 01-analysis.md             # 问题: 消息丢失原因分析
 ├── 02-solution.md             # 方案: 消息队列重构
 ├── 03-implementation.md       # 实施: 代码修复记录
-├── 04-validation.md           # 验证: 测试结果
 └── scripts/
     └── fix-message-queue.sql  # 数据库修复脚本
 ```
 
-### 扩展场景示例
-
-#### 技术调研示例
+### 技术调研示例
 ```
 projects/payment-service/research/RES-cache-selection-20260211/
 ├── 01-background.md           # 背景: 为什么需要缓存

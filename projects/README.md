@@ -29,21 +29,29 @@
 projects/
 ├── README.md                          # 本文件
 ├── _template/                         # 项目规范模板
+│   ├── INDEX.md                      # 模板索引
 │   ├── PROJECT-PROFILE.md            # 项目概况
 │   ├── TECH-STACK.md                 # 技术栈说明
 │   ├── CODE-STANDARDS.md             # 代码规范
-│   ├── DEPLOYMENT.md                 # 部署流程
-│   └── ARCHITECTURE.md               # 架构说明
+│   ├── TESTING.md                    # 测试规范
+│   ├── DEPENDENCIES-VERSION.md       # 依赖版本管理
+│   ├── DEPENDENCIES-UPDATES.md       # 依赖更新策略
+│   ├── CI-CD-OVERVIEW.md             # CI/CD 概览
+│   ├── CI-CD-IMPLEMENTATION.md       # CI/CD 实施
+│   ├── CI-CD-QUALITY-GATES.md        # CI/CD 质量门禁
+│   ├── MONITORING-METRICS.md         # 监控指标
+│   ├── MONITORING-DASHBOARD.md       # 监控面板
+│   └── MONITORING-ALERTS.md          # 告警配置
 │
-├── user-service/                      # 用户服务项目
-│   ├── PROJECT-PROFILE.md
-│   ├── TECH-STACK.md
-│   ├── CODE-STANDARDS.md
-│   ├── DEPLOYMENT.md
-│   └── ARCHITECTURE.md
+├── <project-name>/                    # 具体项目目录
+│   ├── PROJECT-PROFILE.md            # 必需文件
+│   ├── TECH-STACK.md                 # 必需文件
+│   ├── CODE-STANDARDS.md             # 必需文件
+│   ├── requirements/                 # 需求开发输出
+│   ├── bugs/                         # Bug 修复输出
+│   ├── research/                     # 技术调研输出
+│   └── ...                           # 其他输出目录
 │
-├── payment-service/                   # 支付服务项目
-├── chat-service/                      # 聊天服务项目
 └── ...                                # 其他项目
 ```
 
