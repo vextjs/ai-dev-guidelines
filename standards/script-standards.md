@@ -150,6 +150,187 @@ async function initData() {
 }
 ```
 
+### 实现方式
+
+```yaml
+方式 1: 使用 upsert
+  说明: 插入或更新，存在则更新，不存在则插入
+  示例:
+    await db.users.updateOne(
+      { email: user.email },
+      { $set: user },
+      { upsert: true }
+    );
+
+方式 2: 执行前检查状态
+  说明: 检查是否已执行，已执行则跳过
+  示例:
+    const exists = await db.migrations.findOne({ version: '1.0.0' });
+    if (exists) {
+      console.log('⚠️ [WARN] 迁移已执行，跳过');
+      return;
+    }
+    // 执行迁移...
+    await db.migrations.insertOne({ version: '1.0.0', executedAt: new Date() });
+
+方式 3: 使用幂等 key
+  说明: 使用唯一标识防止重复执行
+  示例:
+    const idempotencyKey = `init-${Date.now()}`;
+    const exists = await redis.get(idempotencyKey);
+    if (exists) return;
+    
+    await redis.set(idempotencyKey, '1', 'EX', 3600);
+    // 执行操作...
+
+方式 4: 事务回滚支持
+  说明: 失败时回滚，确保原子性
+  示例:
+    const session = await db.startSession();
+    try {
+      await session.withTransaction(async () => {
+        // 执行多个操作...
+      });
+    } finally {
+      await session.endSession();
+    }
+```
+
+---
+
+## 🔧 环境变量管理
+
+### 必须使用环境变量
+
+```yaml
+必须使用环境变量的场景:
+  - 数据库连接字符串
+  - API 密钥和密钥
+  - 第三方服务凭证
+  - 环境标识（development/production）
+  - 敏感配置参数
+
+命名规范:
+  - 使用 UPPER_SNAKE_CASE
+  - 添加前缀表明模块（如 DB_HOST, REDIS_PORT）
+  - 布尔值使用 true/false 字符串
+```
+
+### 环境变量加载
+
+```typescript
+// 使用 dotenv 加载环境变量
+import dotenv from 'dotenv';
+
+// 加载 .env 文件
+dotenv.config();
+
+// 验证必需的环境变量
+const requiredEnvVars = [
+  'MONGODB_URI',
+  'NODE_ENV',
+  'API_KEY',
+];
+
+for (const key of requiredEnvVars) {
+  if (!process.env[key]) {
+    console.error(`❌ 缺少环境变量: ${key}`);
+    process.exit(1);
+  }
+}
+```
+
+### 环境变量文档
+
+```yaml
+每个脚本必须在头部注释中说明:
+  - 必需的环境变量
+  - 可选的环境变量及默认值
+  - 环境变量的用途
+
+示例:
+  /**
+   * 环境变量:
+   *   MONGODB_URI - 数据库连接（必需）
+   *   NODE_ENV - 运行环境（必需，development/production）
+   *   BATCH_SIZE - 批处理大小（可选，默认 100）
+   *   DRY_RUN - 是否模拟运行（可选，默认 false）
+   */
+```
+
+---
+
+## ✅ 脚本测试规范
+
+### 测试分类
+
+```yaml
+必须测试:
+  - 正常流程: 输入正确时的执行结果
+  - 异常处理: 错误输入、连接失败等
+  - 幂等性: 多次执行结果一致
+  - 环境检查: 缺少环境变量时的行为
+
+可选测试:
+  - 性能测试: 大数据量下的执行时间
+  - 回滚测试: 失败时的回滚机制
+```
+
+### 测试脚本示例
+
+```typescript
+// scripts/init/init-user-data.test.ts
+import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { initUserData } from './init-user-data';
+
+describe('init-user-data', () => {
+  beforeEach(async () => {
+    // 创建测试数据库
+    await setupTestDB();
+  });
+
+  afterEach(async () => {
+    // 清理测试数据库
+    await cleanupTestDB();
+  });
+
+  it('should create users successfully', async () => {
+    const result = await initUserData();
+    expect(result.success).toBe(true);
+    expect(result.created).toBeGreaterThan(0);
+  });
+
+  it('should be idempotent', async () => {
+    // 第一次执行
+    const result1 = await initUserData();
+    expect(result1.created).toBeGreaterThan(0);
+
+    // 第二次执行
+    const result2 = await initUserData();
+    expect(result2.created).toBe(0); // 已存在，跳过
+    expect(result2.skipped).toBe(result1.created);
+  });
+
+  it('should fail gracefully when DB is unavailable', async () => {
+    await disconnectDB();
+    
+    await expect(initUserData()).rejects.toThrow();
+  });
+});
+```
+
+### 测试运行
+
+```json
+// package.json
+{
+  "scripts": {
+    "test:scripts": "jest scripts/**/*.test.ts",
+    "test:scripts:watch": "jest scripts/**/*.test.ts --watch"
+  }
+}
+```
+
 ---
 
 ## 📝 日志输出规范

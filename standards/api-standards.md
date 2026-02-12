@@ -133,15 +133,23 @@
 
 ### 常用错误码表
 
-| 错误码 | 说明 | HTTP 状态码 |
-|--------|------|------------|
-| 0 | 成功 | 200 |
-| 40001 | 参数验证失败 | 400 |
-| 40101 | 未认证 | 401 |
-| 40301 | 无权限 | 403 |
-| 40401 | 资源不存在 | 404 |
-| 42901 | 请求过于频繁 | 429 |
-| 50001 | 服务器内部错误 | 500 |
+| 错误码 | 说明 | HTTP 状态码 | 分类 |
+|--------|------|------------|------|
+| 0 | 成功 | 200 | 成功 |
+| 40001 | 参数验证失败 | 400 | 参数错误 |
+| 40002 | 参数格式错误 | 400 | 参数错误 |
+| 40003 | 参数缺失 | 400 | 参数错误 |
+| 40101 | 未认证 | 401 | 认证错误 |
+| 40102 | Token 过期 | 401 | 认证错误 |
+| 40103 | Token 无效 | 401 | 认证错误 |
+| 40301 | 无权限 | 403 | 权限错误 |
+| 40302 | 账户被禁用 | 403 | 权限错误 |
+| 40401 | 资源不存在 | 404 | 业务错误 |
+| 40901 | 资源冲突 | 409 | 业务错误 |
+| 42201 | 资源锁定 | 422 | 业务错误 |
+| 42901 | 请求过于频繁 | 429 | 系统错误 |
+| 50001 | 服务器内部错误 | 500 | 系统错误 |
+| 50301 | 服务暂时不可用 | 503 | 系统错误 |
 
 ---
 
@@ -208,6 +216,215 @@ Token 结构:
 刷新接口:
   POST /api/v1/auth/refresh
   Body: { "refreshToken": "xxx" }
+```
+
+---
+
+## 🔄 请求频率限制 (Rate Limiting)
+
+### 基础配置
+
+```yaml
+全局限制:
+  - 单 IP: 1000 请求/小时
+  - 单用户: 5000 请求/小时
+  
+端点级别:
+  - 登录: 5 次/分钟
+  - 注册: 3 次/小时
+  - 发送验证码: 10 次/小时
+  - 敏感操作: 10 次/分钟
+```
+
+### 响应头
+
+```yaml
+标准响应头:
+  X-RateLimit-Limit: 1000      # 时间窗口内的请求上限
+  X-RateLimit-Remaining: 950   # 剩余请求次数
+  X-RateLimit-Reset: 1735689600 # 重置时间（Unix timestamp）
+
+超限响应:
+  HTTP/1.1 429 Too Many Requests
+  Retry-After: 3600             # 重试等待时间（秒）
+```
+
+### 实现示例
+
+```typescript
+// Express 中间件示例
+import rateLimit from 'express-rate-limit';
+
+const apiLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 小时
+  max: 1000,
+  message: {
+    success: false,
+    error: {
+      code: '42901',
+      message: 'Too many requests, please try again later.'
+    }
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use('/api/', apiLimiter);
+```
+
+---
+
+## 🌐 CORS 配置规范
+
+### 基础配置
+
+```yaml
+允许的源:
+  开发环境: http://localhost:3000
+  测试环境: https://test.example.com
+  生产环境: https://example.com
+
+允许的方法:
+  - GET
+  - POST
+  - PUT
+  - PATCH
+  - DELETE
+  - OPTIONS
+
+允许的请求头:
+  - Content-Type
+  - Authorization
+  - X-Requested-With
+
+暴露的响应头:
+  - X-RateLimit-Limit
+  - X-RateLimit-Remaining
+  - X-RateLimit-Reset
+
+凭证支持:
+  credentials: true  # 允许携带 Cookie
+```
+
+### 实现示例
+
+```typescript
+// Express CORS 配置
+import cors from 'cors';
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'https://test.example.com',
+      'https://example.com',
+    ];
+    
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['X-RateLimit-Limit', 'X-RateLimit-Remaining', 'X-RateLimit-Reset'],
+  credentials: true,
+  maxAge: 86400, // 预检请求缓存时间（秒）
+};
+
+app.use(cors(corsOptions));
+```
+
+---
+
+## 📝 请求/响应日志规范
+
+### 日志级别
+
+```yaml
+记录级别:
+  - info: 正常请求（默认）
+  - warn: 慢请求（>3秒）、客户端错误（4xx）
+  - error: 服务器错误（5xx）
+```
+
+### 必须记录的字段
+
+```yaml
+请求日志:
+  - requestId: 唯一请求标识
+  - method: HTTP 方法
+  - url: 请求路径（不含查询参数敏感信息）
+  - ip: 客户端 IP
+  - userAgent: 用户代理
+  - userId: 用户 ID（已登录时）
+  - timestamp: 请求时间
+
+响应日志:
+  - requestId: 关联请求 ID
+  - statusCode: HTTP 状态码
+  - duration: 响应时间（毫秒）
+  - responseSize: 响应大小（字节）
+  - timestamp: 响应时间
+```
+
+### 实现示例
+
+```typescript
+// Express 日志中间件
+import { v4 as uuidv4 } from 'uuid';
+import logger from './logger';
+
+app.use((req, res, next) => {
+  const requestId = uuidv4();
+  const startTime = Date.now();
+  
+  req.requestId = requestId;
+  
+  // 请求日志
+  logger.info('HTTP Request', {
+    requestId,
+    method: req.method,
+    url: req.path,
+    ip: req.ip,
+    userAgent: req.get('user-agent'),
+    userId: req.user?.id,
+  });
+  
+  // 响应日志
+  res.on('finish', () => {
+    const duration = Date.now() - startTime;
+    const logLevel = res.statusCode >= 500 ? 'error' 
+                    : res.statusCode >= 400 ? 'warn'
+                    : duration > 3000 ? 'warn'
+                    : 'info';
+    
+    logger[logLevel]('HTTP Response', {
+      requestId,
+      statusCode: res.statusCode,
+      duration,
+      responseSize: res.get('Content-Length'),
+    });
+  });
+  
+  next();
+});
+```
+
+### 敏感信息处理
+
+```yaml
+禁止记录:
+  - 密码字段
+  - Token 完整内容（可记录前6位）
+  - 信用卡号
+  - 身份证号
+
+处理方式:
+  - 使用白名单过滤查询参数
+  - 对敏感字段进行脱敏（如：token: "sk-abc...xyz"）
+  - 在日志工具中配置字段黑名单
 ```
 
 ---
