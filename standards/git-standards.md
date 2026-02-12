@@ -1,0 +1,313 @@
+# Git 操作规范
+
+> Git 版本控制的标准化操作规范和安全指南
+
+---
+
+## 📋 概述
+
+本规范定义了 AI 辅助开发中 Git 操作的标准和安全要求，确保版本控制操作可靠、可追溯。
+
+---
+
+## 🎯 操作分类
+
+### 安全操作（可直接执行）
+
+```yaml
+安全操作列表:
+  查看类:
+    - git status: 查看工作区状态
+    - git log: 查看提交历史
+    - git diff: 查看差异
+    - git branch: 查看分支
+    - git stash list: 查看暂存列表
+    
+  只读类:
+    - git fetch: 获取远程更新（不合并）
+    - git remote -v: 查看远程仓库
+
+执行条件: 无需确认，可直接执行
+```
+
+### 提示操作（建议确认）
+
+```yaml
+提示操作列表:
+  暂存类:
+    - git add: 暂存文件
+    - git stash: 暂存工作区
+    - git stash pop: 恢复暂存
+    
+  分支类:
+    - git checkout: 切换分支
+    - git branch <name>: 创建分支
+
+执行条件: 建议告知用户操作内容，但非必须确认
+```
+
+### 必须确认操作（高风险）
+
+```yaml
+必须确认操作列表:
+  提交类:
+    - git commit: 提交变更
+    - git commit --amend: 修改提交
+    
+  推送类:
+    - git push: 推送到远程
+    - git push --force: 强制推送 ⚠️ 极高风险
+    
+  合并类:
+    - git merge: 合并分支
+    - git rebase: 变基操作
+    - git cherry-pick: 摘取提交
+    
+  回滚类:
+    - git reset: 重置提交
+    - git revert: 撤销提交
+    
+  删除类:
+    - git branch -d/-D: 删除分支
+    - git clean: 清理未跟踪文件
+
+执行条件: 必须明确告知用户并获得确认
+```
+
+---
+
+## 🔴 禁止操作
+
+```yaml
+绝对禁止:
+  - git push --force 到 main/master/production 分支
+  - 未经确认直接 git reset --hard
+  - 删除远程主分支
+  - 在生产环境执行危险操作
+
+需要额外审批:
+  - 修改已推送的提交历史
+  - 删除远程分支
+  - 强制合并冲突
+```
+
+---
+
+## 📝 提交规范
+
+### Commit Message 格式
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+### Type 类型
+
+```yaml
+类型列表:
+  feat: 新功能
+  fix: Bug 修复
+  docs: 文档更新
+  style: 代码格式（不影响功能）
+  refactor: 重构
+  perf: 性能优化
+  test: 测试相关
+  chore: 构建/工具变更
+  ci: CI 配置变更
+```
+
+### 示例
+
+```bash
+# 好的提交信息
+feat(user): 添加用户注册功能
+
+- 实现邮箱验证流程
+- 添加密码强度检查
+- 集成验证码服务
+
+Closes #123
+
+# 不好的提交信息
+fix bug
+update code
+WIP
+```
+
+---
+
+## 🌿 分支策略
+
+### 分支命名规范
+
+```yaml
+主分支:
+  - main: 生产环境代码
+  - develop: 开发环境代码
+
+功能分支:
+  - feature/<issue-id>-<short-description>
+  - 示例: feature/123-user-registration
+
+修复分支:
+  - fix/<issue-id>-<short-description>
+  - hotfix/<issue-id>-<description>（紧急修复）
+
+发布分支:
+  - release/<version>
+  - 示例: release/v1.2.0
+```
+
+### 分支工作流
+
+```yaml
+标准流程:
+  1. 从 develop 创建功能分支
+  2. 在功能分支开发
+  3. 提交 PR 到 develop
+  4. Code Review 通过后合并
+  5. develop 定期合并到 main
+
+紧急修复:
+  1. 从 main 创建 hotfix 分支
+  2. 修复问题
+  3. 同时合并到 main 和 develop
+```
+
+---
+
+## ⚠️ AI 操作确认流程
+
+### 标准确认格式
+
+```yaml
+操作确认:
+  操作类型: [git commit/push/merge/...]
+  目标分支: [分支名]
+  变更内容:
+    - [文件1]
+    - [文件2]
+  风险等级: [低/中/高]
+  
+确认: 是否继续执行？[Y/N]
+```
+
+### 示例场景
+
+```yaml
+场景1 - 提交代码:
+  🔔 即将执行 Git 操作:
+  操作: git commit
+  信息: "feat(auth): 添加 JWT 验证中间件"
+  变更: 3 个文件 (+156, -12)
+  
+  确认继续? [Y/N]
+
+场景2 - 推送代码:
+  🔔 即将执行 Git 操作:
+  操作: git push origin feature/auth-jwt
+  远程: origin (https://github.com/...)
+  分支: feature/auth-jwt
+  
+  确认继续? [Y/N]
+```
+
+---
+
+## 🛡️ 安全检查清单
+
+### 提交前检查
+
+```yaml
+必须确认:
+  - [ ] 没有敏感信息（密钥、密码、Token）
+  - [ ] 没有大文件（>10MB）
+  - [ ] 没有编译产物（node_modules、dist 等）
+  - [ ] .gitignore 配置正确
+  - [ ] 提交信息符合规范
+```
+
+### 推送前检查
+
+```yaml
+必须确认:
+  - [ ] 本地测试通过
+  - [ ] 代码已经过 Review（如需要）
+  - [ ] 目标分支正确
+  - [ ] 没有合并冲突
+```
+
+---
+
+## 📊 常用命令速查
+
+### 日常操作
+
+```bash
+# 查看状态
+git status
+git log --oneline -10
+
+# 暂存变更
+git add .
+git add <file>
+
+# 提交
+git commit -m "type(scope): message"
+
+# 拉取/推送
+git pull origin <branch>
+git push origin <branch>
+```
+
+### 分支操作
+
+```bash
+# 创建并切换分支
+git checkout -b feature/xxx
+
+# 切换分支
+git checkout <branch>
+
+# 合并分支
+git merge <branch>
+
+# 删除本地分支
+git branch -d <branch>
+```
+
+### 撤销操作
+
+```bash
+# 撤销工作区修改
+git checkout -- <file>
+
+# 撤销暂存
+git reset HEAD <file>
+
+# 撤销提交（保留修改）
+git reset --soft HEAD^
+
+# 撤销提交（创建新提交）
+git revert <commit>
+```
+
+---
+
+## 📝 最佳实践
+
+1. **小步提交**: 每个提交只做一件事
+2. **有意义的信息**: 提交信息要说明"为什么"
+3. **先拉后推**: push 前先 pull 最新代码
+4. **分支隔离**: 不同功能在不同分支开发
+5. **定期清理**: 删除已合并的本地分支
+6. **备份重要变更**: 大改动前先 stash 或新建分支
+
+---
+
+**最后更新**: 2026-02-12
+
