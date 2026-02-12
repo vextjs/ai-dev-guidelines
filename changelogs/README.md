@@ -9,11 +9,15 @@
 ```
 changelogs/
 ├── README.md           # 本说明文档
-├── TEMPLATE.md         # 变更文档模板
+├── REFACTOR-SUMMARY.md # 重构摘要
+├── v2.0.0.md          # v2.0.0 详细变更
+├── v1.3.0.md          # v1.3.0 详细变更
 ├── v1.2.0.md          # v1.2.0 详细变更
 ├── v1.1.0.md          # v1.1.0 详细变更
 └── v1.0.0.md          # v1.0.0 详细变更
 ```
+
+> **模板位置**: `templates/common/changelogs/TEMPLATE.md`
 
 ---
 

@@ -5,6 +5,20 @@
 
 ---
 
+## 📁 文件说明
+
+| 文件/目录 | 用途 | 关系 |
+|----------|------|------|
+| `CHANGELOG.md` | 版本概览 | 本文件，提供快速浏览所有版本 |
+| `changelogs/` | 详细变更 | 每个版本一个文件，包含完整变更内容 |
+
+**设计理念**:
+- 本文件（CHANGELOG.md）作为**索引**，快速了解版本历史
+- `changelogs/vX.Y.Z.md` 作为**详情**，记录完整变更内容
+- 两者互相引用，保持同步
+
+---
+
 ## 版本概览
 
 | 版本 | 日期 | 变更摘要 | 详细 |
@@ -50,10 +64,12 @@
 - `templates/lite/requirement-lite.md` - 精简需求文档
 - `templates/lite/implementation-lite.md` - 精简实施记录
 - `templates/lite/bug-analysis-lite.md` - 精简 Bug 分析
+- `templates/lite/optimization-lite.md` - 精简性能优化
+- `templates/lite/research-lite.md` - 精简技术调研
+- `templates/lite/refactoring-lite.md` - 精简架构重构
 - `projects/_template/PROJECT.md` - 统一项目规范模板
-- `workflows/01-requirement-dev/README-v2.md` - v2 需求开发流程
-- `workflows/00-pre-check/README-v2.md` - v2 简化预检查
 - `best-practices/WHEN-TO-USE.md` - 最佳实践快速索引
+- `projects/dev-docs/PROJECT.md` - dev-docs 项目规范
 
 ---
 
@@ -69,7 +85,7 @@
 - ✅ **路径规范**: 标注 outputs/ 已弃用，统一使用 projects/
 - ✅ **新增规范**: config-standards.md（配置管理）+ tool-standards.md（工具调用）
 - ✅ **状态追踪**: 新增 STATUS.md 追踪项目完成度（87%）
-- ✅ **快速参考**: 增强 QUICK-REFERENCE.md（文档矩阵 + 验证速查）
+- ⚠️ **快速参考**: QUICK-REFERENCE.md 计划中（由 best-practices/WHEN-TO-USE.md 替代）
 
 #### 新增文件
 
@@ -88,7 +104,6 @@
 
 #### 增强文件
 
-- `QUICK-REFERENCE.md` - 新增文档矩阵 + 四条底线扩展 + 三轮验证速查
 - `.aiignore` - 优化忽略规则（changelogs 详细文件）
 - `standards/README.md` - 更新索引（8/8 规范文件）
 

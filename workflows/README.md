@@ -26,12 +26,27 @@
 | 07 | [安全修复](./07-security/) | 安全漏洞修复流程 |
 | 08 | [事故复盘](./08-incident/) | 故障分析和改进流程 |
 
+### 专项流程
+
+| 编号 | 工作流 | 说明 |
+|------|--------|------|
+| 09-opensource-init | [开源项目初始化](./09-opensource-init/) | 创建开源 NPM 包项目 🆕 |
+
 ### 通用组件
 
 | 文件 | 说明 |
 |------|------|
 | [common/](./common/) | 通用组件（确认点、文档同步等） |
 | [decision-tree.yaml](./decision-tree.yaml) | 决策树配置 |
+
+### 通用文档（跨工作流）
+
+| 文件 | 说明 |
+|------|------|
+| [09-COMPLETION-AND-DELIVERY.md](./09-COMPLETION-AND-DELIVERY.md) | 完成验证和交付规范（所有工作流通用） |
+| [10-WORKFLOW-TRANSITIONS.md](./10-WORKFLOW-TRANSITIONS.md) | 工作流转移规则（跨工作流切换） |
+
+> **说明**: 09/10 是单独文件而非目录，因为它们是**跨工作流通用文档**，不属于特定任务类型。
 
 ---
 
@@ -54,7 +69,7 @@
 ## 📎 相关文档
 
 - [../README.md](../README.md) - 项目入口
-- [../QUICK-REFERENCE.md](../QUICK-REFERENCE.md) - 快速参考
+- [../best-practices/WHEN-TO-USE.md](../best-practices/WHEN-TO-USE.md) - 快速索引
 - [../templates/](../templates/) - 文档模板
 
 ---

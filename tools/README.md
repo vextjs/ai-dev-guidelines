@@ -12,6 +12,33 @@
 - [Git 操作](#git-操作)
 - [终端命令](#终端命令)
 - [验证工具](#验证工具)
+- [本地脚本工具](#本地脚本工具)
+
+---
+
+## 🛠️ 本地脚本工具
+
+本目录提供的可执行脚本：
+
+| 脚本 | 用途 | 使用方法 |
+|-----|------|---------|
+| `validate-links.js` | 检查文档链接有效性 | `node validate-links.js` |
+| `validate-structure.js` | 检查目录结构规范 | `node validate-structure.js` |
+| `doc-health-check.js` | 文档健康检查（综合） | `node doc-health-check.js [目录]` |
+
+### doc-health-check.js
+
+**功能**：
+- 检查必要文件存在性
+- 检查各目录 README.md
+- 检查版本号一致性
+- 检查空链接和格式问题
+
+**使用示例**：
+```bash
+cd dev-docs
+node tools/doc-health-check.js .
+```
 
 ---
 

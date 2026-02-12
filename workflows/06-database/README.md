@@ -48,6 +48,7 @@
 - 验证数据完整性
 - 检查应用功能
 - 确认性能指标
+- **更新 `projects/<project>/TASK-INDEX.md`**
 
 **输出**: 更新 `03-execution.md`
 

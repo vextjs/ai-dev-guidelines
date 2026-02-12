@@ -96,12 +96,10 @@ dev-docs/
 ├── projects/                          # 🗂️ 项目特定规范（关键）
 │   ├── README.md                     # 项目规范说明
 │   ├── _template/                    # 项目规范模板
-│   │   ├── PROJECT-PROFILE.md        # 项目概况模板
+│   │   ├── PROJECT.md                # 项目规范模板（统一版）
 │   │   ├── TECH-STACK.md             # 技术栈模板
 │   │   └── CODE-STANDARDS.md         # 代码规范模板
-│   ├── user-service/                 # 示例：用户服务项目
-│   ├── payment-service/              # 示例：支付服务项目
-│   └── ...                           # 其他项目
+│   └── user-service/                 # 示例：用户服务项目
 │
 ├── workflows/                         # 🤖 AI 执行流程（通用）
 │   ├── 00-task-identification/       # 步骤0: 识别任务类型
@@ -145,14 +143,10 @@ dev-docs/
 │
 ├── examples/                          # 📚 完整示例（供 AI 学习）
 │   ├── README.md                     # 示例清单和学习路径
-│   ├── requirement-example/          # 需求开发示例
-│   │   ├── README.md                 # 示例说明
-│   │   ├── user-input.md             # 用户输入
-│   │   ├── ai-execution-log.md       # 执行日志
-│   │   ├── outputs/                  # 生成文档
-│   │   └── code-changes/             # 代码变更
-│   ├── bug-fix-example/              # Bug 修复示例
-│   └── ...                           # 其他示例
+│   └── requirement-example/          # 需求开发示例
+│       ├── README.md                 # 示例说明
+│       ├── user-input.md             # 用户输入
+│       └── outputs/                  # 生成文档
 │
 ├── spec-self-fix/                     # 🔧 规范自我修复机制
 │   ├── README.md                     # 机制总览
@@ -412,7 +406,7 @@ cp templates/core/bug-analysis-template.md projects/<project-name>/bugs/<bug-id>
 mkdir -p projects/<project-name>/optimizations/<optimization-id>/scripts
 
 # 2. 复制模板
-cp templates/optimization-template.md projects/<project-name>/optimizations/<optimization-id>/01-baseline.md
+cp templates/core/optimization-template.md projects/<project-name>/optimizations/<optimization-id>/01-baseline.md
 ```
 
 ---
@@ -464,4 +458,4 @@ projects/chat-service/bugs/BUG-chat-001-message-loss/
 - 项目负责人: rockyshi1993
 - 创建日期: 2026-02-11
 - 最后更新: 2026-02-12
-- 版本: v1.1
+- 版本: v2.0.0

@@ -131,9 +131,9 @@ v{版本号}-{后缀}.md
 
 ## 📎 相关文档
 
-- [主 CHANGELOG](../CHANGELOG.md) - 版本概览
+- [主 CHANGELOG](../../../CHANGELOG.md) - 版本概览
 - [变更文档模板](./TEMPLATE.md) - 创建新文档的模板
-- [文档同步机制](../workflows/common/document-sync.md) - 自动同步规范
+- [文档同步机制](../../../workflows/common/document-sync.md) - 自动同步规范
 
 ---
 

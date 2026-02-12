@@ -15,14 +15,13 @@
    - 目录结构说明
    - AI 使用指南
 
-2. **[../../QUICK-REFERENCE.md](../../QUICK-REFERENCE.md)** (快速参考)
-   - 任务类型映射
-   - 输出路径规范
-   - 确认点机制
-
-3. **[../../CONSTRAINTS.md](../../CONSTRAINTS.md)** (约束清单)
+2. **[../../CONSTRAINTS.md](../../CONSTRAINTS.md)** (约束清单)
    - 执行的底线要求
    - 不可违反的规则
+
+3. **[../../best-practices/WHEN-TO-USE.md](../../best-practices/WHEN-TO-USE.md)** (快速索引)
+   - 遇到问题时快速查找
+   - 按场景分类的解决方案
 
 ### 📋 完整规范导航
 
@@ -33,7 +32,7 @@
 | [CODE-STANDARDS.md](./CODE-STANDARDS.md) | 代码规范（风格、命名、注释） | P0 |
 | [../../best-practices/AI-CODE-STANDARDS.md](../../best-practices/AI-CODE-STANDARDS.md) | AI 代码规范（验证优先原则） | P0 |
 | [TECH-STACK.md](./TECH-STACK.md) | 技术栈定义和选择 | P1 |
-| [PROJECT-PROFILE.md](./PROJECT-PROFILE.md) | 项目概况模板 | P1 |
+| [PROJECT.md](./PROJECT.md) | 项目规范模板（统一版） | P0 |
 
 #### 测试规范
 
@@ -90,7 +89,7 @@
 #### 开始一个新项目
 1. 读 [../../README.md](../../README.md) 了解 dev-docs 结构
 2. 复制 `projects/_template/` 到 `projects/<项目名>/`
-3. 填充 [PROJECT-PROFILE.md](./PROJECT-PROFILE.md)
+3. 填充 [PROJECT.md](./PROJECT.md)
 4. 配置 [TECH-STACK.md](./TECH-STACK.md)
 
 #### 写代码
@@ -125,7 +124,7 @@
 ```
 projects/_template/
 ├── INDEX.md                      # 本文件 - 规范索引
-├── PROJECT-PROFILE.md            # 项目概况模板
+├── PROJECT.md                    # 项目规范模板（统一版）
 ├── TECH-STACK.md                 # 技术栈模板
 ├── CODE-STANDARDS.md             # 代码规范模板
 ├── TESTING.md                    # 测试规范模板
@@ -144,8 +143,7 @@ projects/_template/
 ## 🔗 相关文档
 
 - [../../README.md](../../README.md) - dev-docs 项目入口
-- [../../QUICK-REFERENCE.md](../../QUICK-REFERENCE.md) - 快速参考卡
-- [../../AI-WORKFLOW.md](../../AI-WORKFLOW.md) - AI 工作流概述
+- [../../CONSTRAINTS.md](../../CONSTRAINTS.md) - 约束清单
 - [../../workflows/](../../workflows/) - 通用工作流
 - [../../templates/](../../templates/) - 文档模板
 - [../../best-practices/](../../best-practices/) - 最佳实践

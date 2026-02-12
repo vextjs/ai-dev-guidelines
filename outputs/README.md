@@ -64,7 +64,7 @@ AI 执行任务时:
 
 - [项目目录结构](../projects/README.md)
 - [根目录 README](../README.md) - 查看完整目录说明
-- [快速参考卡](../QUICK-REFERENCE.md) - 输出路径规范
+- [最佳实践索引](../best-practices/WHEN-TO-USE.md) - 快速查找解决方案
 
 ---
 

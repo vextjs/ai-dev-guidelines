@@ -382,7 +382,7 @@ outputs/<project>/<task-id>/reports/
 
 - [CI-CD-QUALITY-GATES.md](./CI-CD-QUALITY-GATES.md) - 持续集成质量门禁
 - [CODE-STANDARDS.md](./CODE-STANDARDS.md) - 代码规范
-- [PROJECT-PROFILE.md](./PROJECT-PROFILE.md) - 项目概述
+- [PROJECT.md](./PROJECT.md) - 项目规范
 
 ---
 

@@ -31,36 +31,16 @@ user-service 是一个用户管理微服务，使用 Express + MongoDB + TypeScr
 requirement-example/
 ├── README.md                           # 本文件
 ├── user-input.md                       # 用户原始输入
-├── ai-execution-log.md                 # AI 详细执行日志
 │
-├── outputs/                            # 生成的文档
-│   ├── 01-requirement.md               # 需求文档
-│   ├── 02-technical.md                 # 技术方案
-│   ├── 03-implementation.md            # 实施记录
-│   └── scripts/
-│       ├── install.sh                  # 安装脚本
-│       └── test-rate-limit.js          # 测试脚本
-│
-└── code-changes/                       # 代码变更
-    ├── before/                         # 变更前
-    │   ├── package.json
-    │   └── src/
-    │       └── app.ts
-    │
-    └── after/                          # 变更后
-        ├── package.json                # +1 依赖
-        ├── config/
-        │   └── rate-limit.ts           # 新增配置
-        ├── src/
-        │   ├── app.ts                  # 修改：集成中间件
-        │   └── middleware/
-        │       └── rate-limiter.ts     # 新增中间件
-        ├── types/
-        │   └── rate-limit.d.ts         # 新增类型定义
-        └── test/
-            └── middleware/
-                └── rate-limiter.test.ts # 新增测试
+└── outputs/                            # 生成的文档
+    ├── 01-requirement.md               # 需求文档
+    ├── 02-technical.md                 # 技术方案
+    ├── 03-implementation.md            # 实施记录
+    └── scripts/                        # 脚本目录
 ```
+
+> **注意**: 完整示例应包含 `ai-execution-log.md` (执行日志) 和 `code-changes/` (代码变更) 目录，
+> 当前为精简示例，仅展示核心输出文档。
 
 ---
 

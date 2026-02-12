@@ -6,38 +6,37 @@
 
 ## 📚 示例清单
 
-### Tier 1: 核心示例（必须学习）
+### 已完成示例
 
 | 示例目录 | 任务类型 | 场景描述 | 学习价值 |
 |---------|---------|---------|---------|
 | `requirement-example/` | 需求开发 | 在 user-service 集成限流功能 | ⭐⭐⭐⭐⭐ 最常见场景 |
-| `bug-fix-example/` | Bug 修复 | 修复登录超时问题 | ⭐⭐⭐⭐⭐ 标准 Bug 流程 |
-| `optimization-example/` | 性能优化 | 优化用户查询接口 | ⭐⭐⭐⭐ 性能分析方法 |
+| `bug-fix-example/` | Bug 修复 | 修复 Session 丢失问题 | ⭐⭐⭐⭐⭐ 常见场景 |
 
-### Tier 2: 扩展示例（进阶学习）
+### 计划中示例
 
-| 示例目录 | 任务类型 | 场景描述 | 学习价值 |
-|---------|---------|---------|---------|
-| `research-example/` | 技术调研 | Redis vs Memcached 选型 | ⭐⭐⭐ 对比分析方法 |
-| `refactoring-example/` | 架构重构 | 用户认证模块微服务化 | ⭐⭐⭐ 大型重构规划 |
-| `integration-example/` | 系统对接 | 对接微信支付 API | ⭐⭐⭐ 第三方集成流程 |
+> 以下示例计划添加
+
+| 示例目录 | 任务类型 | 场景描述 | 状态 |
+|---------|---------|---------|------|
+| `optimization-example/` | 性能优化 | 优化用户查询接口 | 📋 计划中 |
+| `research-example/` | 技术调研 | 缓存方案选型 | 📋 计划中 |
 
 ---
 
 ## 📖 示例结构
 
-每个示例包含：
+每个示例应包含：
 
 ```
 <example-name>/
 ├── README.md                  # 示例说明
 ├── user-input.md              # 用户原始输入
-├── ai-execution-log.md        # AI 执行日志
-├── outputs/                   # 生成的文档
-│   ├── 01-requirement.md
-│   ├── 02-technical.md
-│   ├── 03-implementation.md
-│   └── scripts/
+└── outputs/                   # 生成的文档
+    ├── 01-requirement.md
+    ├── 02-technical.md
+    ├── 03-implementation.md
+    └── scripts/
 └── code-changes/              # 代码变更
     ├── before/                # 变更前
     └── after/                 # 变更后
@@ -47,12 +46,11 @@
 
 ## 🎯 AI 学习路径
 
-### Level 1: 基础（必学）
-1. ✅ `requirement-example/` - 理解需求开发完整流程
-2. ✅ `bug-fix-example/` - 掌握 Bug 修复标准步骤
-3. ✅ `optimization-example/` - 学习性能优化方法论
+### Level 1: 基础（当前可用）
 
-**学习时长**: 30-60 分钟  
+1. ✅ `requirement-example/` - 理解需求开发完整流程
+
+**学习时长**: 30 分钟  
 **学习重点**:
 - 如何识别任务类型
 - 如何收集项目上下文
@@ -60,25 +58,16 @@
 - 如何执行代码实现
 - 如何验证完成度
 
-### Level 2: 进阶（推荐）
-4. ✅ `research-example/` - 技术调研的对比分析方法
-5. ✅ `integration-example/` - 第三方系统对接流程
-6. ✅ `refactoring-example/` - 大型重构的规划与实施
+### Level 2: 进阶（计划中）
 
-**学习时长**: 60-90 分钟  
-**学习重点**:
-- 复杂场景的处理策略
-- 多文档的协调生成
-- 风险评估与缓解
-- 分阶段实施方法
+> 以下示例计划添加，可参考 workflows/ 中的对应流程学习
 
-### Level 3: 高级（可选）
-7. ✅ 实战演练: 使用真实项目验证学习效果
-8. ✅ 错误分析: 回顾历史失败案例，总结经验
-9. ✅ 流程优化: 根据实践反馈优化工作流
+- `bug-fix-example/` - Bug 修复流程 → 参考 `workflows/02-bug-fix/`
+- `optimization-example/` - 性能优化方法 → 参考 `workflows/03-optimization/`
 
-**学习时长**: 持续改进  
-**学习重点**:
+### Level 3: 实战
+
+通过实际项目练习，验证学习效果：
 - 处理边缘情况
 - 提高生成质量
 - 优化执行效率

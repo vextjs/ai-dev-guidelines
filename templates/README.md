@@ -14,14 +14,19 @@ templates/
 │   ├── technical-lite.md
 │   ├── requirement-lite.md
 │   ├── implementation-lite.md
-│   └── bug-analysis-lite.md
+│   ├── bug-analysis-lite.md
+│   ├── optimization-lite.md      # 🆕
+│   ├── research-lite.md          # 🆕
+│   └── refactoring-lite.md       # 🆕
 ├── core/                  # 核心模板（完整模式）
 │   ├── requirement-template.md
 │   ├── technical-template.md
 │   ├── implementation-template.md
 │   ├── bug-analysis-template.md
 │   ├── optimization-template.md
-│   └── integration-template.md
+│   ├── integration-template.md
+│   ├── api-doc-template.md
+│   └── frontend-integration-template.md
 ├── extended/              # 扩展模板（Tier 2 任务）
 │   ├── research-template.md
 │   ├── refactoring-template.md
@@ -31,8 +36,11 @@ templates/
 └── common/                # 通用模板组件
     ├── header.md          # 文档头部
     ├── footer.md          # 文档尾部
-    ├── changelog.md       # 变更日志
-    └── checklist.md       # 检查清单
+    ├── checklist.md       # 检查清单
+    ├── STATUS-template.md
+    ├── CHANGELOG-template.md
+    ├── status-badge.md
+    └── changelogs/        # 变更日志子目录
 ```
 
 ---
@@ -70,6 +78,9 @@ templates/
 | `requirement-lite.md` | 需求文档 | 3-4 |
 | `implementation-lite.md` | 实施记录 | 3-4 |
 | `bug-analysis-lite.md` | Bug 分析 | 4 |
+| `optimization-lite.md` | 性能优化 | 5 |
+| `research-lite.md` | 技术调研 | 5 |
+| `refactoring-lite.md` | 架构重构 | 5 |
 
 ### Core Templates（核心模板）
 用于 Tier 1 任务，使用频率 80%：

@@ -55,6 +55,7 @@
 - 总结重构效果
 - 记录经验教训
 - 整理技术文档
+- **更新 `projects/<project>/TASK-INDEX.md`**
 
 **输出**: `05-summary.md`
 

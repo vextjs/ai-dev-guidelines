@@ -84,7 +84,7 @@ const EXPECTED_ROOT_FILES = [
   'CHANGELOG.md',
   'CONSTRAINTS.md',
   'QUICK-REFERENCE.md',
-  'AI-WORKFLOW.md',
+  // 'AI-WORKFLOW.md',  // v2.0 已整合到 README.md 中
 ];
 
 // 检查目录是否存在

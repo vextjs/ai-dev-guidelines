@@ -27,10 +27,12 @@
 - `templates/lite/requirement-lite.md`
 - `templates/lite/implementation-lite.md`
 - `templates/lite/bug-analysis-lite.md`
+- `templates/lite/optimization-lite.md`
+- `templates/lite/research-lite.md`
+- `templates/lite/refactoring-lite.md`
 - `projects/_template/PROJECT.md`
-- `workflows/01-requirement-dev/README-v2.md`
-- `workflows/00-pre-check/README-v2.md`
 - `best-practices/WHEN-TO-USE.md`
+- `projects/dev-docs/PROJECT.md`
 
 ---
 
@@ -40,7 +42,7 @@
 |------|--------|------|------|
 | workflows/ | 90% | 🟢 稳定 | 核心工作流 v2 完成，支持双模式 |
 | standards/ | 95% | 🟢 完善 | 8个规范文件完整 |
-| templates/lite/ | 100% | 🟢 完成 | 🆕 4个精简模板 |
+| templates/lite/ | 100% | 🟢 完成 | 🆕 7个精简模板（新增3个） |
 | templates/core/ | 100% | 🟢 完成 | 8个核心模板齐全 |
 | templates/extended/ | 100% | 🟢 完成 | 5个扩展模板齐全 |
 | templates/common/ | 100% | 🟢 完成 | 7个通用组件齐全 |
@@ -106,9 +108,9 @@
 |------|------|------|
 | research-template.md | ✅ | 技术调研 |
 | refactoring-template.md | ✅ | 架构重构 |
-| database-migration-template.md | ✅ | 数据库迁移 |
-| security-fix-template.md | ✅ | 安全修复 |
-| incident-report-template.md | ✅ | 事故复盘 |
+| database-template.md | ✅ | 数据库迁移 |
+| security-template.md | ✅ | 安全修复 |
+| incident-template.md | ✅ | 事故复盘 |
 
 ### 通用组件 (templates/common/)
 
@@ -153,29 +155,29 @@
 
 ## 🗺️ 版本路线图
 
-### v1.3.0 (当前版本) - 2026-02-12
+### v2.0.0 (当前版本) - 2026-02-12
 
-**主题**: 全面修复与优化增强
+**主题**: 轻量化与灵活性重构
 
-- ✅ 修复 6 个规范文件的截断问题
-- ✅ 修复 outputs/ 路径矛盾
-- ✅ 新增 config-standards.md
-- ✅ 新增 tool-standards.md
-- ✅ 新增 STATUS.md（本文件）
-- ✅ 增强 QUICK-REFERENCE.md
-- ✅ 优化 .aiignore
+- ✅ 新增快速/完整双模式
+- ✅ 新增 `templates/lite/` 精简模板（7个）
+- ✅ 预检查简化为 3 项必做
+- ✅ 新增统一 PROJECT.md 模板
+- ✅ 新增 best-practices/WHEN-TO-USE.md
+- ✅ 新增 projects/dev-docs/ 项目规范
+- ✅ 全面审计并修复 P1 问题
 
-### v1.4.0 (计划中) - 2026-02-20
+### v2.1.0 (计划中) - 2026-02-20
 
 **主题**: 示例补充与工作流验证
 
 - 📋 补充 bug-fix-example
 - 📋 补充 optimization-example
 - 📋 验证扩展工作流（04-08）
-- 📋 优化 best-practices/ 内容
-- 📋 补充视频教程（可选）
+- 📋 补充开源项目初始化规范
+- 📋 优化自我修复机制
 
-### v1.5.0 (计划中) - 2026-03-01
+### v2.2.0 (计划中) - 2026-03-01
 
 **主题**: 工具增强与自动化
 
@@ -255,8 +257,8 @@
 
 - [CHANGELOG.md](./CHANGELOG.md) - 版本变更历史
 - [README.md](./README.md) - 项目介绍
-- [QUICK-REFERENCE.md](./QUICK-REFERENCE.md) - 快速参考
 - [CONSTRAINTS.md](./CONSTRAINTS.md) - 约束清单
+- [best-practices/WHEN-TO-USE.md](./best-practices/WHEN-TO-USE.md) - 快速索引
 
 ---
 

@@ -56,6 +56,7 @@
 - 汇总所有分析
 - 生成完整复盘报告
 - 组织复盘会议
+- **更新 `projects/<project>/TASK-INDEX.md`**
 
 **输出**: `05-summary.md`
 

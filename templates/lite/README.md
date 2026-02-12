@@ -8,10 +8,13 @@
 
 | 模板 | 用途 | 章节数 |
 |-----|------|-------|
-| [technical-lite.md](./technical-lite.md) | 技术方案 | 3-4 |
+| [technical-lite.md](./technical-lite.md) | 技术方案 | 4-5 |
 | [requirement-lite.md](./requirement-lite.md) | 需求文档 | 3-4 |
 | [implementation-lite.md](./implementation-lite.md) | 实施记录 | 3-4 |
 | [bug-analysis-lite.md](./bug-analysis-lite.md) | Bug 分析 | 3-4 |
+| [optimization-lite.md](./optimization-lite.md) | 性能优化 | 5 |
+| [research-lite.md](./research-lite.md) | 技术调研 | 5 |
+| [refactoring-lite.md](./refactoring-lite.md) | 架构重构 | 5 |
 
 ---
 

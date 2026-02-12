@@ -119,7 +119,13 @@
 **AI 执行**:
 1. 检查所有文档完整性
 2. 生成脚本文件（如需要）
-3. 向用户报告完成
+3. **更新任务索引** `projects/<project>/TASK-INDEX.md`
+4. 向用户报告完成
+
+**索引更新**:
+```markdown
+| BUG-xxx | YYYY-MM-DD | Bug 标题 | P1 | ✅ 修复 | `bugs/BUG-xxx/` |
+```
 
 **输出**: 完整的 Bug 修复文档包
 

@@ -1,8 +1,8 @@
-# AI 决策树配置文件 v1.0.0
+# AI 决策树配置文件 v2.0.0
 # 用于快速场景识别和任务路由
 # 基于: guidelines decision-tree.yaml 精简版
 
-version: "1.0.0"
+version: "2.0.0"
 last_updated: "2026-02-12"
 description: "dev-docs AI 执行规范的结构化决策树"
 
@@ -56,54 +56,84 @@ task_identification:
     incident: "workflows/08-incident/"
 
 # ===========================================
-# 强制预检查
+# 强制预检查 (v2.0 简化版 - 3项必做)
 # ===========================================
 mandatory_precheck:
   name: "强制启动协议"
   priority: "P0"
+  version: "v2.0"
 
+  # v2.0 简化为 3 项必做检查
   steps:
     - step: 1
-      action: "识别项目名称"
+      action: "确认工作区"
       sources:
-        - "用户明确提到"
         - "当前工作目录"
-        - "文件路径"
-        - "询问用户"
+        - "用户明确提到"
 
     - step: 2
-      action: "加载项目规范"
-      target: "projects/<project>/PROJECT-PROFILE.md"
-      fallback: "projects/_template/PROJECT-PROFILE.md"
-
-    - step: 3
       action: "识别任务类型"
       method: "关键词权重匹配"
       ambiguous_handling: "询问用户确认"
 
-    - step: 4
-      action: "评估风险等级"
-      levels:
-        P0: ["数据库变更", "生产环境", "核心功能"]
-        P1: ["新功能", "API变更", "配置修改"]
-        P2: ["文档更新", "代码重构", "测试补充"]
-
-    - step: 5
-      action: "确定输出目录"
+    - step: 3
+      action: "确定输出位置"
       pattern: "projects/<project>/<task-type>/<task-id>/"
 
+  # 按需检查（涉及代码修改时）
+  optional_steps:
+    - step: 4
+      action: "加载项目规范"
+      condition: "涉及代码修改"
+      target: "projects/<project>/PROJECT.md"
+      fallback: "projects/_template/PROJECT.md"
+
   output_format: |
-    🔴 预检查清单:
-    ✅ 1. 工作区: <路径>
-    ✅ 2. 项目规范: ✅ 已加载 / ⚠️ 未找到
-    ✅ 3. 任务类型: <类型>
-    ✅ 4. 风险等级: <P0/P1/P2>
-    ✅ 5. 输出目录: <路径>
+    📋 预检查:
+    1. 工作区: <路径>
+    2. 任务类型: <类型>
+    3. 输出位置: <projects/...>
+    4. 项目规范: ✅ 已加载 / ⚠️ 未找到（按需）
 
   failure_handling:
     condition: "任何步骤失败"
     action: "HALT"
     message: "预检查失败，请确认后重试"
+
+# ===========================================
+# 执行模式选择 (v2.0 新增)
+# ===========================================
+mode_selection:
+  description: "根据条件自动选择快速或完整模式"
+
+  quick_mode:
+    name: "快速模式"
+    conditions:
+      - "需求描述 < 100 字"
+      - "涉及文件 < 5 个"
+      - "用户关键词: 快速, 简单, 小改动"
+    template_dir: "templates/lite/"
+    stages: 4
+    estimated_time: "15-30 分钟"
+    skip_stages: ["详细文档", "完整测试"]
+
+  full_mode:
+    name: "完整模式"
+    conditions:
+      - "用户关键词: 完整, 详细, 需要文档"
+      - "涉及文件 >= 5 个"
+      - "复杂需求、核心功能"
+      - "正式交付场景"
+    template_dir: "templates/core/"
+    stages: 6
+    estimated_time: "45-90 分钟"
+
+  mode_keywords:
+    quick_triggers: ["快速", "简单", "小改动", "快速处理", "简单修复"]
+    full_triggers: ["完整", "详细", "需要文档", "正式", "完整文档"]
+    skip_doc_triggers: ["只要代码", "跳过文档", "不需要文档"]
+
+  default: "quick_mode"
 
 # ===========================================
 # 确认点定义

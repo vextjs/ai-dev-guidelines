@@ -4,6 +4,16 @@
 
 ---
 
+## 📋 现有项目
+
+| 项目 | 描述 | 规范路径 |
+|-----|------|---------|
+| `_template` | 项目规范模板 | `_template/` |
+| `dev-docs` | AI 开发执行手册（本项目） | `dev-docs/` |
+| `user-service` | 用户服务示例项目 | `user-service/` |
+
+---
+
 ## 📋 目录说明
 
 ### 通用规范 vs 项目规范
@@ -30,7 +40,8 @@ projects/
 ├── README.md                          # 本文件
 ├── _template/                         # 项目规范模板
 │   ├── INDEX.md                      # 模板索引
-│   ├── PROJECT-PROFILE.md            # 项目概况
+│   ├── PROJECT.md                    # 项目规范（统一版）
+│   ├── TASK-INDEX.md                 # 任务索引模板 ⭐ 追溯历史任务
 │   ├── TECH-STACK.md                 # 技术栈说明
 │   ├── CODE-STANDARDS.md             # 代码规范
 │   ├── TESTING.md                    # 测试规范
@@ -44,9 +55,10 @@ projects/
 │   └── MONITORING-ALERTS.md          # 告警配置
 │
 ├── <project-name>/                    # 具体项目目录
-│   ├── PROJECT-PROFILE.md            # 必需文件
-│   ├── TECH-STACK.md                 # 必需文件
-│   ├── CODE-STANDARDS.md             # 必需文件
+│   ├── PROJECT.md                    # 项目规范（必需）
+│   ├── TASK-INDEX.md                 # 任务索引（⭐ 强关联 workflows/01-08）
+│   ├── TECH-STACK.md                 # 技术栈（可选，可合并到PROJECT.md）
+│   ├── CODE-STANDARDS.md             # 代码规范（可选，可合并到PROJECT.md）
 │   ├── requirements/                 # 需求开发输出
 │   ├── bugs/                         # Bug 修复输出
 │   ├── research/                     # 技术调研输出

@@ -135,9 +135,11 @@ npm test
 
 ## 📎 相关文档
 
-- [API 文档](./API.md) - 如有
-- [部署文档](./DEPLOYMENT.md) - 如有
-- [变更日志](./CHANGELOG.md) - 如有
+> 以下为模板占位，使用时请根据实际情况创建对应文件或删除
+
+- API 文档: `./API.md` (如有)
+- 部署文档: `./DEPLOYMENT.md` (如有)
+- 变更日志: `./CHANGELOG.md` (如有)
 
 ---
 

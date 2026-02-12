@@ -48,6 +48,7 @@
 - 综合评估
 - 给出推荐方案
 - 说明选择理由
+- **更新 `projects/<project>/TASK-INDEX.md`**
 
 **输出**: `04-conclusion.md`
 

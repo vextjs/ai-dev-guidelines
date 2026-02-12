@@ -190,8 +190,10 @@ user-service/
 
 ## 📚 相关文档
 
-- [技术栈详情](./TECH-STACK.md)
-- [代码规范](./CODE-STANDARDS.md)
-- [测试规范](./TESTING.md)
-- [依赖版本](./DEPENDENCIES-VERSION.md)
+> 注：以下文档为示例占位，实际项目中应创建对应文件
+
+- 技术栈详情: `./TECH-STACK.md`
+- 代码规范: `./CODE-STANDARDS.md`
+- 测试规范: `./TESTING.md`
+- 依赖版本: `./DEPENDENCIES-VERSION.md`
 

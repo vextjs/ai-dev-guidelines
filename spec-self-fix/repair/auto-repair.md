@@ -176,7 +176,7 @@
   检测: CONSTRAINTS.md (行 20-35) 与 confirmation-points.md 重复
   保留: confirmation-points.md（专门文件）
   删除: CONSTRAINTS.md 行 20-35
-  替换: "确认点机制详见 [确认点文档](./workflows/common/confirmation-points.md)"
+  替换: "确认点机制详见 [确认点文档](../../workflows/common/confirmation-points.md)"
 ```
 
 ---
