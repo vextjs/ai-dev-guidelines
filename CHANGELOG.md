@@ -9,6 +9,7 @@
 
 | 版本 | 日期 | 变更摘要 | 详细 |
 |------|------|---------|------|
+| [v1.3.0](./changelogs/v1.3.0.md) | 2026-02-12 | 🔧 全面修复：6个规范文件补全 + 新增配置/工具规范 + 状态追踪 | [查看](./changelogs/v1.3.0.md) |
 | [v1.2.0](./changelogs/v1.2.0.md) | 2026-02-12 | 🔧 优化：确认点机制增强 + 文档同步规范 + 模板优化 | [查看](./changelogs/v1.2.0.md) |
 | [v1.1.0](./changelogs/v1.1.0.md) | 2026-02-12 | 🎉 重大功能：强制启动协议 + 三轮验证 + 确认点机制 | [查看](./changelogs/v1.1.0.md) |
 | [v1.0.0](./changelogs/v1.0.0.md) | 2026-02-11 | 初始版本：核心工作流 + 文档模板 + 最佳实践 | [查看](./changelogs/v1.0.0.md) |
@@ -16,6 +17,43 @@
 ---
 
 ## 🚨 重要更新
+
+### v1.3.0 - 全面修复与优化增强
+
+**发布日期**: 2026-02-12  
+**版本类型**: Enhancement + Fix  
+**重要性**: ⭐⭐⭐⭐
+
+#### 核心变更
+
+- ✅ **P0 修复**: 补全 6 个规范文件（api/doc/script/test-standards）
+- ✅ **路径规范**: 标注 outputs/ 已弃用，统一使用 projects/
+- ✅ **新增规范**: config-standards.md（配置管理）+ tool-standards.md（工具调用）
+- ✅ **状态追踪**: 新增 STATUS.md 追踪项目完成度（87%）
+- ✅ **快速参考**: 增强 QUICK-REFERENCE.md（文档矩阵 + 验证速查）
+
+#### 新增文件
+
+- `STATUS.md` - 项目状态追踪（模块完成度、版本路线图）
+- `standards/config-standards.md` - 配置规范（环境变量、分层、敏感配置）
+- `standards/tool-standards.md` - 工具调用规范（权限边界、安全实践）
+- `changelogs/v1.3.0.md` - 详细变更文档
+
+#### 修复文件
+
+- `standards/api-standards.md` - 补全 15 个错误码 + Rate Limiting + CORS + 日志规范
+- `standards/doc-standards.md` - 补全 20+ 语言标识 + 链接 + 图片 + 中英文排版
+- `standards/script-standards.md` - 补全 4 种幂等性实现 + 环境变量 + 测试规范
+- `standards/test-standards.md` - 补全 8 种边界情况 + Mock + 覆盖率 + CI/CD
+- `outputs/README.md` - 标注弃用 + 迁移指南
+
+#### 增强文件
+
+- `QUICK-REFERENCE.md` - 新增文档矩阵 + 四条底线扩展 + 三轮验证速查
+- `.aiignore` - 优化忽略规则（changelogs 详细文件）
+- `standards/README.md` - 更新索引（8/8 规范文件）
+
+---
 
 ### v1.2.0 - 优化增强
 
@@ -79,6 +117,7 @@
 
 | 版本 | 新增 | 变更 | 修复 | 移除 |
 |------|------|------|------|------|
+| v1.3.0 | 3 | 6 | 7 | 0 |
 | v1.2.0 | 7 | 2 | 0 | 0 |
 | v1.1.0 | 21 | 2 | 0 | 0 |
 | v1.0.0 | 初始 | - | - | - |

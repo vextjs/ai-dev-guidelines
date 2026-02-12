@@ -144,7 +144,21 @@ MIT
   - 长代码块需添加注释
 
 语言标识:
-  javascript, typescript, bash, yaml, json, sql, markdown
+  - typescript, javascript, jsx, tsx  # JavaScript 系列
+  - python, java, go, rust, c, cpp    # 其他语言
+  - bash, sh, shell, zsh              # Shell 脚本
+  - json, yaml, yml, toml             # 配置文件
+  - sql, graphql                      # 查询语言
+  - markdown, md, html, css           # 标记语言
+  - docker, dockerfile                # 容器
+  - xml, diff, plaintext              # 其他格式
+
+示例:
+  \`\`\`typescript
+  function hello(name: string): string {
+    return `Hello, ${name}!`;
+  }
+  \`\`\`
 ```
 
 ### 表格
@@ -169,6 +183,151 @@ MIT
   - 有序列表使用 1. 2. 3.
   - 嵌套列表缩进 2 空格
   - 列表项之间不要有空行（除非内容较长）
+```
+
+---
+
+## 🔗 链接格式规范
+
+### 相对链接 vs 绝对链接
+
+```yaml
+相对链接:
+  使用场景: 仓库内的文档引用
+  格式: ./file.md 或 ../dir/file.md
+  示例:
+    - [代码规范](./code-standards.md)
+    - [上级目录](../README.md)
+    - [子目录](./workflows/README.md)
+
+绝对链接:
+  使用场景: 外部资源、公共文档站点
+  格式: https://domain.com/path
+  示例:
+    - [GitHub](https://github.com)
+    - [API文档](https://api.example.com/docs)
+```
+
+### 锚点链接
+
+```yaml
+规则:
+  - 标题自动生成锚点
+  - 中文标题使用英文 slug
+  - 多级标题用 - 连接
+  
+示例:
+  # 标题: ## 🔧 技术方案
+  # 链接: [技术方案](#-技术方案)
+  
+  # 标题: ### 数据库设计
+  # 链接: [数据库设计](#数据库设计)
+```
+
+---
+
+## 🖼️ 图片和图表规范
+
+### 图片引用
+
+```yaml
+格式: ![图片描述](图片路径)
+
+本地图片:
+  - 存储位置: ./assets/ 或 ./images/
+  - 命名规范: <模块>-<描述>.png
+  - 示例: ![架构图](./assets/system-architecture.png)
+
+外部图片:
+  - 使用稳定的图床或 CDN
+  - 添加替代文本
+  - 示例: ![Logo](https://cdn.example.com/logo.png)
+```
+
+### 图表规范
+
+```yaml
+推荐工具:
+  - Mermaid: 流程图、序列图、类图
+  - PlantUML: UML 图
+  - ASCII Art: 简单示意图
+
+Mermaid 示例:
+  \`\`\`mermaid
+  graph TD
+    A[开始] --> B{判断}
+    B -->|是| C[执行]
+    B -->|否| D[结束]
+    C --> D
+  \`\`\`
+
+表格替代:
+  - 简单对比用表格
+  - 复杂关系用图表
+```
+
+---
+
+## 📏 中英文排版规范
+
+### 空格规则
+
+```yaml
+必须加空格:
+  - 中英文之间: "使用 React 开发"
+  - 中文与数字之间: "共 3 个文件"
+  - 中文与百分号之间: "覆盖率 80%"
+  - 全角标点与其他字符之间: "这是示例，注意空格"
+
+不加空格:
+  - 全角标点与汉字之间: "这是示例，不加空格"
+  - 链接文字内: "[查看详情](./link.md)"
+  - 专有名词内: "GitHub API"
+```
+
+### 标点符号
+
+```yaml
+使用全角:
+  - 中文句子使用全角标点: 。，！？；：""''（）
+  - 例外: 代码、链接、专有名词中使用半角
+
+使用半角:
+  - 英文句子使用半角标点: . , ! ? ; : "" '' ()
+  - 数字、代码、命令中使用半角
+```
+
+### 格式规范
+
+```yaml
+专有名词:
+  - 保持正确的大小写: GitHub（不是 Github）
+  - 保持正确的空格: App Store（不是 AppStore）
+  - 常见专有名词:
+    * JavaScript, TypeScript, Node.js
+    * React, Vue.js, Angular
+    * GitHub, GitLab
+    * macOS, iOS, Windows
+    * MySQL, MongoDB, Redis
+
+数字:
+  - 大数字使用千分位: 1,000,000
+  - 小数保持精度: 3.14159
+  - 百分比带单位: 95.5%
+```
+
+### 示例对比
+
+```yaml
+✅ 正确:
+  - 使用 TypeScript 开发，覆盖率达到 85%。
+  - 请查看 [GitHub 仓库](https://github.com/example)。
+  - 支持 iOS 12+ 和 Android 6+。
+
+❌ 错误:
+  - 使用TypeScript开发，覆盖率达到85%。（缺少空格）
+  - 请查看[Github仓库](https://github.com/example)。（缺少空格+专有名词错误）
+  - 支持iOS12+和Android6+。（缺少空格）
 ```
 
 ---

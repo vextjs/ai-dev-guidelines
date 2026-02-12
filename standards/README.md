@@ -14,6 +14,8 @@
 | [api-standards.md](./api-standards.md) | API 规范 | API 开发 |
 | [script-standards.md](./script-standards.md) | 脚本规范 | 脚本开发 |
 | [security-standards.md](./security-standards.md) | 安全规范 | 所有代码 |
+| [config-standards.md](./config-standards.md) | 配置规范 | 配置管理 |
+| [tool-standards.md](./tool-standards.md) | 工具规范 | AI 工具调用 |
 
 ---
 

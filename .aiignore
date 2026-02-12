@@ -55,3 +55,9 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
+# changelogs 详细文件（按需读取）
+changelogs/v*.md
+
+# 重构总结（历史参考，非必读）
+best-practices/REFACTOR-SUMMARY.md
+
