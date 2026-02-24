@@ -23,7 +23,8 @@
 
 | 版本 | 日期 | 变更摘要 | 详细 |
 |------|------|---------|------|
-| v2.1.0 | 2026-02-24 | 🔧 工作流统一升级：全部流程增加实施方案+CP确认点 + 新增约束#10/#11 | 本次更新 |
+| v2.2.0 | 2026-02-24 | 🔧 项目规范模块化重构 + 规范体系清理 | 本次更新 |
+| v2.1.0 | 2026-02-24 | 🔧 工作流统一升级：全部流程增加实施方案+CP确认点 + 新增约束#10/#11 | — |
 | [v2.0.0](./changelogs/v2.0.0.md) | 2026-02-12 | 🎉 重大重构：快速/完整双模式 + 精简模板 + 工作流优化 | [查看](./changelogs/v2.0.0.md) |
 | [v1.3.0](./changelogs/v1.3.0.md) | 2026-02-12 | 🔧 全面修复：6个规范文件补全 + 新增配置/工具规范 + 状态追踪 | [查看](./changelogs/v1.3.0.md) |
 | [v1.2.0](./changelogs/v1.2.0.md) | 2026-02-12 | 🔧 优化：确认点机制增强 + 文档同步规范 + 模板优化 | [查看](./changelogs/v1.2.0.md) |
@@ -34,7 +35,26 @@
 
 ## 🚨 重要更新
 
-### v2.0.0 - 重大重构：轻量化与灵活性 🆕
+### v2.2.0 - 项目规范模块化重构 + 规范体系清理 🆕
+
+**发布日期**: 2026-02-24  
+**版本类型**: Minor Release
+
+#### 核心变更
+
+- ✅ **项目规范模块化**: 所有项目规范统一为 `profile/` 子目录 + 模块化文件结构
+- ✅ **TASK-INDEX.md**: 纳入标准项目结构（项目根目录）
+- ✅ **任务记忆机制**: 新增 `workflows/common/task-memory.md`，通过 `.ai-memory/` 实现跨会话上下文传递
+- ✅ **临时报告规范**: 新增 `workflows/common/temp-reports.md`，统一各项目 `reports/` 的存储和命名规范
+- ✅ **copilot-instructions.md**: 精简为纯入口文件，不再包含规范细节
+- ✅ **README.md 精简**: 删除与 QUICK-REFERENCE.md 重复的 ~180 行内容
+- ✅ **清理旧文件**: 删除 `_template/` 下 13 个旧模板、`outputs/` 弃用目录、v1.x 过时工作流文件
+- ✅ **全部项目统一**: chat/dev-docs/user-service 全部迁移到新结构
+- ✅ **版本号统一**: 所有文件版本号对齐 v2.2.0
+
+---
+
+### v2.0.0 - 重大重构：轻量化与灵活性 
 
 **发布日期**: 2026-02-12  
 **版本类型**: Major Release  
@@ -55,7 +75,7 @@
 - ✅ **精简模板**: 新增 `templates/lite/` 目录，4 个精简模板
 - ✅ **工作流优化**: 重构需求开发流程，支持模式切换
 - ✅ **预检查简化**: 从 5+ 项精简为 3 项必做检查
-- ✅ **项目规范**: 新增统一的 PROJECT.md 模板
+- ✅ **项目规范**: 新增统一的 PROJECT.md 模板（⚠️ v2.2.0 已被 `profile/` 模块化结构替代）
 - ✅ **快速索引**: 新增 best-practices/WHEN-TO-USE.md
 
 #### 新增文件
@@ -68,9 +88,9 @@
 - `templates/lite/optimization-lite.md` - 精简性能优化
 - `templates/lite/research-lite.md` - 精简技术调研
 - `templates/lite/refactoring-lite.md` - 精简架构重构
-- `projects/_template/PROJECT.md` - 统一项目规范模板
+- `projects/_template/PROJECT.md` - 统一项目规范模板（⚠️ v2.2.0 已删除，改为 `profile/`）
 - `best-practices/WHEN-TO-USE.md` - 最佳实践快速索引
-- `projects/dev-docs/PROJECT.md` - dev-docs 项目规范
+- `projects/dev-docs/PROJECT.md` - dev-docs 项目规范（⚠️ v2.2.0 已迁移至 `profile/README.md`）
 
 ---
 

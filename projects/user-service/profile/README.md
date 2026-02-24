@@ -190,10 +190,10 @@ user-service/
 
 ## 📚 相关文档
 
-> 注：以下文档为示例占位，实际项目中应创建对应文件
+> 注：本项目为示例项目，展示 dev-docs 项目规范的使用方式。
+> 实际项目应按 `projects/_template/profile/` 模板创建模块化规范文件。
 
-- 技术栈详情: `./TECH-STACK.md`
-- 代码规范: `./CODE-STANDARDS.md`
-- 测试规范: `./TESTING.md`
-- 依赖版本: `./DEPENDENCIES-VERSION.md`
+- 项目规范模板: `../../_template/profile/README.md`
+- 通用代码规范: `../../../standards/code-standards.md`
+- 通用测试规范: `../../../standards/test-standards.md`
 

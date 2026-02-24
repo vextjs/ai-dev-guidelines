@@ -24,8 +24,8 @@
 
 ```yaml
 优先级（从高到低）:
-  1. 项目规范 (projects/<project>/CODE-STANDARDS.md)
-     - 最高优先级，项目特定约束
+  1. 项目规范 (projects/<project>/profile/)
+     - 最高优先级，项目特定约束（入口: profile/README.md）
      - 只能覆盖"可覆盖"的规范
   
   2. 通用规范 (standards/)
@@ -66,8 +66,9 @@
 ```yaml
 必须加载:
   1. 项目规范（如存在）
-     - projects/<project>/CODE-STANDARDS.md
-     - projects/<project>/TECH-STACK.md
+     - projects/<project>/profile/README.md（规范入口）
+     - projects/<project>/profile/01-项目信息.md（技术栈）
+     - projects/<project>/profile/03-代码风格.md（代码标准）
   
   2. 通用代码规范
      - standards/code-standards.md

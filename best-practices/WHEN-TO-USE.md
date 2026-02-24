@@ -92,7 +92,7 @@
 参考: compliance-check.md + auto-fix.md
 
 步骤:
-  1. 读取项目 CODE-STANDARDS.md
+  1. 读取项目 profile/03-代码风格.md
   2. 对照检查生成的代码
   3. 自动修复或提示用户
 ```

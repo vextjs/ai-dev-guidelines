@@ -47,7 +47,7 @@
 检查项:
   1. 代码风格检查 (Linting)
      工具: eslint / prettier
-     标准: 项目的 CODE-STANDARDS.md
+     标准: 项目的 profile/03-代码风格.md
      通过标准: 0 个错误，0 个警告
   
   2. 类型检查

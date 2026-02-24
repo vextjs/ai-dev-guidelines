@@ -14,7 +14,7 @@
 | 项目描述 | 轻量、灵活、实用的 AI 开发执行手册 |
 | 定位 | AI Agent 的文档生成工具 |
 | 目标用户 | GitHub Copilot / Claude / GPT 等 AI Agent |
-| 代码仓库 | [本地] E:\MySelf\dev-docs |
+| 代码仓库 | 当前工作区下的 `dev-docs/` 目录 |
 
 ---
 

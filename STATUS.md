@@ -2,7 +2,7 @@
 
 > Dev-Docs 项目完成度和版本路线图
 
-**当前版本**: v2.1.0  
+**当前版本**: v2.2.0  
 **最后更新**: 2026-02-24
 
 ---
@@ -17,7 +17,7 @@
 | 📝 精简模板 | 新增 `templates/lite/` 目录 |
 | 🔄 工作流优化 | 重构需求开发流程，支持模式切换 |
 | ✅ 预检查简化 | 从 5+ 项精简为 3 项必做 |
-| 📋 项目规范 | 新增统一的 PROJECT.md 模板 |
+| 📋 项目规范 | 模块化 profile/ 结构（参考 chat 项目） |
 | 🔍 快速索引 | 新增 best-practices/WHEN-TO-USE.md |
 
 ### 新增文件
@@ -30,9 +30,9 @@
 - `templates/lite/optimization-lite.md`
 - `templates/lite/research-lite.md`
 - `templates/lite/refactoring-lite.md`
-- `projects/_template/PROJECT.md`
-- `best-practices/WHEN-TO-USE.md`
-- `projects/dev-docs/PROJECT.md`
+- `projects/_template/profile/README.md`
+- `projects/_template/TASK-INDEX.md`
+- `projects/dev-docs/profile/README.md`
 
 ---
 
@@ -49,7 +49,7 @@
 | best-practices/ | 95% | 🟢 完善 | 🆕 新增快速索引 |
 | examples/ | 25% | 🟡 进行中 | requirement + bug-fix 示例已完成，其余待补充 |
 | tools/ | 70% | 🟡 进行中 | 4个可执行脚本+README |
-| projects/_template/ | 95% | 🟢 完善 | 🆕 新增 PROJECT.md 统一模板 |
+| projects/_template/ | 100% | 🟢 完成 | v2.2 模块化 profile/ 结构 |
 
 **总体完成度**: 90%
 
@@ -159,12 +159,12 @@
 - ✅ 新增快速/完整双模式
 - ✅ 新增 `templates/lite/` 精简模板（7个）
 - ✅ 预检查简化为 3 项必做
-- ✅ 新增统一 PROJECT.md 模板
+- ✅ 新增统一 profile/ 模块化项目规范模板
 - ✅ 新增 best-practices/WHEN-TO-USE.md
 - ✅ 新增 projects/dev-docs/ 项目规范
 - ✅ 全面审计并修复 P1 问题
 
-### v2.1.0 (当前版本) - 2026-02-24
+### v2.1.0 - 2026-02-24
 
 **主题**: 工作流统一升级 + AI 行为约束
 
@@ -176,15 +176,18 @@
 - ✅ 新增约束 #11 自动关联文件检查
 - ✅ 术语统一："实施记录"→"实施方案"
 
-### v2.2.0 (计划中) - 2026-03-01
+### v2.2.0 (当前版本) - 2026-02-24
 
-**主题**: 工具增强与自动化
+**主题**: 项目规范模块化重构 + 规范体系清理
 
-- 📋 新增文档生成脚本
-- 📋 新增规范检查脚本
-- 📋 新增依赖更新脚本
-- 📋 CI/CD 集成优化
-- 📋 自动化测试覆盖
+- ✅ 项目规范统一为 `profile/` 模块化结构
+- ✅ TASK-INDEX.md 纳入标准结构
+- ✅ copilot-instructions.md 精简为纯入口
+- ✅ 新增任务记忆机制（`workflows/common/task-memory.md` + `.ai-memory/`）
+- ✅ 新增临时报告规范（`workflows/common/temp-reports.md`）
+- ✅ 清理旧文件（_template 旧模板、v1.x 预检查文件）
+- ✅ README.md 精简（去除与 QUICK-REFERENCE 重复内容）
+- ✅ 全项目版本号统一
 
 ### v3.0.0 (规划中) - 2026-04-01
 
@@ -226,7 +229,8 @@
 
 | 版本 | 日期 | 主要变更 | 详情 |
 |------|------|---------|------|
-| v2.1.0 | 2026-02-24 | 工作流统一升级+AI行为约束 | 本次更新 |
+| v2.2.0 | 2026-02-24 | 项目规范模块化重构+规范体系清理 | 当前版本 |
+| v2.1.0 | 2026-02-24 | 工作流统一升级+AI行为约束 | [查看](./changelogs/) |
 | v2.0.0 | 2026-02-12 | 重大重构：快速/完整双模式 | [查看](./changelogs/v2.0.0.md) |
 | v1.3.0 | 2026-02-12 | 全面修复与优化增强 | [查看](./changelogs/v1.3.0.md) |
 

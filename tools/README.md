@@ -89,25 +89,41 @@ await replace_string_in_file({
 
 ### 4. 多处编辑
 ```typescript
-// 工具: multi_replace_string_in_file
-// 用途: 一次性替换多处内容
+// 工具: replace_string_in_file（多次调用）
+// 用途: 需要修改多处时，对每处分别调用 replace_string_in_file
+// 注意: 不存在 multi_replace_string_in_file 工具
 
-await multi_replace_string_in_file({
-  explanation: '更新配置和导入',
-  replacements: [
-    {
-      filePath: '/path/to/file1.ts',
-      oldString: 'old1',
-      newString: 'new1',
-      explanation: '更新配置'
-    },
-    {
-      filePath: '/path/to/file2.ts',
-      oldString: 'old2',
-      newString: 'new2',
-      explanation: '更新导入'
-    }
-  ]
+// 第一处修改
+await replace_string_in_file({
+  filePath: '/path/to/file1.ts',
+  oldString: 'old1',
+  newString: 'new1',
+  explanation: '更新配置'
+});
+
+// 第二处修改
+await replace_string_in_file({
+  filePath: '/path/to/file2.ts',
+  oldString: 'old2',
+  newString: 'new2',
+  explanation: '更新导入'
+});
+```
+
+### 5. 智能插入编辑
+```typescript
+// 工具: insert_edit_into_file
+// 用途: 当 replace_string_in_file 失败时使用，支持用注释表示未变更区域
+
+await insert_edit_into_file({
+  filePath: '/path/to/file.ts',
+  explanation: '添加新方法',
+  code: `class MyClass {
+  // ...existing code...
+  newMethod() {
+    return true;
+  }
+}`
 });
 ```
 

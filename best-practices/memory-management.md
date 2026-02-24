@@ -2,6 +2,9 @@
 
 > 跨会话上下文保存和任务恢复机制
 
+> **🔗 关联**: 任务记忆的标准化实现已整合到 [workflows/common/task-memory.md](../workflows/common/task-memory.md)，  
+> 通过 `.ai-memory/` 目录在每次任务完成后自动保存摘要。本文档提供更深层次的记忆策略。
+
 ---
 
 ## 📋 概述

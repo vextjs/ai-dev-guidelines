@@ -156,7 +156,7 @@
   检测: 缺少可覆盖标记
   插入位置: 第一个 "##" 前
   插入内容:
-    > **可被项目覆盖**: 此规范可被 projects/<project>/CODE-STANDARDS.md 覆盖
+    > **可被项目覆盖**: 此规范可被 projects/<project>/profile/03-代码风格.md 覆盖
 ```
 
 ---

@@ -1,6 +1,5 @@
 # AI 决策树配置文件 v2.1.0
 # 用于快速场景识别和任务路由
-# 基于: guidelines decision-tree.yaml 精简版
 
 version: "2.1.0"
 last_updated: "2026-02-24"
@@ -85,8 +84,8 @@ mandatory_precheck:
     - step: 4
       action: "加载项目规范"
       condition: "涉及代码修改"
-      target: "projects/<project>/PROJECT.md"
-      fallback: "projects/_template/PROJECT.md"
+      target: "projects/<project>/profile/README.md"
+      fallback: "projects/_template/profile/README.md"
 
   output_format: |
     📋 预检查:
@@ -113,7 +112,7 @@ mode_selection:
       - "涉及文件 < 5 个"
       - "用户关键词: 快速, 简单, 小改动"
     template_dir: "templates/lite/"
-    stages: 4
+    stages: 5
     estimated_time: "15-30 分钟"
     skip_stages: ["详细文档", "完整测试"]
 
@@ -125,7 +124,7 @@ mode_selection:
       - "复杂需求、核心功能"
       - "正式交付场景"
     template_dir: "templates/core/"
-    stages: 6
+    stages: 7
     estimated_time: "45-90 分钟"
 
   mode_keywords:
@@ -149,7 +148,7 @@ confirmation_points:
     name: "方案确认"
     timing: "技术方案设计后"
     must_show: ["技术方案摘要", "P0操作清单", "回滚方案"]
-    options: ["Continue", "Modify", "Stop", "Cancel"]
+    options: ["确认", "修改", "取消"]
 
   CP3:
     name: "实施方案确认"
@@ -173,7 +172,7 @@ confirmation_points:
     name: "项目文档更新确认"
     timing: "任务完成前"
     must_show: ["STATUS.md更新", "CHANGELOG.md更新"]
-    options: ["Continue", "Modify", "Skip"]
+    options: ["确认", "修改", "跳过"]
 
 # ===========================================
 # 询问点定义
@@ -201,53 +200,71 @@ inquiry_points:
       - "S: 跳过"
 
 # ===========================================
-# 禁止项
+# 禁止项（编号对齐 CONSTRAINTS.md 的 11 条约束）
 # ===========================================
 constraints:
-  absolute_forbidden:
+  # 对应 CONSTRAINTS.md 核心约束
+  core_constraints:
     - id: 1
-      rule: "禁止跳过预检查"
-      violation: "看到需求就直接写代码"
-
-    - id: 2
-      rule: "禁止未确认删除"
+      rule: "删除操作需确认"
       violation: "删除代码/文件前未获得用户确认"
 
+    - id: 2
+      rule: "Git 操作需确认"
+      violation: "commit/push 前未获得用户确认"
+
     - id: 3
-      rule: "禁止假设用户同意"
-      violation: "没有等待用户响应就继续执行"
+      rule: "方案选择需确认"
+      violation: "多方案时没有等待用户决策就继续执行"
 
     - id: 4
+      rule: "多任务需拆分"
+      violation: "同时收到多个任务不拆分、直接混合执行"
+
+  # 对应 CONSTRAINTS.md 代码输出约束
+  code_constraints:
+    - id: 5
+      rule: "必须包含错误处理"
+      violation: "async 函数无 try-catch、无边界检查"
+
+    - id: 6
       rule: "禁止硬编码敏感信息"
       violation: "代码中出现密码、密钥、Token"
 
-    - id: 5
-      rule: "禁止跳过验证"
-      violation: "代码写完不运行验证"
+    - id: 7
+      rule: "使用结构化输出"
+      violation: "输出大段叙述而非表格/列表/代码块"
 
-    - id: 6
-      rule: "禁止凭想象设计"
-      violation: "未读代码就设计方案"
+  # 对应 CONSTRAINTS.md 报告/修复/行为约束
+  behavior_constraints:
+    - id: 8
+      rule: "报告需验证"
+      violation: "基于推断列出问题而未实际读取文件验证，未按 🔴/🟡/💡/❌ 分类"
 
     - id: 9
-      rule: "禁止浅层搜索下结论"
-      violation: "只搜索1-2处就断言问题已全部发现/修复，未全局搜索"
-
-    - id: 10
-      rule: "禁止混淆问题分类"
-      violation: "把路线图待办/优化建议当作Bug报告，未按 🔴Bug/🟡待办/💡建议/❌误报 分类"
-
-    - id: 11
-      rule: "禁止跳过修复后扫描"
+      rule: "修复需扫描"
       violation: "修复完成后未执行全局同类扫描+数据联动检查就声称修复完毕"
 
-  conditional_forbidden:
-    - id: 7
-      rule: "禁止删除 STATUS/CHANGELOG"
+    - id: 10
+      rule: "主动合理性分析"
+      violation: "收到指令后不评估合理性、不提出更好建议就直接执行"
+
+    - id: 11
+      rule: "自动关联文件检查"
+      violation: "修改文件后未扫描关联文件、未同步更新"
+
+  # 附加禁止项（未在 CONSTRAINTS.md 中编号，但在决策树中强制）
+  additional_forbidden:
+    - rule: "禁止跳过预检查"
+      violation: "看到需求就直接写代码"
+
+    - rule: "禁止凭想象设计"
+      violation: "未读代码就设计方案"
+
+    - rule: "禁止删除 STATUS/CHANGELOG"
       condition: "任何情况"
 
-    - id: 8
-      rule: "禁止删除测试文件"
+    - rule: "禁止删除测试文件"
       condition: "除非用户明确要求"
 
 # ===========================================

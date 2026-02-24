@@ -2,7 +2,7 @@
 
 > AI 执行任务时的速查手册
 
-**版本**: v2.1.0  
+**版本**: v2.2.0  
 **最后更新**: 2026-02-24
 
 ---
@@ -131,13 +131,15 @@ projects/<project-name>/
 
 查找之前的方案/修复记录：
 ```
-1. 读取 projects/<project>/TASK-INDEX.md
-2. 搜索关键词，定位任务 ID 和路径
-3. 读取具体文档
+1. 读取 dev-docs/projects/<project>/.ai-memory/SUMMARY.md（快速回忆）
+2. 读取 projects/<project>/TASK-INDEX.md（正式索引）
+3. 搜索关键词，定位任务 ID 和路径
+4. 读取具体文档
 ```
 
-> **⚠️ 强关联**: 此机制依赖各工作流（01-08）在任务完成时更新 TASK-INDEX.md  
-> 模板位置: `projects/_template/TASK-INDEX.md`
+> **⚠️ 强关联**: 此机制依赖各工作流（01-08）在任务完成时更新 TASK-INDEX.md + .ai-memory/  
+> 模板位置: `projects/_template/TASK-INDEX.md`  
+> 记忆机制: `workflows/common/task-memory.md`
 
 ---
 
@@ -169,6 +171,6 @@ projects/<project-name>/
 
 ---
 
-**版本**: v2.1.0  
+**版本**: v2.2.0  
 **最后更新**: 2026-02-24
 

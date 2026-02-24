@@ -122,6 +122,29 @@ changelogs/vX.Y.Z.md 必需章节:
   - API 文档链接
 ```
 
+### 4. 任务记忆（P1 每次任务完成后）
+
+```yaml
+更新位置: dev-docs/projects/<project>/.ai-memory/
+
+执行:
+  1. 生成单任务记忆 → .ai-memory/tasks/<date>-<type>-<id>.md
+  2. 更新 SUMMARY.md → 追加到"最近任务" + 更新"关键决策"
+
+详见: workflows/common/task-memory.md
+```
+
+### 5. TASK-INDEX.md（P0 每次任务完成后）
+
+```yaml
+更新位置: dev-docs/projects/<project>/TASK-INDEX.md
+
+执行:
+  追加本次任务记录行到对应类型表格
+
+详见: projects/_template/TASK-INDEX.md
+```
+
 ---
 
 ## 🔄 同步流程

@@ -43,7 +43,7 @@
 
 示例:
   AI 读取: code-standards.md 要求驼峰命名
-  AI 读取: projects/user/CODE-STANDARDS.md 要求下划线
+  AI 读取: projects/user/profile/03-代码风格.md 要求下划线
   触发: "检测到规范冲突，请确认使用哪个？"
 ```
 
@@ -146,7 +146,7 @@
   - 耗时: 0.2s
 
 [2026-02-12 15:46] 规范冲突检测
-  - 对比: code-standards.md vs projects/user/CODE-STANDARDS.md
+  - 对比: code-standards.md vs projects/user/profile/03-代码风格.md
   - 结果: ✅ 无冲突
   - 耗时: 0.5s
 ```

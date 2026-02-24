@@ -168,6 +168,7 @@
 3. 总结经验教训
 4. 提出后续优化建议
 5. **更新 `projects/<project>/TASK-INDEX.md`**
+6. **生成任务记忆** `dev-docs/projects/<project>/.ai-memory/`（详见 [common/task-memory.md](../common/task-memory.md)）
 
 **输出**: 更新所有文档，确保完整性
 

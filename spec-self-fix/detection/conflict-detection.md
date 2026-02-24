@@ -39,7 +39,7 @@
 检测逻辑:
   1. 收集所有命名规范定义
      - code-standards.md 中的命名规范
-     - projects/_template/CODE-STANDARDS.md 中的命名规范
+     - projects/_template/profile/03-代码风格.md 中的命名规范
   2. 比较是否一致
 
 检测示例:

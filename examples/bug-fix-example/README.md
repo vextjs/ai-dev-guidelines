@@ -32,7 +32,7 @@
 1. 工作区: E:\Worker\user-service
 2. 任务类型: Bug 修复
 3. 输出位置: projects/user-service/bugs/BUG-001-session-loss/
-4. 项目规范: ✅ 已加载 PROJECT.md
+4. 项目规范: ✅ 已加载 profile/
 ```
 
 ### 任务识别

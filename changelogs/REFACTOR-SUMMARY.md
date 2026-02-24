@@ -122,8 +122,7 @@ Best Practices (已优化):
   ✅ README.md (84 行 - 导航页)
 
 其他大文件（需要进一步评估）:
-  ⚠️ projects/_template/CODE-STANDARDS.md (400 行)
-  ⚠️ projects/_template/TECH-STACK.md (318 行)
+  ⚠️ projects/_template/profile/ (已模块化拆分)
   ⚠️ templates/core/*.md (302-403 行)
   ⚠️ tools/README.md (405 行)
   ⚠️ workflows/01-requirement-dev/steps.md (828 行)

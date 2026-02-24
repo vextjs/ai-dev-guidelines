@@ -117,6 +117,7 @@
 - 更新安全文档
 - 总结经验教训
 - **更新 `projects/<project>/TASK-INDEX.md`**
+- **生成任务记忆** `dev-docs/projects/<project>/.ai-memory/`（详见 [common/task-memory.md](../common/task-memory.md)）
 
 **输出**: 更新所有文档
 

@@ -12,6 +12,8 @@
 | [confirmation-points.md](./confirmation-points.md) | 确认点机制 | CP1-CP6 确认点定义 |
 | [document-sync.md](./document-sync.md) | 文档同步规范 | 任务完成后更新相关文档 |
 | [stop-and-save.md](./stop-and-save.md) | 中断保存机制 | 任务中断时保存上下文 |
+| [task-memory.md](./task-memory.md) | 任务记忆机制 | 🆕 跨会话上下文传递 |
+| [temp-reports.md](./temp-reports.md) | 临时报告规范 | 🆕 AI 临时分析报告管理 |
 
 ---
 
@@ -37,7 +39,8 @@
 任务完成后必须更新的文档：
 
 1. `projects/<project>/TASK-INDEX.md` - 添加任务记录
-2. `STATUS.md` / `CHANGELOG.md` - 如涉及版本变更
+2. `dev-docs/projects/<project>/.ai-memory/` - 生成任务记忆
+3. `STATUS.md` / `CHANGELOG.md` - 如涉及版本变更
 
 详见 [document-sync.md](./document-sync.md)
 
@@ -61,5 +64,5 @@
 
 ---
 
-**最后更新**: 2026-02-12
+**最后更新**: 2026-02-24
 

@@ -197,7 +197,7 @@
 失败处理: 列出违反规范的代码
 自动修复: ✅ 是 - 自动格式化
 
-参考文档: projects/<project>/CODE-STANDARDS.md
+参考文档: projects/<project>/profile/03-代码风格.md
 ```
 
 ### 8. 性能考量

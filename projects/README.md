@@ -6,11 +6,12 @@
 
 ## 📋 现有项目
 
-| 项目 | 描述 | 规范路径 |
+| 项目 | 描述 | 规范入口 |
 |-----|------|---------|
-| `_template` | 项目规范模板 | `_template/` |
-| `dev-docs` | AI 开发执行手册（本项目） | `dev-docs/` |
-| `user-service` | 用户服务示例项目 | `user-service/` |
+| `_template` | 项目规范模板 | `_template/profile/README.md` |
+| `chat` | AITA 核心聊天服务（对话、行程、AI Agent） | `chat/profile/README.md` |
+| `dev-docs` | AI 开发执行手册（本项目） | `dev-docs/profile/README.md` |
+| `user-service` | 用户服务（示例项目） | `user-service/profile/README.md` |
 
 ---
 
@@ -38,93 +39,130 @@
 ```
 projects/
 ├── README.md                          # 本文件
-├── _template/                         # 项目规范模板
-│   ├── INDEX.md                      # 模板索引
-│   ├── PROJECT.md                    # 项目规范（统一版）
-│   ├── TASK-INDEX.md                 # 任务索引模板 ⭐ 追溯历史任务
-│   ├── TECH-STACK.md                 # 技术栈说明
-│   ├── CODE-STANDARDS.md             # 代码规范
-│   ├── TESTING.md                    # 测试规范
-│   ├── DEPENDENCIES-VERSION.md       # 依赖版本管理
-│   ├── DEPENDENCIES-UPDATES.md       # 依赖更新策略
-│   ├── CI-CD-OVERVIEW.md             # CI/CD 概览
-│   ├── CI-CD-IMPLEMENTATION.md       # CI/CD 实施
-│   ├── CI-CD-QUALITY-GATES.md        # CI/CD 质量门禁
-│   ├── MONITORING-METRICS.md         # 监控指标
-│   ├── MONITORING-DASHBOARD.md       # 监控面板
-│   └── MONITORING-ALERTS.md          # 告警配置
+├── _template/                         # 🔴 项目规范模板
+│   ├── README.md                     # 项目顶层索引模板
+│   ├── TASK-INDEX.md                 # 任务索引模板
+│   └── profile/                      # 模块化规范模板
+│       ├── README.md                 # 规范入口（索引所有模块文件）
+│       ├── 01-项目信息.md             # 项目路径、技术栈、目录结构
+│       ├── 02-架构约束.md             # 强制禁止项（P0）
+│       ├── 03-代码风格.md             # 命名规范、缩进格式
+│       └── CHANGELOG.md              # 版本变更日志
+│       （按项目需要可增加更多模块文件）
+│
+├── chat/                              # chat 项目（参考实例）
+│   ├── README.md                     # 项目顶层索引
+│   ├── TASK-INDEX.md                 # 任务索引
+│   └── profile/                      # 模块化规范（9 文件）
+│       ├── README.md
+│       ├── 01-项目信息.md
+│       ├── ...
+│       └── CHANGELOG.md
 │
 ├── <project-name>/                    # 具体项目目录
-│   ├── PROJECT.md                    # 项目规范（必需）
-│   ├── TASK-INDEX.md                 # 任务索引（⭐ 强关联 workflows/01-08）
-│   ├── TECH-STACK.md                 # 技术栈（可选，可合并到PROJECT.md）
-│   ├── CODE-STANDARDS.md             # 代码规范（可选，可合并到PROJECT.md）
-│   ├── requirements/                 # 需求开发输出
-│   ├── bugs/                         # Bug 修复输出
-│   ├── research/                     # 技术调研输出
-│   └── ...                           # 其他输出目录
+│   ├── README.md                     # 项目顶层索引（指向 profile/）
+│   ├── TASK-INDEX.md                 # 📋 任务索引（追溯历史任务）
+│   ├── profile/                      # 🔴 项目规范（模块化）
+│   │   ├── README.md                 # 规范入口 + AI 遵循声明
+│   │   ├── 01-项目信息.md             # 必需
+│   │   ├── 02-架构约束.md             # 必需
+│   │   ├── 03-代码风格.md             # 必需
+│   │   ├── 04-错误处理与多语言.md      # 推荐
+│   │   ├── ...                       # 更多模块
+│   │   └── CHANGELOG.md
+│   ├── requirements/                 # 需求开发输出（归档，提交 git）
+│   ├── bugs/                         # Bug 修复输出（归档，提交 git）
+│   ├── optimizations/                # 优化方案输出（归档，提交 git）
+│   └── research/                     # 技术调研输出（归档，提交 git）
 │
 └── ...                                # 其他项目
 ```
 
+### AI 工作目录
+
+`reports/` 和 `.ai-memory/` 统一存放在 `dev-docs/projects/<project>/` 下，与正式归档文档同级：
+
+```
+projects/<project>/                    # 如 projects/chat/
+├── profile/                          # 🔴 项目规范
+├── TASK-INDEX.md                     # 📋 任务索引
+├── requirements/                     # 需求开发输出（归档，提交 git）
+├── bugs/                             # Bug 修复输出（归档，提交 git）
+├── optimizations/                    # 优化方案输出（归档，提交 git）
+├── research/                         # 技术调研输出（归档，提交 git）
+│
+├── reports/                          # 📊 AI 临时报告（gitignore 忽略）
+│   ├── diagnostics/                  # 诊断分析
+│   ├── bugs/                         # Bug 分析
+│   ├── requirements/                 # 需求分析
+│   └── .temp/                        # 中间过程文件（可随时清理）
+│
+└── .ai-memory/                       # 🧠 AI 任务记忆（gitignore 忽略）
+    ├── SUMMARY.md                    # 总摘要（AI 首先读取）
+    └── tasks/                        # 各任务的详细记忆
+        └── <date>-<type>-<id>.md
+```
+
+> **为什么在 dev-docs/projects/ 下？**
+> - 统一管理：与项目规范（profile/）、正式归档文档（requirements/ 等）在同一目录树下
+> - 不污染业务源码目录
+> - dev-docs 是独立仓库，跨工作区不丢失
+> - reports/ 和 .ai-memory/ 加入 dev-docs/.gitignore 忽略即可
+
+### 🔴 强制规则：模块化结构
+
+所有项目规范**必须**按模块化拆分到 `profile/` 子目录，**禁止**在项目根目录平铺规范文件或生成单一 `PROJECT.md`。
+
+**必需文件**（`profile/` 下，所有项目）：
+
+| 文件 | 内容 | 优先级 |
+|------|------|--------|
+| `profile/README.md` | 规范索引 + AI 遵循声明 | P0 必需 |
+| `profile/01-项目信息.md` | 项目路径、技术栈、目录结构 | P0 必需 |
+| `profile/02-架构约束.md` | 强制禁止项 | P0 必需 |
+| `profile/03-代码风格.md` | 命名规范、缩进格式 | P0 必需 |
+| `profile/CHANGELOG.md` | 版本变更日志 | P1 推荐 |
+
+**推荐文件**（`profile/` 下，视项目复杂度）：
+
+| 文件 | 内容 | 适用场景 |
+|------|------|---------|
+| `profile/04-错误处理与多语言.md` | 错误处理规范 | 有多语言需求 |
+| `profile/05-参数校验规范.md` | 参数校验方式 | API 服务 |
+| `profile/06-中间件规范.md` | 中间件使用 | Egg.js / Express / Koa |
+| `profile/07-路由与接口规范.md` | 路由分组、鉴权 | API 服务 |
+| `profile/XX-<项目特有>.md` | 项目独有模块 | 如 AI 架构、微服务通信 |
+
+**项目根目录文件**：
+
+| 文件 | 内容 | 优先级 |
+|------|------|--------|
+| `README.md` | 项目顶层索引（指向 profile/ + 列出任务输出目录） | P0 必需 |
+
 ---
 
-## 🎯 项目规范包含内容
+## 🎯 模块化规范参考实例
 
-### 1. PROJECT-PROFILE.md（项目概况）
-```yaml
-内容:
-  - 项目名称和描述
-  - 仓库地址
-  - 主要负责人
-  - 依赖服务列表
-  - 环境清单（开发、测试、生产）
-  - 监控和日志地址
+### chat 项目（完整参考）
+
 ```
-
-### 2. TECH-STACK.md（技术栈说明）
-```yaml
-内容:
-  - 编程语言和版本
-  - 框架和版本（Express/Koa/Fastify）
-  - 数据库（MongoDB/PostgreSQL/Redis）
-  - 测试框架（Jest/Vitest/Mocha）
-  - 构建工具（TypeScript/Webpack/Vite）
-  - 依赖包约束（必须/禁止/推荐）
-```
-
-### 3. CODE-STANDARDS.md（代码规范）
-```yaml
-内容:
-  - 命名规范（变量/函数/类/文件）
-  - 目录结构约定
-  - 导入顺序规则
-  - 注释规范
-  - 错误处理模式
-  - 日志规范
-  - API 设计规范
-```
-
-### 4. DEPLOYMENT.md（部署流程）
-```yaml
-内容:
-  - 构建命令
-  - 部署步骤
-  - 环境变量配置
-  - 数据库迁移流程
-  - 回滚策略
-  - 健康检查端点
-```
-
-### 5. ARCHITECTURE.md（架构说明）
-```yaml
-内容:
-  - 系统架构图
-  - 模块划分
-  - 数据流向
-  - 关键接口
-  - 性能要求
-  - 安全要求
+projects/chat/
+├── README.md                   ← 项目顶层索引
+├── profile/                    ← 项目规范
+│   ├── README.md               ← 规范入口 + AI 遵循声明
+│   ├── 01-项目信息.md           ← 项目路径、技术栈、目录结构
+│   ├── 02-架构约束.md           ← 8 条强制禁止项
+│   ├── 03-代码风格.md           ← 命名规范、缩进格式
+│   ├── 04-错误处理与多语言.md    ← schema-dsl 错误处理
+│   ├── 05-参数校验规范.md        ← schema-dsl 三层标准模式
+│   ├── 06-中间件规范.md          ← 中间件加载顺序
+│   ├── 07-路由与接口规范.md      ← 接口分组、鉴权
+│   ├── 08-AI架构.md             ← Agent 策略模式（项目特有）
+│   ├── 09-微服务通信.md          ← httpHelper、服务清单（项目特有）
+│   └── CHANGELOG.md             ← 版本变更日志
+├── requirements/               ← 需求开发输出
+├── bugs/                       ← Bug 修复输出
+└── optimizations/              ← 优化方案输出
 ```
 
 ---
@@ -134,83 +172,72 @@ projects/
 ### Step 1: 识别项目
 ```typescript
 // 从用户输入中提取项目名
-用户输入: "在 user-service 添加限流功能"
-项目名: "user-service"
+用户输入: "在 chat 服务添加一个内部接口"
+项目名: "chat"
 ```
 
 ### Step 2: 读取项目规范
-```typescript
-// 按优先级读取项目文档
-const projectDocs = [
-  'projects/user-service/PROJECT-PROFILE.md',   // 必读
-  'projects/user-service/TECH-STACK.md',        // 必读
-  'projects/user-service/CODE-STANDARDS.md',    // 必读
-  'projects/user-service/ARCHITECTURE.md',      // 可选
-  'projects/user-service/DEPLOYMENT.md'         // 需要时读
-];
+```yaml
+加载入口: projects/<project>/profile/README.md
 
-for (const doc of projectDocs.slice(0, 3)) {
-  const content = await read_file(doc);
-  projectContext.add(content);
-}
+加载策略:
+  必读: profile/README.md → profile/01-项目信息.md → profile/02-架构约束.md → profile/03-代码风格.md
+  按需: 根据任务类型加载对应模块
+    - 涉及错误处理 → profile/04-错误处理与多语言.md
+    - 涉及参数校验 → profile/05-参数校验规范.md
+    - 涉及中间件   → profile/06-中间件规范.md
+    - 涉及路由     → profile/07-路由与接口规范.md
+    - 涉及 AI 功能 → profile/08-AI架构.md（如存在）
+    - 涉及服务调用 → profile/09-微服务通信.md（如存在）
+
+未找到时:
+  🔴 必须询问用户 "是否需要我分析项目并生成项目规范文件？[是/否]"
 ```
 
 ### Step 3: 应用项目约束
-```typescript
-// 示例：根据项目技术栈选择方案
-if (projectTechStack.database === 'MongoDB') {
-  // 选择支持 MongoDB 的限流库
-  selectedLibrary = 'flex-rate-limit';
-} else if (projectTechStack.database === 'PostgreSQL') {
-  // 选择其他方案
-  selectedLibrary = 'rate-limiter-flexible';
-}
+```yaml
+原则:
+  项目规范 > 通用规范 > 行业标准
 
-// 示例：遵守项目命名规范
-if (projectCodeStandards.naming.middleware === 'camelCase') {
-  middlewareName = 'rateLimiterMiddleware'; // camelCase
-} else {
-  middlewareName = 'rate_limiter_middleware'; // snake_case
-}
-```
-
-### Step 4: 验证项目兼容性
-```typescript
-// 检查是否符合项目约束
-const validations = [
-  checkNodeVersion(projectTechStack.node),
-  checkDependencyConflicts(projectTechStack.forbidden),
-  checkDirectoryStructure(projectCodeStandards.structure),
-  checkNamingConventions(projectCodeStandards.naming)
-];
-
-const allPassed = validations.every(v => v.passed);
+示例:
+  - chat 规范要求用 ctx.dsl.error.throw()
+  - 即使旧代码用 throw new Error()
+  - 新代码也必须遵循项目规范
 ```
 
 ---
 
 ## 📝 创建新项目规范
 
-### 方式 1: 使用模板
+### 方式 1: AI 自动生成（推荐）
+
+```yaml
+用户输入: "为 payment 项目创建规范文档"
+
+AI 流程:
+  1. 分析项目代码（package.json、目录结构、tsconfig 等）
+  2. 参考 _template/ 模板和已有项目规范（如 chat/profile/）
+  3. 生成 projects/<project>/README.md（顶层索引）
+  4. 生成 projects/<project>/profile/（模块化规范文件）
+
+生成的最小文件集:
+  - README.md（项目顶层索引）
+  - TASK-INDEX.md（任务索引）
+  - profile/README.md（规范入口 + AI 遵循声明）
+  - profile/01-项目信息.md
+  - profile/02-架构约束.md
+  - profile/03-代码风格.md
+  - profile/CHANGELOG.md
+```
+
+### 方式 2: 手动基于模板
+
 ```bash
 # 复制模板
 cp -r projects/_template projects/new-service
 
-# 填充内容
-# 编辑 PROJECT-PROFILE.md、TECH-STACK.md 等
-```
-
-### 方式 2: AI 自动生成
-```typescript
-// AI 执行
-用户输入: "为 order-service 项目创建规范文档"
-
-AI 流程:
-1. 读取 projects/_template/ 下的所有模板
-2. 分析 order-service 项目代码
-3. 提取技术栈、命名规范、架构信息
-4. 填充模板生成项目规范
-5. 保存到 projects/order-service/
+# 按实际项目填充每个模块文件
+# 删除不需要的可选模块
 ```
 
 ---
@@ -262,7 +289,7 @@ AI 流程:
 建议:
   - 项目规范随项目代码一起版本管理
   - 重大变更打 tag（如 v1.0.0）
-  - 在 PROJECT-PROFILE.md 记录版本历史
+  - 在 README.md / CHANGELOG.md 记录版本历史
 ```
 
 ---
@@ -305,7 +332,7 @@ AI 流程:
 问题: 项目 A 依赖项目 B 的服务
 
 处理:
-  1. 在 PROJECT-PROFILE.md 的 dependencies 字段列出
+  1. 在 01-项目信息.md 或 09-微服务通信.md 的 dependencies 字段列出
   2. AI 开发涉及依赖服务的功能时
   3. 自动读取依赖服务的接口文档
 
@@ -320,20 +347,22 @@ AI 流程:
 ## 🔍 检查清单
 
 ### 项目规范完整性检查
-- [ ] PROJECT-PROFILE.md 已创建
-- [ ] TECH-STACK.md 已创建
-- [ ] CODE-STANDARDS.md 已创建
+- [ ] README.md（项目顶层索引）已创建
+- [ ] TASK-INDEX.md（任务索引）已创建
+- [ ] profile/README.md（规范入口 + AI 遵循声明）已创建
+- [ ] profile/01-项目信息.md 已创建
+- [ ] profile/02-架构约束.md 已创建
+- [ ] profile/03-代码风格.md 已创建
 - [ ] 技术栈版本信息完整
 - [ ] 命名规范明确
-- [ ] 架构图清晰
-- [ ] 部署流程可操作
+- [ ] profile/CHANGELOG.md 已创建
 
 ### AI 使用项目规范检查
 - [ ] AI 能正确识别项目名
-- [ ] AI 优先读取项目规范
+- [ ] AI 优先读取 profile/README.md 索引
+- [ ] AI 按需加载 profile/ 下对应模块文件
 - [ ] AI 生成的代码符合项目规范
-- [ ] AI 生成的文档符合项目要求
-- [ ] 项目特有流程得到遵守
+- [ ] 项目特有规则得到遵守
 
 ---
 
@@ -345,4 +374,4 @@ AI 流程:
 
 ---
 
-**最后更新**: 2026-02-12
+**最后更新**: 2026-02-24

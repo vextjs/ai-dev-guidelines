@@ -182,7 +182,8 @@
 1. 检查所有文档完整性
 2. 生成脚本文件（如需要）
 3. **更新任务索引** `projects/<project>/TASK-INDEX.md`
-4. 向用户报告完成
+4. **生成任务记忆** `dev-docs/projects/<project>/.ai-memory/`（详见 [common/task-memory.md](../common/task-memory.md)）
+5. 向用户报告完成
 
 **索引更新**:
 ```markdown

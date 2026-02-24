@@ -8,16 +8,19 @@
 
 ```
 changelogs/
-├── README.md           # 本说明文档
-├── REFACTOR-SUMMARY.md # 重构摘要
-├── v2.0.0.md          # v2.0.0 详细变更
-├── v1.3.0.md          # v1.3.0 详细变更
-├── v1.2.0.md          # v1.2.0 详细变更
-├── v1.1.0.md          # v1.1.0 详细变更
-└── v1.0.0.md          # v1.0.0 详细变更
+├── README.md                              # 本说明文档
+├── REFACTOR-SUMMARY.md                    # 重构摘要
+├── v2.0.0.md                             # v2.0.0 详细变更
+├── v1.3.0.md                             # v1.3.0 详细变更
+├── v1.2.0.md                             # v1.2.0 详细变更
+├── v1.1.0.md                             # v1.1.0 详细变更
+├── v1.0.0.md                             # v1.0.0 详细变更
+├── v1x-09-COMPLETION-AND-DELIVERY.md     # v1.x 存档（原 workflows/09）
+└── v1x-10-WORKFLOW-TRANSITIONS.md        # v1.x 存档（原 workflows/10）
 ```
 
-> **模板位置**: `templates/common/changelogs/TEMPLATE.md`
+> **模板位置**: `templates/common/changelogs/TEMPLATE.md`  
+> **说明**: v2.1.0 和 v2.2.0 为同日小版本更新，变更已记录在 CHANGELOG.md 主文件中，未单独建详情文件。
 
 ---
 
