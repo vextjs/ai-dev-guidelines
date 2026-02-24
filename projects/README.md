@@ -11,6 +11,7 @@
 | `_template` | 项目规范模板 | `_template/profile/README.md` |
 | `chat` | AITA 核心聊天服务（对话、行程、AI Agent） | `chat/profile/README.md` |
 | `dev-docs` | AI 开发执行手册（本项目） | `dev-docs/profile/README.md` |
+| `monSQLize` | 轻量级 MongoDB ORM（多级缓存 + Saga 事务 + 122 操作符） | `monSQLize/profile/README.md` |
 | `user-service` | 用户服务（示例项目） | `user-service/profile/README.md` |
 
 ---
