@@ -3,6 +3,10 @@
 > **任务ID**: REQ-user-20260212-rate-limit  
 > **项目**: user-service  
 > **创建日期**: 2026-02-12
+>
+> **关联文档**:
+> - 需求文档: [01-requirement.md](./01-requirement.md)
+> - 实施方案: [03-implementation/](./03-implementation/README.md)
 
 ---
 

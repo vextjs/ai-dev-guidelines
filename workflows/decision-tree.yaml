@@ -1,9 +1,9 @@
-# AI 决策树配置文件 v2.0.0
+# AI 决策树配置文件 v2.1.0
 # 用于快速场景识别和任务路由
 # 基于: guidelines decision-tree.yaml 精简版
 
-version: "2.0.0"
-last_updated: "2026-02-12"
+version: "2.1.0"
+last_updated: "2026-02-24"
 description: "dev-docs AI 执行规范的结构化决策树"
 
 # ===========================================
@@ -152,9 +152,9 @@ confirmation_points:
     options: ["Continue", "Modify", "Stop", "Cancel"]
 
   CP3:
-    name: "代码确认"
-    timing: "代码实现完成后"
-    must_show: ["修改文件清单", "代码变更摘要"]
+    name: "实施方案确认"
+    timing: "实施方案生成后，执行代码修改前"
+    must_show: ["实施前检查清单", "变更文件清单", "实施步骤"]
     options: ["确认", "修改", "取消"]
 
   CP4:
@@ -228,6 +228,18 @@ constraints:
     - id: 6
       rule: "禁止凭想象设计"
       violation: "未读代码就设计方案"
+
+    - id: 9
+      rule: "禁止浅层搜索下结论"
+      violation: "只搜索1-2处就断言问题已全部发现/修复，未全局搜索"
+
+    - id: 10
+      rule: "禁止混淆问题分类"
+      violation: "把路线图待办/优化建议当作Bug报告，未按 🔴Bug/🟡待办/💡建议/❌误报 分类"
+
+    - id: 11
+      rule: "禁止跳过修复后扫描"
+      violation: "修复完成后未执行全局同类扫描+数据联动检查就声称修复完毕"
 
   conditional_forbidden:
     - id: 7

@@ -49,7 +49,7 @@
 outputs/
 ├── 01-analysis.md      # 问题分析
 ├── 02-solution.md      # 解决方案
-└── 03-implementation.md # 实施记录
+└── 03-implementation.md # 实施方案
 ```
 
 ---

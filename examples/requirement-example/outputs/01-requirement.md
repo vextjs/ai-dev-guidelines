@@ -4,6 +4,10 @@
 > **项目**: user-service  
 > **创建日期**: 2026-02-12  
 > **状态**: ✅ 已完成
+>
+> **关联文档**:
+> - 技术方案: [02-technical.md](./02-technical.md)
+> - 实施方案: [03-implementation/](./03-implementation/README.md)
 
 ---
 

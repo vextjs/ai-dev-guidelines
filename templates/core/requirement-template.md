@@ -9,6 +9,10 @@
 - **负责人**: [姓名]
 - **状态**: 🔵 待分析 / 🟡 设计中 / 🟢 已完成 / 🔴 已取消
 
+> **关联文档**:
+> - 技术方案: [02-technical.md](./02-technical.md)
+> - 实施方案: [03-implementation/](./03-implementation/README.md)
+
 ---
 
 ## 📋 需求概述

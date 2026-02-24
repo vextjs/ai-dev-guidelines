@@ -1,5 +1,9 @@
 # 需求开发详细步骤
 
+> ⚠️ **注意**: 本文件基于 v1.x 的 8 步流程编写，部分内容已过时。  
+> **v2.0 当前流程请以 `README.md` 为准（5阶段快速模式 / 7阶段完整模式）。**  
+> 本文件中的技术细节（收集上下文、生成文档、代码实现逻辑等）仍可作为参考。
+
 > 补充 README.md 中的详细执行逻辑
 
 ---
@@ -74,10 +78,10 @@ projects/
 ### AI 执行命令
 ```bash
 # 创建主目录
-mkdir -p outputs/<project-name>/requirements/<task-id>/scripts
+mkdir -p projects/<project-name>/requirements/<task-id>/scripts
 
 # 示例
-mkdir -p outputs/user-service/requirements/REQ-user-20260211-rate-limit/scripts
+mkdir -p projects/user-service/requirements/REQ-user-20260211-rate-limit/scripts
 ```
 
 ### 验证清单
@@ -281,7 +285,7 @@ const template = await readFile('templates/requirement-template.md');
 
 #### 4.3 保存文档
 ```typescript
-const outputPath = `outputs/${projectName}/requirements/${taskId}/01-requirement.md`;
+const outputPath = `projects/${projectName}/requirements/${taskId}/01-requirement.md`;
 await writeFile(outputPath, filledContent);
 ```
 
@@ -309,7 +313,7 @@ AI 应输出：
 ```markdown
 ✅ 需求文档已生成
 
-文件路径: outputs/user-service/requirements/REQ-user-20260211-rate-limit/01-requirement.md
+文件路径: projects/user-service/requirements/REQ-user-20260211-rate-limit/01-requirement.md
 
 文档结构:
 - ✅ 第 1 章: 需求概述 (200 字)
@@ -434,7 +438,7 @@ interface RateLimitRecord {
 
 ### 保存文档
 ```typescript
-const outputPath = `outputs/${projectName}/requirements/${taskId}/02-technical.md`;
+const outputPath = `projects/${projectName}/requirements/${taskId}/02-technical.md`;
 await writeFile(outputPath, technicalDoc);
 ```
 
@@ -442,7 +446,7 @@ await writeFile(outputPath, technicalDoc);
 ```markdown
 ✅ 技术方案文档已生成
 
-文件路径: outputs/user-service/requirements/REQ-user-20260211-rate-limit/02-technical.md
+文件路径: projects/user-service/requirements/REQ-user-20260211-rate-limit/02-technical.md
 
 方案概要:
 - 架构模式: 中间件模式
@@ -833,7 +837,7 @@ done
 
 ### 保存文档
 ```typescript
-const outputPath = `outputs/${projectName}/requirements/${taskId}/03-implementation.md`;
+const outputPath = `projects/${projectName}/requirements/${taskId}/03-implementation.md`;
 await writeFile(outputPath, implementationDoc);
 ```
 
@@ -841,7 +845,7 @@ await writeFile(outputPath, implementationDoc);
 ```markdown
 ✅ 实施记录文档已生成
 
-文件路径: outputs/user-service/requirements/REQ-user-20260211-rate-limit/03-implementation.md
+文件路径: projects/user-service/requirements/REQ-user-20260211-rate-limit/03-implementation.md
 
 文档内容:
 - ✅ 变更清单 (7 个文件)
@@ -952,10 +956,10 @@ AI 应向用户报告：
 执行时长: 45 分钟
 
 📦 输出内容:
-- 📄 需求文档: outputs/user-service/requirements/REQ-user-20260211-rate-limit/01-requirement.md
-- 📄 技术方案: outputs/user-service/requirements/REQ-user-20260211-rate-limit/02-technical.md
-- 📄 实施记录: outputs/user-service/requirements/REQ-user-20260211-rate-limit/03-implementation.md
-- 🔧 安装脚本: outputs/user-service/requirements/REQ-user-20260211-rate-limit/scripts/install.sh
+- 📄 需求文档: projects/user-service/requirements/REQ-user-20260211-rate-limit/01-requirement.md
+- 📄 技术方案: projects/user-service/requirements/REQ-user-20260211-rate-limit/02-technical.md
+- 📄 实施记录: projects/user-service/requirements/REQ-user-20260211-rate-limit/03-implementation.md
+- 🔧 安装脚本: projects/user-service/requirements/REQ-user-20260211-rate-limit/scripts/install.sh
 
 ✅ 验证结果:
 - 文档完整性: 100%

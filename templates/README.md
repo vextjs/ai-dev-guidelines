@@ -76,7 +76,7 @@ templates/
 |---------|------|-------|
 | `technical-lite.md` | 技术方案 | 4-5 |
 | `requirement-lite.md` | 需求文档 | 3-4 |
-| `implementation-lite.md` | 实施记录 | 3-4 |
+| `implementation-lite.md` | 实施方案 | 3-4 |
 | `bug-analysis-lite.md` | Bug 分析 | 4 |
 | `optimization-lite.md` | 性能优化 | 5 |
 | `research-lite.md` | 技术调研 | 5 |
@@ -89,7 +89,7 @@ templates/
 |---------|------|---------|
 | `requirement-template.md` | 需求文档 | 新功能开发 |
 | `technical-template.md` | 技术方案 | 方案设计 |
-| `implementation-template.md` | 实施记录 | 代码实现 |
+| `implementation-template.md` | 实施方案 | 代码实现 |
 | `bug-analysis-template.md` | Bug 分析 | 问题定位 |
 | `optimization-template.md` | 优化方案 | 性能优化 |
 | `integration-template.md` | 对接文档 | 系统集成 |
@@ -199,7 +199,7 @@ function validateDocument(doc: Document): ValidationResult {
 
 ### Step 6: 保存文档
 ```typescript
-const outputPath = `outputs/${projectName}/${taskType}/${taskId}/01-xxx.md`;
+const outputPath = `projects/${projectName}/${taskType}/${taskId}/01-xxx.md`;
 await writeFile(outputPath, generatedDocument);
 ```
 

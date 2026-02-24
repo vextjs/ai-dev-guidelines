@@ -114,7 +114,7 @@
   open coverage/index.html
 
 记录位置:
-  outputs/<project>/<task-id>/reports/coverage-report.md
+  projects/<project>/<task-id>/reports/coverage-report.md
 ```
 
 ---
@@ -318,7 +318,7 @@ npm test -- --coverage --coverageThreshold='{
 npm run test:performance
 
 # 生成性能报告
-npm run test:performance -- --report=outputs/reports/perf.json
+npm run test:performance -- --report=projects/reports/perf.json
 ```
 
 ---
@@ -372,7 +372,7 @@ npm run test:performance -- --report=outputs/reports/perf.json
 ### 记录位置
 
 ```
-outputs/<project>/<task-id>/reports/
+projects/<project>/<task-id>/reports/
   └── coverage-report.md (记录测试覆盖率)
 ```
 

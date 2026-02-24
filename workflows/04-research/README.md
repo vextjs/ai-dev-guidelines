@@ -3,6 +3,7 @@
 > **任务类型**: 技术调研  
 > **使用场景**: 技术选型、方案对比、POC 验证  
 > **输出目录**: `projects/<project-name>/research/<research-id>/`  
+> **版本**: v2.1.0
 
 ---
 

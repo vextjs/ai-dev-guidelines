@@ -3,13 +3,15 @@
 > **任务类型**: 架构重构  
 > **使用场景**: 大型代码重构、架构升级  
 > **输出目录**: `projects/<project-name>/refactoring/<ref-id>/`  
+> **版本**: v2.1.0
 
 ---
 
 ## 📋 流程概览
 
 ```
-现状分析 → 目标设计 → 拆分计划 → 分步实施 → 灰度上线 → 完成总结
+现状分析 → 目标设计 → 拆分计划 → 实施方案 → 分步执行 → 灰度上线 → 完成总结
+    CP1         CP2                  CP3（每阶段执行前确认）
 ```
 
 ---
@@ -23,6 +25,10 @@
 
 **输出**: `01-current-state.md`
 
+**⏸️ CP1 确认点**: 等待用户确认分析结果和重构范围
+
+---
+
 ### Step 2: 目标设计
 - 设计目标架构
 - 制定重构原则
@@ -30,28 +36,80 @@
 
 **输出**: `02-target-design.md`
 
+**⏸️ CP2 确认点**: 等待用户确认目标架构可行
+
+---
+
 ### Step 3: 拆分计划
 - 将重构拆分为多个阶段
-- 确定每个阶段的目标
+- 确定每个阶段的目标和范围
 - 制定回滚方案
 
 **输出**: `03-plan.md`
 
-### Step 4: 分步实施
-- 按阶段实施重构
+**内容要点**:
+- 阶段划分（Phase 1/2/3...）
+- 每阶段的目标和涉及模块
+- 阶段间依赖关系
+- 回滚方案
+
+---
+
+### Step 4: 实施方案
+
+**目标**: 为每个阶段生成具体的实施方案
+
+**核心原则**:
+- 拆分计划说"分几步走"（宏观规划）
+- 实施方案说"每步具体改什么"（每个文件的完整变更）
+- **每个阶段执行前，生成该阶段的实施方案并确认**
+
+**实施方案结构**:
+
+```yaml
+按阶段生成:
+  projects/<project>/refactoring/<ref-id>/
+  ├── 04-implementation/
+  │   ├── phase-1/
+  │   │   ├── README.md            # 阶段1实施索引（前检查+步骤+验证）
+  │   │   ├── <Module>.md          # 各文件变更
+  │   │   └── ...
+  │   ├── phase-2/
+  │   │   ├── README.md
+  │   │   └── ...
+  │   └── ...
+  └── scripts/
+```
+
+**⏸️ CP3 确认点**: 每个阶段执行前确认该阶段的实施方案
+
+---
+
+### Step 5: 分步执行
+- 按阶段执行重构
+- 每阶段执行前先确认实施方案
+- 每阶段完成后验证并报告
 - 记录每个阶段的变更
-- 持续测试验证
 
-**输出**: `04-implementation.md`
+**执行流程（每个阶段）**:
+1. 生成该阶段实施方案 → 用户确认
+2. 执行实施前检查
+3. 对照方案逐文件执行
+4. 验证该阶段无问题
+5. 进入下一阶段
 
-### Step 5: 灰度上线
+---
+
+### Step 6: 灰度上线
 - 制定灰度策略
 - 监控关键指标
 - 逐步扩大灰度范围
 
-**输出**: 更新 `04-implementation.md`
+**输出**: 更新 `04-implementation/` 最后阶段
 
-### Step 6: 完成总结
+---
+
+### Step 7: 完成总结
 - 总结重构效果
 - 记录经验教训
 - 整理技术文档
@@ -67,8 +125,16 @@
 projects/user-service/refactoring/REF-user-auth-20260211/
 ├── 01-current-state.md        # 当前架构
 ├── 02-target-design.md        # 目标架构
-├── 03-plan.md                 # 实施计划
-├── 04-implementation.md       # 实施记录
+├── 03-plan.md                 # 实施计划（阶段划分）
+├── 04-implementation/         # 实施方案
+│   ├── phase-1/               # 阶段1：基础拆分
+│   │   ├── README.md
+│   │   ├── AuthService.md
+│   │   └── UserModel.md
+│   └── phase-2/               # 阶段2：接口迁移
+│       ├── README.md
+│       ├── AuthController.md
+│       └── AuthMiddleware.md
 ├── 05-summary.md              # 完成总结
 └── docs/
     ├── architecture.png       # 架构图
@@ -80,7 +146,8 @@ projects/user-service/refactoring/REF-user-auth-20260211/
 ## 🚨 注意事项
 
 - 大型重构必须分阶段进行
-- 每个阶段都要有测试验证
+- 每个阶段都要有实施方案和用户确认
+- 每个阶段执行后都要验证
 - 制定详细的回滚方案
 - 重要变更需要灰度上线
 
@@ -89,7 +156,9 @@ projects/user-service/refactoring/REF-user-auth-20260211/
 ## ✅ 完成检查清单
 
 - [ ] 重构目标明确
-- [ ] 实施计划详细
+- [ ] 目标架构已确认
+- [ ] 实施计划详细（阶段划分清晰）
+- [ ] 每阶段实施方案已确认
 - [ ] 每阶段已验证
 - [ ] 测试覆盖充分
 - [ ] 文档已更新
@@ -120,5 +189,13 @@ projects/user-service/refactoring/REF-user-auth-20260211/
 
 ---
 
-**相关模板**: [重构计划模板](../../templates/extended/refactoring-template.md)
+**相关文档**:
+- [重构模板](../../templates/extended/refactoring-template.md)
+- [实施方案模板](../../templates/core/implementation-template.md)
+- [问题识别流程](../00-task-identification/README.md)
 
+---
+
+**版本**: v2.1.0  
+**更新日期**: 2026-02-24  
+**核心改进**: 新增实施方案环节，按阶段生成+确认，每阶段执行前必须用户确认

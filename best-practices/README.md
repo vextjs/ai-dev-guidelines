@@ -19,6 +19,14 @@
 - [compliance-check.md](./compliance-check.md) - 规范检查机制
 - [auto-fix.md](./auto-fix.md) - 自动修复机制
 
+### AI 行为规范
+- [AI-CODE-STANDARDS.md](./AI-CODE-STANDARDS.md) - AI 代码生成标准（报告验证、修复扫描）
+- [ai-self-check.md](./ai-self-check.md) - AI 自检机制
+- [analysis-methods.md](./analysis-methods.md) - 分析方法论
+
+### 快速索引
+- [WHEN-TO-USE.md](./WHEN-TO-USE.md) - 问题速查（什么场景用什么文档）
+
 ---
 
 ## 🎯 快速索引

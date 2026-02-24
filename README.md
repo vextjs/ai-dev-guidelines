@@ -1,7 +1,7 @@
 # Dev-Docs - AI 开发执行手册
 
-> **版本**: v2.0.0  
-> **最后更新**: 2026-02-12  
+> **版本**: v2.1.0  
+> **最后更新**: 2026-02-24  
 > **核心定位**: 轻量、灵活、实用的 AI 文档生成工具
 > 
 > **目标用户**: AI Agent（GitHub Copilot / Claude / GPT）
@@ -10,14 +10,14 @@
 
 ---
 
-## 🎯 执行模式（v2.0 新增）
+## 🎯 执行模式（v2.1 新增）
 
 ### 快速模式 (默认)
 
 | 项目 | 说明 |
 |-----|------|
 | 适用场景 | 简单需求、小改动、快速迭代 |
-| 流程步骤 | 4 个阶段 |
+| 流程步骤 | 5 个阶段 |
 | 输出文档 | 精简版（使用 `templates/lite/`） |
 | 预计时间 | 15-30 分钟 |
 
@@ -26,7 +26,7 @@
 | 项目 | 说明 |
 |-----|------|
 | 适用场景 | 复杂需求、核心功能、正式交付 |
-| 流程步骤 | 6 个阶段 |
+| 流程步骤 | 7 个阶段 |
 | 输出文档 | 完整版（使用 `templates/core/`） |
 | 预计时间 | 45-90 分钟 |
 
@@ -41,11 +41,13 @@
 
 ### 当你（AI）收到用户请求时：
 
-1. **识别任务类型** - 判断属于哪种开发场景
-2. **读取对应流程** - 从 `workflows/` 目录找到执行流程
-3. **按步骤执行** - 严格按照流程定义的步骤操作
-4. **生成文档** - 使用 `templates/` 中的模板记录过程
-5. **验证完成度** - 对照检查清单确认任务完成
+1. **预检查** - 执行 3 项必做检查
+2. **评估合理性** - 有更好建议先提出，确认后再执行
+3. **识别任务类型** - 判断属于哪种开发场景
+4. **读取对应流程** - 从 `workflows/` 目录找到执行流程
+5. **按步骤执行** - 严格按照流程定义的步骤操作
+6. **关联文件检查** - 修改文件时自动扫描关联文件并同步
+7. **验证完成度** - 对照检查清单确认任务完成
 
 ### 支持的任务类型（按优先级）
 
@@ -92,71 +94,64 @@
 ```
 dev-docs/
 ├── README.md                          # 👈 你正在阅读的文件（AI 入口）
+├── QUICK-REFERENCE.md                 # 📖 速查手册（推荐首先阅读）
+├── STATUS.md                          # 📊 项目状态追踪
+├── CONSTRAINTS.md                     # ⛔ 约束清单（11 条）
+├── CHANGELOG.md                       # 📜 版本变更索引
 │
 ├── projects/                          # 🗂️ 项目特定规范（关键）
 │   ├── README.md                     # 项目规范说明
 │   ├── _template/                    # 项目规范模板
-│   │   ├── PROJECT.md                # 项目规范模板（统一版）
-│   │   ├── TECH-STACK.md             # 技术栈模板
-│   │   └── CODE-STANDARDS.md         # 代码规范模板
+│   │   └── PROJECT.md                # 项目规范模板（统一版）
+│   ├── dev-docs/                     # 本项目规范
 │   └── user-service/                 # 示例：用户服务项目
 │
 ├── workflows/                         # 🤖 AI 执行流程（通用）
+│   ├── 00-pre-check/                 # 预检查（3 项必做）
 │   ├── 00-task-identification/       # 步骤0: 识别任务类型
-│   │   ├── README.md                 # 识别流程主文档
-│   │   ├── rules.md                  # 识别规则详解
-│   │   └── examples.md               # 识别案例集
 │   ├── 01-requirement-dev/           # 流程1: 需求开发
-│   │   ├── README.md                 # 流程主文档
-│   │   └── steps.md                  # 详细步骤说明
 │   ├── 02-bug-fix/                   # 流程2: Bug 修复
 │   ├── 03-optimization/              # 流程3: 性能优化
 │   ├── 04-research/                  # 流程4: 技术调研
 │   ├── 05-refactoring/               # 流程5: 架构重构
 │   ├── 06-database/                  # 流程6: 数据库变更
 │   ├── 07-security/                  # 流程7: 安全修复
-│   └── 08-incident/                  # 流程8: 事故复盘
+│   ├── 08-incident/                  # 流程8: 事故复盘
+│   ├── 09-opensource-init/           # 专项: 开源项目初始化
+│   ├── common/                       # 通用组件（确认点、断点续传等）
+│   └── decision-tree.yaml            # 决策树配置
+│
+├── standards/                         # 📏 开发规范（9 个文件）
+│   ├── code-standards.md             # 代码规范
+│   ├── test-standards.md             # 测试规范
+│   ├── doc-standards.md              # 文档规范
+│   ├── api-standards.md              # API 规范
+│   ├── script-standards.md           # 脚本规范
+│   ├── security-standards.md         # 安全规范（不可覆盖）
+│   ├── config-standards.md           # 配置规范
+│   ├── tool-standards.md             # 工具规范（不可覆盖）
+│   └── git-standards.md              # Git 规范
 │
 ├── templates/                         # 📝 文档模板（结构化）
-│   ├── README.md                     # 模板使用说明
-│   ├── core/                         # 核心模板（Tier 1）
-│   │   ├── requirement-template.md
-│   │   ├── technical-template.md
-│   │   ├── implementation-template.md
-│   │   ├── bug-analysis-template.md
-│   │   ├── optimization-template.md
-│   │   └── integration-template.md
-│   ├── extended/                     # 扩展模板（Tier 2）
-│   │   ├── research-template.md
-│   │   ├── refactoring-template.md
-│   │   └── ...
-│   └── common/                       # 通用组件
-│       ├── header.md
-│       ├── footer.md
-│       └── checklist.md
+│   ├── lite/                         # 精简模板（快速模式，7 个）
+│   ├── core/                         # 核心模板（完整模式，8 个）
+│   ├── extended/                     # 扩展模板（Tier 2，5 个）
+│   └── common/                       # 通用组件（头部、尾部、清单等）
 │
-├── outputs/                           # 📦 保留目录（历史兼容，推荐使用 projects/）
-│   └── README.md                     # 说明文档
-│
-├── tools/                             # 🔧 AI 可用工具说明
-│   └── README.md                     # 工具使用手册（包含所有工具说明）
-│
-├── examples/                          # 📚 完整示例（供 AI 学习）
-│   ├── README.md                     # 示例清单和学习路径
-│   └── requirement-example/          # 需求开发示例
-│       ├── README.md                 # 示例说明
-│       ├── user-input.md             # 用户输入
-│       └── outputs/                  # 生成文档
+├── best-practices/                    # ⚡ 最佳实践和高级场景
+│   └── README.md                     # 边界处理、Token优化、大项目策略
 │
 ├── spec-self-fix/                     # 🔧 规范自我修复机制
-│   ├── README.md                     # 机制总览
 │   ├── detection/                    # 检测模块
 │   ├── repair/                       # 修复模块
-│   ├── triggers/                     # 触发机制（含用户意图）
+│   ├── triggers/                     # 触发机制
 │   └── records/                      # 修复记录
 │
-└── best-practices/                    # ⚡ 最佳实践和高级场景
-    └── README.md                     # 边界处理、Token优化、大项目策略
+├── tools/                             # 🔧 工具脚本（4 个）
+├── examples/                          # 📚 完整示例（供 AI 学习）
+├── changelogs/                        # 📜 版本变更详情（v1.0~v2.0）
+├── reports/                           # 📊 历史分析报告
+└── outputs/                           # 📦 已弃用（历史兼容，使用 projects/）
 ```
 
 ### 🎯 目录说明（AI 必读）
@@ -174,27 +169,6 @@ dev-docs/
 
 ---
 
-## 🔄 AI 开发流程规范
-
-详细流程请参阅 `workflows/` 目录下的对应文件：
-
-### 核心流程
-| 流程 | 文件位置 | 阶段概览 |
-|-----|---------|---------|
-| 需求开发 | `workflows/01-requirement-dev/` | 需求分析 → 技术方案 → 实施计划 → 代码开发 |
-| Bug 修复 | `workflows/02-bug-fix/` | 问题复现 → 原因分析 → 解决方案 → 验证测试 |
-| 性能优化 | `workflows/03-optimization/` | 性能基线 → 瓶颈识别 → 优化方案 → 效果验证 |
-
-### 扩展流程
-| 流程 | 文件位置 |
-|-----|---------|
-| 技术调研 | `workflows/04-research/` |
-| 架构重构 | `workflows/05-refactoring/` |
-| 数据库变更 | `workflows/06-database/` |
-| 安全修复 | `workflows/07-security/` |
-| 事故复盘 | `workflows/08-incident/` |
-
----
 
 ## 📝 文档命名规范
 
@@ -233,10 +207,10 @@ dev-docs/
 ### 预检查（每次必做）
 
 ```text
-🔍 预检查:
-✅ 1. 工作区: [当前路径]
-✅ 2. 任务类型: [需求/Bug/优化]
-✅ 3. 输出位置: [projects/<project>/...]
+📋 预检查:
+1. 工作区: [当前路径]
+2. 任务类型: [需求/Bug/优化]
+3. 输出位置: [projects/<project>/...]
 ```
 
 ### 任务类型映射
@@ -254,7 +228,7 @@ dev-docs/
 |-------|------|------|
 | CP1 | 需求理解后 | 确认/修改 |
 | CP2 | 方案设计后 | 确认/修改/取消 |
-| CP3 | 代码实现后 | 确认/修改/取消 |
+| CP3 | 实施方案后 | 确认/修改/取消 |
 
 ### 输出路径
 
@@ -263,22 +237,27 @@ projects/<project-name>/
 ├── requirements/    # 需求开发
 ├── bugs/           # Bug 修复
 ├── optimizations/  # 性能优化
-└── research/       # 技术调研
+├── research/       # 技术调研
+├── refactoring/    # 架构重构
+├── database/       # 数据库变更
+├── security/       # 安全修复
+└── incidents/      # 事故复盘
 ```
 
 ---
 
-## 🚀 快速开始
+## 📋 快速开始
 
 ### 创建新需求文档
 ```bash
 # 1. 创建项目目录（如果不存在）
+mkdir -p projects/<project-name>/requirements/<feature-name>/03-implementation
 mkdir -p projects/<project-name>/requirements/<feature-name>/scripts
 
 # 2. 复制模板
 cp templates/core/requirement-template.md projects/<project-name>/requirements/<feature-name>/01-requirement.md
 cp templates/core/technical-template.md projects/<project-name>/requirements/<feature-name>/02-technical.md
-cp templates/core/implementation-template.md projects/<project-name>/requirements/<feature-name>/03-implementation.md
+cp templates/core/implementation-template.md projects/<project-name>/requirements/<feature-name>/03-implementation/README.md
 
 # 3. 开始编辑文档
 ```
@@ -322,9 +301,9 @@ cp templates/core/bug-analysis-template.md projects/<project-name>/bugs/<bug-id>
 
 | 流程文件 | 任务类型 | 关键步骤 | 输出文档 | 使用频率 |
 |---------|---------|---------|---------|----------|
-| `01-requirement-dev/` | 需求开发 | 分析→设计→实现→验证 | 3-4 个文档 | 40% |
-| `02-bug-fix/` | Bug 修复 | 复现→分析→修复→验证 | 3 个文档 | 30% |
-| `03-optimization/` | 性能优化 | 基线→优化→验证→对比 | 4 个文档 | 10% |
+| `01-requirement-dev/` | 需求开发 | 分析→方案→实施方案→执行→验证 | 3-4 个文档 | 40% |
+| `02-bug-fix/` | Bug 修复 | 分析→方案→实施方案→修复→验证 | 3 个文档 | 30% |
+| `03-optimization/` | 性能优化 | 基线→方案→实施方案→优化→验证 | 5 个文档 | 10% |
 
 > **说明**: 需求开发如果涉及第三方系统对接，会多生成 `04-integration.md` 文档
 
@@ -338,6 +317,12 @@ cp templates/core/bug-analysis-template.md projects/<project-name>/bugs/<bug-id>
 | `07-security/` | 安全修复 | 漏洞修复、加固 | 1% |
 | `08-incident/` | 事故复盘 | 生产故障分析 | 1% |
 
+#### 专项工作流
+
+| 流程文件 | 任务类型 | 使用场景 | 使用频率 |
+|---------|---------|---------|----------|
+| `09-opensource-init/` | 开源项目初始化 | 创建新的开源 NPM 包 | 按需 |
+
 ---
 
 ## 📚 输出示例
@@ -345,21 +330,24 @@ cp templates/core/bug-analysis-template.md projects/<project-name>/bugs/<bug-id>
 ### 需求开发示例
 ```
 projects/user-service/requirements/20260211-rate-limit-integration/
-├── 01-requirement.md          # 需求: 集成限流功能
-├── 02-technical.md            # 方案: 技术设计
-├── 03-implementation.md       # 实施: 代码实现记录
-├── 04-integration.md          # 对接: 第三方系统对接说明
+├── 01-requirement.md          # 需求: 做什么、为什么做
+├── 02-technical.md            # 方案: 怎么做（只描述，不写代码）
+├── 03-implementation/         # 实施方案（执行前生成，确认后才执行）
+│   ├── README.md              # 实施总索引（前检查+步骤+验证）
+│   ├── RateLimitConfig.md     # 配置文件变更（完整代码）
+│   ├── RateLimiter.md         # 中间件变更（完整代码）
+│   └── AppIntegration.md      # 应用集成变更（完整代码）
+├── 04-integration.md          # 对接: 第三方系统（可选）
 └── scripts/
-    ├── install.sh             # 安装脚本
-    └── test-rate-limit.js     # 测试脚本
+    └── install.sh             # 安装脚本
 ```
 
 ### Bug 修复示例
 ```
 projects/chat-service/bugs/BUG-chat-001-message-loss/
-├── 01-analysis.md             # 问题: 消息丢失原因分析
+├── 01-analysis.md             # 分析: 消息丢失原因
 ├── 02-solution.md             # 方案: 消息队列重构
-├── 03-implementation.md       # 实施: 代码修复记录
+├── 03-implementation.md       # 实施方案: 变更内容
 └── scripts/
     └── fix-message-queue.sql  # 数据库修复脚本
 ```
@@ -376,63 +364,25 @@ projects/payment-service/research/RES-cache-selection-20260211/
 #### 事故复盘示例
 ```
 projects/order-service/incidents/INC-20260210-P0-database-outage/
-├── 01-timeline.md             # 时间线: 故障发生到恢复
-├── 02-rootcause.md            # 根因: 连接池耗尽
+├── 01-incident-record.md      # 故障记录+时间线
+├── 02-root-cause.md           # 根因: 连接池耗尽
 ├── 03-impact.md               # 影响: 损失 10万订单
-└── 04-action.md               # 措施: 监控+限流+扩容
+├── 04-improvements.md         # 改进措施: 监控+限流+扩容
+└── 05-summary.md              # 复盘报告
 ```
 
 #### 架构重构示例
 ```
 projects/user-service/refactoring/REF-user-auth-20260211/
-├── 01-current.md              # 现状: 单体架构问题
-├── 02-target.md               # 目标: 微服务拆分
+├── 01-current-state.md        # 现状: 单体架构问题
+├── 02-target-design.md        # 目标: 微服务拆分
 ├── 03-plan.md                 # 计划: 分 3 个阶段
-└── 04-rollout.md              # 上线: 灰度 → 全量
+├── 04-implementation/         # 实施方案（按阶段）
+│   ├── phase-1/
+│   └── phase-2/
+└── 05-summary.md              # 完成总结
 ```
 
-### 创建 Bug 文档
-```bash
-# 1. 创建 Bug 目录
-mkdir -p projects/<project-name>/bugs/<bug-id>
-
-# 2. 复制模板
-cp templates/core/bug-analysis-template.md projects/<project-name>/bugs/<bug-id>/01-analysis.md
-```
-
-### 创建优化文档
-```bash
-# 1. 创建优化目录
-mkdir -p projects/<project-name>/optimizations/<optimization-id>/scripts
-
-# 2. 复制模板
-cp templates/core/optimization-template.md projects/<project-name>/optimizations/<optimization-id>/01-baseline.md
-```
-
----
-
-## 📋 文档清单示例
-
-### 完整需求开发示例
-```
-projects/user-service/requirements/20260211-rate-limit/
-├── 01-requirement.md          # 需求: 接入 flex-rate-limit
-├── 02-technical.md            # 技术方案: 中间件设计
-├── 03-implementation.md       # 实施: 代码变更记录
-├── 04-integration.md          # 对接: API 使用说明
-└── scripts/
-    ├── install.sh             # 安装脚本
-    └── test-rate-limit.js     # 测试脚本
-```
-
-### Bug 修复示例
-```
-projects/chat-service/bugs/BUG-chat-001-message-loss/
-├── 01-analysis.md             # 分析: 复现步骤 + 根因
-├── 02-solution.md             # 方案: 修复代码 + 测试
-└── scripts/
-    └── fix-message-queue.sql  # 数据库修复脚本
-```
 
 ---
 
@@ -457,5 +407,5 @@ projects/chat-service/bugs/BUG-chat-001-message-loss/
 
 - 项目负责人: rockyshi1993
 - 创建日期: 2026-02-11
-- 最后更新: 2026-02-12
-- 版本: v2.0.0
+- 最后更新: 2026-02-24
+- 版本: v2.1.0

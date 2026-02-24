@@ -1,5 +1,9 @@
 # 步骤 9 和 10 - 完成验证和交付规范
 
+> ⚠️ **注意**: 本文件基于 v1.x 的步骤体系编写，部分内容已过时。  
+> **v2.1 各工作流的验证和完成步骤请以各自的 `README.md` 为准。**  
+> 本文件中的通用验证逻辑仍可作为参考。
+
 > **所属流程**: 所有工作流（WF-01 到 WF-08）  
 > **执行阶段**: 步骤 8（验证完成度）之后  
 > **驱动方式**: AI 自动执行 + 用户确认 + 用户手动提交  
@@ -434,9 +438,9 @@ feat(auth): 实现 JWT 用户认证和 RBAC 权限管理
   - 支持动态权限更新（需要重新登录）
 
 相关文档:
-  - 需求: outputs/auth/req-001/REQUIREMENT.md
-  - 技术方案: outputs/auth/req-001/TECH-PLAN.md
-  - 实施记录: outputs/auth/req-001/IMPLEMENTATION.md
+  - 需求: projects/auth/req-001/REQUIREMENT.md
+  - 技术方案: projects/auth/req-001/TECH-PLAN.md
+  - 实施记录: projects/auth/req-001/IMPLEMENTATION.md
 
 测试结果:
   ✅ 单元测试: 45/45 通过
@@ -481,7 +485,7 @@ A. 长期保存 (进入项目 docs/)
      - API文档 → docs/api/
    处理: 用户审核后复制
 
-B. 临时保存 (保留在 outputs/)
+B. 临时保存 (保留在 projects/)
    条件: 实施过程中的临时产物
    文件:
      - IMPLEMENTATION.md (保留原件)
@@ -506,7 +510,7 @@ Step 10.2 - 文件归档清单
 ═════════════════════════════════════════
 
 生成的文件:
-  outputs/auth/req-001/
+  projects/auth/req-001/
     ├── REQUIREMENT.md (248 行)
     ├── TECH-PLAN.md (412 行)
     ├── IMPLEMENTATION.md (185 行)
@@ -532,7 +536,7 @@ Step 10.2 - 文件归档清单
     目标路径: docs/api/auth-api.md
     步骤: 单独整理，审核后复制
 
-【保留在 outputs 的文件】
+【保留在 projects 的文件】
   □ IMPLEMENTATION.md (参考实施细节用)
   □ test-scripts/ (以后运行回归测试用)
   □ reports/ (审计追踪用)
@@ -545,9 +549,9 @@ Step 10.2 - 文件归档清单
 
 用户操作流程:
   1. 审核 REQUIREMENT.md 和 TECH-PLAN.md
-  2. 如需修改，修改 outputs 中的原件
+  2. 如需修改，修改 projects 中的原件
   3. 审核通过后，复制到 docs/
-  4. 更新 outputs/auth/INDEX.md (任务列表)
+  4. 更新 projects/auth/INDEX.md (任务列表)
 ```
 
 ---
@@ -600,7 +604,7 @@ Step 10.2 - 文件归档清单
   操作:
     1. 复制 REQUIREMENT.md → docs/requirements/
     2. 复制 TECH-PLAN.md → docs/design/
-    3. 更新 outputs/auth/INDEX.md (标记为已合并)
+    3. 更新 projects/auth/INDEX.md (标记为已合并)
     4. git add docs/ && git commit && git push
   预计时间: < 10 分钟
 
@@ -676,7 +680,7 @@ Step 10.3 - 后续操作清单
       □ 更改已推送到 main
 
 6️⃣  更新任务状态 (代码合并后)
-    文件: outputs/auth/INDEX.md
+    文件: projects/auth/INDEX.md
     更新:
       - 状态: merged → completed
       - 完成日期: 2026-02-15
@@ -762,7 +766,7 @@ feat(auth): 实现 JWT 用户认证和 RBAC 权限管理
 【文件归档清单】
 - REQUIREMENT.md → docs/requirements/FEATURE-AUTH-001.md
 - TECH-PLAN.md → docs/design/FEATURE-AUTH-001-design.md
-- test-scripts/ → outputs/auth/req-001/test-scripts/
+- test-scripts/ → projects/auth/req-001/test-scripts/
 
 【后续操作】
 1. git commit && git push
@@ -788,8 +792,8 @@ git push origin feature/auth-001
 [点击 Merge 按钮]
 
 # 后续：归档文件
-cp outputs/auth/REQUIREMENT.md docs/requirements/
-cp outputs/auth/TECH-PLAN.md docs/design/
+cp projects/auth/REQUIREMENT.md docs/requirements/
+cp projects/auth/TECH-PLAN.md docs/design/
 git commit && git push
 ```
 

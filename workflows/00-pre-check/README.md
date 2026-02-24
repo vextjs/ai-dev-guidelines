@@ -1,6 +1,6 @@
 # 工作流 00 - 简化预检查 v2
 
-> **版本**: v2.0.0  
+> **版本**: v2.1.0  
 > **核心改进**: 精简为 3 项必做检查，移除形式化检查
 
 ---
@@ -119,24 +119,20 @@
 ### 标准格式（快速模式）
 
 ```text
-🔍 预检查:
-✅ 1. 工作区: E:\Worker\user-service
-✅ 2. 任务类型: 需求开发
-✅ 3. 输出位置: projects/user/requirements/20260212-rate-limit/
-
-预检查完成，开始执行...
+📋 预检查:
+1. 工作区: E:\Worker\user-service
+2. 任务类型: 需求开发
+3. 输出位置: projects/user/requirements/20260212-rate-limit/
 ```
 
 ### 扩展格式（涉及代码时）
 
 ```text
-🔍 预检查:
-✅ 1. 工作区: E:\Worker\user-service
-✅ 2. 任务类型: 需求开发
-✅ 3. 输出位置: projects/user/requirements/20260212-rate-limit/
-✅ 4. 项目规范: ✅ 已加载 PROJECT.md (Node.js 18 + TypeScript)
-
-预检查完成，开始执行...
+📋 预检查:
+1. 工作区: E:\Worker\user-service
+2. 任务类型: 需求开发
+3. 输出位置: projects/user/requirements/20260212-rate-limit/
+4. 项目规范: 已加载 PROJECT.md (Node.js 18 + TypeScript)
 ```
 
 ---

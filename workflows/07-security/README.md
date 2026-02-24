@@ -3,13 +3,15 @@
 > **任务类型**: 安全修复  
 > **使用场景**: 漏洞修复、安全加固、合规整改  
 > **输出目录**: `projects/<project-name>/security/<sec-id>/`  
+> **版本**: v2.1.0
 
 ---
 
 ## 📋 流程概览
 
 ```
-漏洞识别 → 风险评估 → 修复方案 → 代码修复 → 安全测试 → 安全审计
+漏洞识别 → 风险评估 → 修复方案 → 实施方案 → 执行修复 → 安全测试 → 安全审计
+              CP1          CP2        CP3（含实施前检查）
 ```
 
 ---
@@ -23,6 +25,8 @@
 
 **输出**: `01-vulnerability.md`
 
+---
+
 ### Step 2: 风险评估
 - 评估安全风险等级
 - 分析潜在危害
@@ -30,28 +34,85 @@
 
 **输出**: 更新 `01-vulnerability.md`
 
+**⏸️ CP1 确认点**: 等待用户确认漏洞分析和风险等级
+
+---
+
 ### Step 3: 修复方案
-- 设计修复方案
+- 设计修复方案（只描述方案，不写具体代码）
 - 考虑防御深度
 - 制定加固措施
+- 列出需修改的文件清单
 
 **输出**: `02-solution.md`
 
-### Step 4: 代码修复
-- 实施安全修复
-- 添加安全检查
-- 更新安全配置
+**内容要点**:
+- 修复方案设计
+- 改动文件清单
+- 安全加固措施
+- 风险评估
 
-**输出**: `03-implementation.md`
+**⏸️ CP2 确认点**: 等待用户确认修复方案
 
-### Step 5: 安全测试
+---
+
+### Step 4: 实施方案
+
+**目标**: 生成可执行的实施方案，供用户确认后才执行
+
+**核心原则**:
+- 修复方案说"怎么修"（思路、策略）
+- 实施方案说"具体改什么"（每个文件的完整变更内容）
+- **用户确认所有变更内容后，才开始修改代码**
+
+**AI 执行**:
+1. 基于修复方案，为每个需要修改的文件生成变更内容
+2. 生成实施前检查清单
+3. 生成实施步骤
+4. 生成安全验证清单
+
+**实施方案结构**:
+
+```yaml
+小修复（< 5 个文件）:
+  直接在聊天中输出
+
+大修复（>= 5 个文件）:
+  生成 03-implementation 目录:
+    projects/<project>/security/<sec-id>/
+    ├── 03-implementation/
+    │   ├── README.md
+    │   ├── <Module>.md
+    │   └── ...
+    └── scripts/
+```
+
+**⏸️ CP3 确认点**: 用户确认所有变更内容后才执行
+
+---
+
+### Step 5: 执行修复
+
+**前置条件**: CP3 已确认 + 实施前检查全部通过
+
+**AI 执行**:
+1. 先执行实施前检查清单，逐项验证
+2. 按实施方案中的步骤顺序，逐文件修改
+3. 每完成一个文件报告进度
+4. 遇到问题暂停，向用户报告
+
+---
+
+### Step 6: 安全测试
 - 执行安全扫描
 - 进行渗透测试
 - 验证修复效果
 
 **输出**: `04-testing.md`
 
-### Step 6: 安全审计
+---
+
+### Step 7: 安全审计
 - 复查代码
 - 更新安全文档
 - 总结经验教训
@@ -61,16 +122,44 @@
 
 ---
 
+## 📎 文档职责划分
+
+```yaml
+文档关系:
+  01-vulnerability.md: 漏洞描述、类型、影响范围、风险等级
+  02-solution.md: 修复方案设计（只描述，不写代码）
+  03-implementation/: 实施方案（具体变更内容，确认后才执行）
+  04-testing.md: 安全测试结果
+```
+
+---
+
 ## 📦 输出示例
 
+### 小修复
 ```
 projects/payment-service/security/SEC-sql-injection-fix-20260211/
 ├── 01-vulnerability.md        # 漏洞描述
 ├── 02-solution.md             # 修复方案
-├── 03-implementation.md       # 实施记录
+├── 03-implementation.md       # 实施方案（单文件）
 ├── 04-testing.md              # 安全测试
 └── scripts/
     └── security-check.js      # 安全检查脚本
+```
+
+### 大修复
+```
+projects/payment-service/security/SEC-auth-overhaul-20260211/
+├── 01-vulnerability.md
+├── 02-solution.md
+├── 03-implementation/
+│   ├── README.md
+│   ├── AuthMiddleware.md
+│   ├── InputValidator.md
+│   └── SecurityConfig.md
+├── 04-testing.md
+└── scripts/
+    └── security-scan.js
 ```
 
 ---
@@ -101,7 +190,10 @@ projects/payment-service/security/SEC-sql-injection-fix-20260211/
 
 - [ ] 漏洞已明确定位
 - [ ] 风险等级已评估
-- [ ] 修复方案已实施
+- [ ] 修复方案已确认（CP2）
+- [ ] 实施方案已确认（CP3）
+- [ ] 实施前检查已通过
+- [ ] 修复代码已执行
 - [ ] 安全测试已通过
 - [ ] 无新引入安全问题
 - [ ] 安全文档已更新
@@ -132,5 +224,13 @@ projects/payment-service/security/SEC-sql-injection-fix-20260211/
 
 ---
 
-**相关模板**: [安全修复模板](../../templates/extended/security-template.md)
+**相关文档**:
+- [安全修复模板](../../templates/extended/security-template.md)
+- [实施方案模板](../../templates/core/implementation-template.md)
+- [问题识别流程](../00-task-identification/README.md)
 
+---
+
+**版本**: v2.1.0  
+**更新日期**: 2026-02-24  
+**核心改进**: 新增实施方案环节（Step 4），增加 CP1/CP2/CP3 确认点

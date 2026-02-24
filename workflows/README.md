@@ -39,14 +39,14 @@
 | [common/](./common/) | 通用组件（确认点、文档同步等） |
 | [decision-tree.yaml](./decision-tree.yaml) | 决策树配置 |
 
-### 通用文档（跨工作流）
+### 通用文档（跨工作流）— ⚠️ 基于 v1.x，仅供参考
 
 | 文件 | 说明 |
 |------|------|
-| [09-COMPLETION-AND-DELIVERY.md](./09-COMPLETION-AND-DELIVERY.md) | 完成验证和交付规范（所有工作流通用） |
-| [10-WORKFLOW-TRANSITIONS.md](./10-WORKFLOW-TRANSITIONS.md) | 工作流转移规则（跨工作流切换） |
+| [09-COMPLETION-AND-DELIVERY.md](./09-COMPLETION-AND-DELIVERY.md) | ⚠️ 完成验证和交付规范（v1.x，已过时） |
+| [10-WORKFLOW-TRANSITIONS.md](./10-WORKFLOW-TRANSITIONS.md) | ⚠️ 工作流转移规则（v1.x，已过时） |
 
-> **说明**: 09/10 是单独文件而非目录，因为它们是**跨工作流通用文档**，不属于特定任务类型。
+> **说明**: v2.1 各工作流 README.md 已自包含完成/验证步骤，09/10 仅作为历史参考。
 
 ---
 
@@ -74,5 +74,5 @@
 
 ---
 
-**最后更新**: 2026-02-12
+**最后更新**: 2026-02-24
 

@@ -1,5 +1,8 @@
 # 预检查输出示例
 
+> ⚠️ **注意**: 本文件为 v1.x 旧版预检查示例（5项、🔴/✅ 前缀），仅供历史参考。  
+> **v2.0 当前格式请以 `README.md` 为准（3项，📋 前缀，无 ✅ 编号前缀）。**
+
 > 各种场景下的预检查输出示例
 
 ---
@@ -149,7 +152,7 @@
 预计生成文档:
   - 01-requirement.md (需求文档)
   - 02-technical.md (技术方案)
-  - 03-implementation.md (实施记录)
+  - 03-implementation/ (实施方案目录)
   - 04-integration.md (对接文档，如涉及第三方)
 
 开始执行需求开发流程...
@@ -164,8 +167,7 @@
 预计生成文档:
   - 01-analysis.md (问题分析)
   - 02-solution.md (解决方案)
-  - 03-implementation.md (实施记录)
-  - 04-validation.md (验证报告)
+  - 03-implementation (实施方案)
 
 开始执行 Bug 修复流程...
 ```

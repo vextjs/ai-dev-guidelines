@@ -369,7 +369,7 @@ await run_in_terminal({
 #### Step 2: 创建输出目录
 ```typescript
 await create_directory({
-  dirPath: `outputs/${projectName}/requirements/${taskId}/scripts`
+  dirPath: `projects/${projectName}/requirements/${taskId}/scripts`
 });
 ```
 
@@ -400,7 +400,7 @@ const template = await read_file({
 
 // 创建文档
 await create_file({
-  filePath: `outputs/${projectName}/requirements/${taskId}/01-requirement.md`,
+  filePath: `projects/${projectName}/requirements/${taskId}/01-requirement.md`,
   content: filledTemplate
 });
 

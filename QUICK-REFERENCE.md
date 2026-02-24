@@ -2,8 +2,8 @@
 
 > AI 执行任务时的速查手册
 
-**版本**: v2.0.0  
-**最后更新**: 2026-02-12
+**版本**: v2.1.0  
+**最后更新**: 2026-02-24
 
 ---
 
@@ -41,7 +41,7 @@
 | 项目 | 说明 |
 |-----|------|
 | 适用 | 简单需求、小改动、< 5 个文件 |
-| 流程 | 4 阶段 |
+| 流程 | 5 阶段（理解→方案→实施方案→执行→报告） |
 | 模板 | `templates/lite/` |
 | 时间 | 15-30 分钟 |
 
@@ -50,7 +50,7 @@
 | 项目 | 说明 |
 |-----|------|
 | 适用 | 复杂需求、核心功能、正式交付 |
-| 流程 | 6 阶段 |
+| 流程 | 7 阶段（+生成文档+验证检查） |
 | 模板 | `templates/core/` |
 | 时间 | 45-90 分钟 |
 
@@ -67,8 +67,8 @@
 | 确认点 | 时机 | 必须等待用户 |
 |-------|------|-------------|
 | CP1 | 需求理解后 | ✅ 是 |
-| CP2 | 方案设计后 | ✅ 是 |
-| CP3 | 代码实现后 | ✅ 是 |
+| CP2 | 技术方案后 | ✅ 是 |
+| CP3 | 实施方案后（含实施前检查） | ✅ 是 - 确认所有变更内容后才执行 |
 
 > **完整模式额外确认点**: CP4 (测试完成后)、CP5 (文档生成后)  
 > 详见 [workflows/common/confirmation-points.md](./workflows/common/confirmation-points.md)
@@ -89,6 +89,10 @@ projects/<project-name>/
 │   └── <RES-xxx>/
 ├── refactoring/    # 架构重构输出
 │   └── <REF-xxx>/
+├── database/       # 数据库变更输出
+│   └── <DB-xxx>/
+├── security/       # 安全修复输出
+│   └── <SEC-xxx>/
 └── incidents/      # 事故复盘输出
     └── <INC-xxx>/
 ```
@@ -101,7 +105,7 @@ projects/<project-name>/
 |---------|---------|---------|
 | 需求开发 | `lite/requirement-lite.md` | `core/requirement-template.md` |
 | 技术方案 | `lite/technical-lite.md` | `core/technical-template.md` |
-| 实施记录 | `lite/implementation-lite.md` | `core/implementation-template.md` |
+| 实施方案 | `lite/implementation-lite.md` | `core/implementation-template.md` |
 | Bug 分析 | `lite/bug-analysis-lite.md` | `core/bug-analysis-template.md` |
 | 性能优化 | `lite/optimization-lite.md` | `core/optimization-template.md` |
 | 技术调研 | `lite/research-lite.md` | `extended/research-template.md` |
@@ -137,12 +141,21 @@ projects/<project-name>/
 
 ---
 
-## ⚠️ 核心约束 (4条)
+## ⚠️ 核心约束 (11条)
 
 1. **删除操作需确认** - 删除代码/文件前必须用户确认
 2. **Git 操作需确认** - commit/push 前必须用户确认
 3. **方案选择需确认** - 多方案时必须用户决策
 4. **多任务需拆分** - 同时多个任务建议分开执行
+5. **错误处理** - 所有代码必须有错误处理
+6. **禁止硬编码** - 敏感信息必须用环境变量
+7. **结构化输出** - 所有输出必须结构化
+8. **报告需验证** - 分析报告必须逐项验证，按 🔴/🟡/💡/❌ 分类
+9. **修复需扫描** - 修复后必须全局扫描同类问题+数据联动检查
+10. **主动合理性分析** - 收到指令先评估合理性，有更好建议先提出
+11. **自动关联文件检查** - 修改文件时自动扫描关联文件并同步
+
+> 完整说明见 [CONSTRAINTS.md](./CONSTRAINTS.md)
 
 ---
 
@@ -156,6 +169,6 @@ projects/<project-name>/
 
 ---
 
-**版本**: v2.0.0  
-**最后更新**: 2026-02-12
+**版本**: v2.1.0  
+**最后更新**: 2026-02-24
 

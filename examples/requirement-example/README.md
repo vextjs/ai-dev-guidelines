@@ -19,7 +19,7 @@ user-service 是一个用户管理微服务，使用 Express + MongoDB + TypeScr
 ### 期望输出
 - 需求文档
 - 技术方案文档
-- 实施记录文档
+- 实施方案文档
 - 可运行的代码
 - 测试用例
 
@@ -35,7 +35,7 @@ requirement-example/
 └── outputs/                            # 生成的文档
     ├── 01-requirement.md               # 需求文档
     ├── 02-technical.md                 # 技术方案
-    ├── 03-implementation.md            # 实施记录
+    ├── 03-implementation.md            # 实施方案
     └── scripts/                        # 脚本目录
 ```
 
@@ -182,7 +182,7 @@ Step 3: 收集项目上下文           8 分钟   18%
 Step 4: 生成需求文档            12 分钟   27%
 Step 5: 生成技术方案文档        10 分钟   22%
 Step 6: 执行代码实现            10 分钟   22%
-Step 7: 生成实施记录文档         2 分钟    4%
+Step 7: 生成实施方案文档         2 分钟    4%
 Step 8: 验证完成度               1 分钟    2%
 ```
 

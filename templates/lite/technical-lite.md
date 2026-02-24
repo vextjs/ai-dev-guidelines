@@ -3,6 +3,9 @@
 > **项目**: [项目名]  
 > **日期**: YYYY-MM-DD  
 > **状态**: 📝 草稿 / ✅ 已确认
+> 
+> **关联**: [01-requirement](./01-requirement.md) → 本文档 → [03-implementation/](./03-implementation/README.md)  
+> **定位**: 只写方案描述，具体代码变更在实施方案中
 
 ---
 
