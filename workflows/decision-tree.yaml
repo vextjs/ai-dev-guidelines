@@ -3,7 +3,7 @@
 
 version: "2.1.0"
 last_updated: "2026-02-24"
-description: "dev-docs AI 执行规范的结构化决策树"
+description: "ai-dev-guidelines AI 执行规范的结构化决策树"
 
 # ===========================================
 # 任务类型识别

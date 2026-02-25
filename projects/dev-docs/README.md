@@ -1,6 +1,6 @@
 # Dev-Docs 项目
 
-> **项目名称**: dev-docs  
+> **项目名称**: ai-dev-guidelines  
 > **项目描述**: 轻量、灵活、实用的 AI 开发执行手册
 
 ---

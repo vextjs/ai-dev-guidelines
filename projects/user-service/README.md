@@ -1,7 +1,7 @@
 # User Service 项目
 
 > **项目名称**: user-service  
-> **项目描述**: 用户中心服务（示例项目，展示 dev-docs 规范使用方式）
+> **项目描述**: 用户中心服务（示例项目，展示 ai-dev-guidelines 规范使用方式）
 
 ---
 

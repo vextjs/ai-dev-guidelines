@@ -131,7 +131,7 @@ projects/<project-name>/
 
 查找之前的方案/修复记录：
 ```
-1. 读取 dev-docs/projects/<project>/.ai-memory/SUMMARY.md（快速回忆）
+1. 读取 ai-dev-guidelines/projects/<project>/.ai-memory/SUMMARY.md（快速回忆）
 2. 读取 projects/<project>/TASK-INDEX.md（正式索引）
 3. 搜索关键词，定位任务 ID 和路径
 4. 读取具体文档

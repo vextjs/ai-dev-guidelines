@@ -1,4 +1,4 @@
-# dev-docs 项目规范
+# ai-dev-guidelines 项目规范
 
 > **最后更新**: 2026-02-24  
 > **版本**: v2.1.0  
@@ -10,11 +10,11 @@
 
 | 项目 | 说明 |
 |-----|------|
-| 项目名称 | dev-docs |
+| 项目名称 | ai-dev-guidelines |
 | 项目描述 | 轻量、灵活、实用的 AI 开发执行手册 |
 | 定位 | AI Agent 的文档生成工具 |
 | 目标用户 | GitHub Copilot / Claude / GPT 等 AI Agent |
-| 代码仓库 | 当前工作区下的 `dev-docs/` 目录 |
+| 代码仓库 | 当前工作区下的 `ai-dev-guidelines/` 目录 |
 
 ---
 
@@ -40,7 +40,7 @@
 ## 📁 目录结构
 
 ```
-dev-docs/
+ai-dev-guidelines/
 ├── README.md                 # 项目入口（AI 首读）
 ├── QUICK-REFERENCE.md        # 快速参考
 ├── CONSTRAINTS.md            # 约束清单
@@ -69,7 +69,7 @@ dev-docs/
 │
 ├── projects/                 # 🗂️ 项目规范
 │   ├── _template/            # 项目规范模板
-│   ├── dev-docs/             # 本项目规范
+│   ├── ai-dev-guidelines/             # 本项目规范
 │   └── user-service/         # 示例项目
 │
 ├── best-practices/           # 💡 最佳实践
@@ -233,6 +233,6 @@ dev-docs/
 
 ---
 
-**注意**: 此文件为 dev-docs 项目自身的规范，修改时需同步更新相关文档
+**注意**: 此文件为 ai-dev-guidelines 项目自身的规范，修改时需同步更新相关文档
 
 

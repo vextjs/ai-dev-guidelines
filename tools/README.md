@@ -36,7 +36,7 @@
 
 **使用示例**：
 ```bash
-cd dev-docs
+cd ai-dev-guidelines
 node tools/doc-health-check.js .
 ```
 
@@ -546,7 +546,7 @@ await grep_search({
 
 ---
 
-## 🛠️ dev-docs 验证脚本
+## 🛠️ ai-dev-guidelines 验证脚本
 
 ### validate-links.js
 

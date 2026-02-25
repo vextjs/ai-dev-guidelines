@@ -1,6 +1,6 @@
 # Changelogs 目录说明
 
-本目录存放 dev-docs 各版本的详细变更文档。
+本目录存放 ai-dev-guidelines 各版本的详细变更文档。
 
 ---
 

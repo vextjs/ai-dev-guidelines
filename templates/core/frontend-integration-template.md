@@ -203,5 +203,5 @@ interface XxxState {
 ---
 
 **文档版本**: 1.0  
-**模板来源**: dev-docs/templates/core/frontend-integration-template.md
+**模板来源**: ai-dev-guidelines/templates/core/frontend-integration-template.md
 

@@ -58,7 +58,7 @@
 - 生成完整复盘报告
 - 组织复盘会议
 - **更新 `projects/<project>/TASK-INDEX.md`**
-- **生成任务记忆** `dev-docs/projects/<project>/.ai-memory/`（详见 [common/task-memory.md](../common/task-memory.md)）
+- **生成任务记忆** `ai-dev-guidelines/projects/<project>/.ai-memory/`（详见 [common/task-memory.md](../common/task-memory.md)）
 
 **输出**: `05-summary.md`
 

@@ -103,7 +103,7 @@
 - 检查应用功能
 - 确认性能指标
 - **更新 `projects/<project>/TASK-INDEX.md`**
-- **生成任务记忆** `dev-docs/projects/<project>/.ai-memory/`（详见 [common/task-memory.md](../common/task-memory.md)）
+- **生成任务记忆** `ai-dev-guidelines/projects/<project>/.ai-memory/`（详见 [common/task-memory.md](../common/task-memory.md)）
 
 **输出**: 更新 `03-execution.md`
 

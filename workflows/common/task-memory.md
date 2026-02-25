@@ -15,7 +15,7 @@
 ## 📁 存储位置
 
 ```
-dev-docs/projects/<project>/          # 如 projects/chat/
+ai-dev-guidelines/projects/<project>/          # 如 projects/chat/
 └── .ai-memory/                       # 🔴 AI 任务记忆（gitignore 忽略）
     ├── SUMMARY.md                    # 📋 总摘要（AI 首先读取的文件）
     └── tasks/                        # 各任务的详细记忆
@@ -24,10 +24,10 @@ dev-docs/projects/<project>/          # 如 projects/chat/
         └── ...
 ```
 
-> **为什么在 dev-docs/projects/ 下而不在项目源码目录？**
+> **为什么在 ai-dev-guidelines/projects/ 下而不在项目源码目录？**
 > - 统一管理：与项目规范（profile/）、正式归档文档在同一目录树下
 > - 不污染业务源码目录
-> - .ai-memory/ 加入 dev-docs/.gitignore 忽略即可
+> - .ai-memory/ 加入 ai-dev-guidelines/.gitignore 忽略即可
 
 ---
 
@@ -92,7 +92,7 @@ dev-docs/projects/<project>/          # 如 projects/chat/
 ## 🔗 关联
 
 - TASK-INDEX: `REQ-xxx`
-- 归档文档: `dev-docs/projects/<project>/requirements/xxx/`（如有）
+- 归档文档: `ai-dev-guidelines/projects/<project>/requirements/xxx/`（如有）
 ```
 
 ---

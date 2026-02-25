@@ -7,7 +7,7 @@
 ### 🔄 目录重构
 - **规范文件移入 `profile/` 子目录**: 规范和任务输出（requirements/bugs/optimizations）职责分离
 - 项目顶层 `README.md` 作为总索引，指向 `profile/` 和各任务输出目录
-- 对齐 dev-docs 模块化 profiles 概念
+- 对齐 ai-dev-guidelines 模块化 profiles 概念
 
 ---
 
@@ -15,7 +15,7 @@
 
 ### 🔄 结构重构
 - **拆分 PROJECT.md**: 将单一文件拆分为 9 个独立模块文件 + README 索引
-- **参考 user 项目规范结构**: 对齐 dev-docs `_template/profile/` 的文件组织方式
+- **参考 user 项目规范结构**: 对齐 ai-dev-guidelines `_template/profile/` 的文件组织方式
 
 ### 📁 新文件清单
 | 文件 | 内容 |
@@ -40,7 +40,7 @@
 - 响应格式统一为 `ctx.success(data)`
 - 错误码配置唯一位置 `config/dsl/`
 - 新增 8 条架构约束
-- 参考 dev-docs 通用规范体系（`standards/` 目录）
+- 参考 ai-dev-guidelines 通用规范体系（`standards/` 目录）
 
 ---
 

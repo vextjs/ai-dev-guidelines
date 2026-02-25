@@ -49,7 +49,7 @@
 - ✅ **copilot-instructions.md**: 精简为纯入口文件，不再包含规范细节
 - ✅ **README.md 精简**: 删除与 QUICK-REFERENCE.md 重复的 ~180 行内容
 - ✅ **清理旧文件**: 删除 `_template/` 下 13 个旧模板、`outputs/` 弃用目录、v1.x 过时工作流文件
-- ✅ **全部项目统一**: chat/dev-docs/user-service 全部迁移到新结构
+- ✅ **全部项目统一**: chat/ai-dev-guidelines/user-service 全部迁移到新结构
 - ✅ **版本号统一**: 所有文件版本号对齐 v2.2.0
 
 ---
@@ -90,7 +90,7 @@
 - `templates/lite/refactoring-lite.md` - 精简架构重构
 - `projects/_template/PROJECT.md` - 统一项目规范模板（⚠️ v2.2.0 已删除，改为 `profile/`）
 - `best-practices/WHEN-TO-USE.md` - 最佳实践快速索引
-- `projects/dev-docs/PROJECT.md` - dev-docs 项目规范（⚠️ v2.2.0 已迁移至 `profile/README.md`）
+- `projects/ai-dev-guidelines/PROJECT.md` - ai-dev-guidelines 项目规范（⚠️ v2.2.0 已迁移至 `profile/README.md`）
 
 ---
 

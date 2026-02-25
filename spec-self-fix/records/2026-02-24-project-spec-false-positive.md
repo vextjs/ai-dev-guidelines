@@ -28,7 +28,7 @@
 
 ### 问题 1: AI 虚报结果
 
-**事实**: `dev-docs/projects/` 下不存在 `chat/` 目录，即 chat 项目没有项目规范文件
+**事实**: `ai-dev-guidelines/projects/` 下不存在 `chat/` 目录，即 chat 项目没有项目规范文件
 
 **AI 行为**: 在预检查中输出 `项目规范: ✅ 已加载`
 

@@ -125,7 +125,7 @@ changelogs/vX.Y.Z.md 必需章节:
 ### 4. 任务记忆（P1 每次任务完成后）
 
 ```yaml
-更新位置: dev-docs/projects/<project>/.ai-memory/
+更新位置: ai-dev-guidelines/projects/<project>/.ai-memory/
 
 执行:
   1. 生成单任务记忆 → .ai-memory/tasks/<date>-<type>-<id>.md
@@ -137,7 +137,7 @@ changelogs/vX.Y.Z.md 必需章节:
 ### 5. TASK-INDEX.md（P0 每次任务完成后）
 
 ```yaml
-更新位置: dev-docs/projects/<project>/TASK-INDEX.md
+更新位置: ai-dev-guidelines/projects/<project>/TASK-INDEX.md
 
 执行:
   追加本次任务记录行到对应类型表格

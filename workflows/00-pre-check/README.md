@@ -53,7 +53,7 @@
 ### 任务记忆加载逻辑
 
 ```yaml
-加载入口: dev-docs/projects/<project>/.ai-memory/SUMMARY.md
+加载入口: ai-dev-guidelines/projects/<project>/.ai-memory/SUMMARY.md
 存在时: 读取最近任务摘要 + 未完成事项
 不存在时: 跳过（首次任务，不需要记忆）
 ```

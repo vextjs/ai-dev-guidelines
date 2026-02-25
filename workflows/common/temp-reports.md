@@ -15,7 +15,7 @@
 ## 📁 存储位置
 
 ```
-dev-docs/projects/<project>/          # 如 projects/chat/
+ai-dev-guidelines/projects/<project>/          # 如 projects/chat/
 └── reports/                          # 🔴 AI 临时报告（gitignore 忽略）
     ├── diagnostics/                  # 诊断分析报告
     ├── bugs/                         # Bug 分析报告
@@ -24,7 +24,7 @@ dev-docs/projects/<project>/          # 如 projects/chat/
     └── .temp/                        # 临时/中间过程文件（可随时清理）
 ```
 
-> **注意**: `reports/` 在 dev-docs/.gitignore 中忽略，不提交到 git。
+> **注意**: `reports/` 在 ai-dev-guidelines/.gitignore 中忽略，不提交到 git。
 
 ---
 
@@ -48,15 +48,15 @@ dev-docs/projects/<project>/          # 如 projects/chat/
 
 ---
 
-## 🔄 与 dev-docs 的关系
+## 🔄 与 ai-dev-guidelines 的关系
 
 ```yaml
-reports/ (dev-docs/projects/<project>/ 下):
+reports/ (ai-dev-guidelines/projects/<project>/ 下):
   - 临时工作文件，不提交 git
   - AI 分析过程中随时写入
   - 可做参考但不是正式文档
 
-dev-docs/projects/<project>/requirements/ 等 (归档文档):
+ai-dev-guidelines/projects/<project>/requirements/ 等 (归档文档):
   - 正式归档文档，提交 git
   - 完整模式下生成
   - 长期保存，可追溯

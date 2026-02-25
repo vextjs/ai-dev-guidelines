@@ -286,7 +286,7 @@
 ```
 
 **🧠 任务记忆（必须）**:
-完成后生成任务记忆，保存到 `dev-docs/projects/<project>/.ai-memory/`：
+完成后生成任务记忆，保存到 `ai-dev-guidelines/projects/<project>/.ai-memory/`：
 1. 生成 `tasks/<date>-REQ-<id>.md`（做了什么、关键决策、变更文件）
 2. 更新 `SUMMARY.md`（追加最近任务 + 关键决策）
 

@@ -1,4 +1,4 @@
-# dev-docs 项目重构总结
+# ai-dev-guidelines 项目重构总结
 
 ## 🎉 完成情况
 

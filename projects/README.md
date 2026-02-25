@@ -10,7 +10,7 @@
 |-----|------|---------|
 | `_template` | 项目规范模板 | `_template/profile/README.md` |
 | `chat` | AITA 核心聊天服务（对话、行程、AI Agent） | `chat/profile/README.md` |
-| `dev-docs` | AI 开发执行手册（本项目） | `dev-docs/profile/README.md` |
+| `ai-dev-guidelines` | AI 开发执行手册（本项目） | `ai-dev-guidelines/profile/README.md` |
 | `monSQLize` | 轻量级 MongoDB ORM（多级缓存 + Saga 事务 + 122 操作符） | `monSQLize/profile/README.md` |
 | `user-service` | 用户服务（示例项目） | `user-service/profile/README.md` |
 
@@ -81,7 +81,7 @@ projects/
 
 ### AI 工作目录
 
-`reports/` 和 `.ai-memory/` 统一存放在 `dev-docs/projects/<project>/` 下，与正式归档文档同级：
+`reports/` 和 `.ai-memory/` 统一存放在 `ai-dev-guidelines/projects/<project>/` 下，与正式归档文档同级：
 
 ```
 projects/<project>/                    # 如 projects/chat/
@@ -104,11 +104,11 @@ projects/<project>/                    # 如 projects/chat/
         └── <date>-<type>-<id>.md
 ```
 
-> **为什么在 dev-docs/projects/ 下？**
+> **为什么在 ai-dev-guidelines/projects/ 下？**
 > - 统一管理：与项目规范（profile/）、正式归档文档（requirements/ 等）在同一目录树下
 > - 不污染业务源码目录
-> - dev-docs 是独立仓库，跨工作区不丢失
-> - reports/ 和 .ai-memory/ 加入 dev-docs/.gitignore 忽略即可
+> - ai-dev-guidelines 是独立仓库，跨工作区不丢失
+> - reports/ 和 .ai-memory/ 加入 ai-dev-guidelines/.gitignore 忽略即可
 
 ### 🔴 强制规则：模块化结构
 

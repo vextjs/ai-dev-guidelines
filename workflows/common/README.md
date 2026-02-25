@@ -39,7 +39,7 @@
 任务完成后必须更新的文档：
 
 1. `projects/<project>/TASK-INDEX.md` - 添加任务记录
-2. `dev-docs/projects/<project>/.ai-memory/` - 生成任务记忆
+2. `ai-dev-guidelines/projects/<project>/.ai-memory/` - 生成任务记忆
 3. `STATUS.md` / `CHANGELOG.md` - 如涉及版本变更
 
 详见 [document-sync.md](./document-sync.md)

@@ -55,5 +55,5 @@
 ---
 
 **文档版本**: 1.0  
-**模板来源**: dev-docs/templates/common/STATUS-template.md
+**模板来源**: ai-dev-guidelines/templates/common/STATUS-template.md
 

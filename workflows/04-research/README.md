@@ -50,7 +50,7 @@
 - 给出推荐方案
 - 说明选择理由
 - **更新 `projects/<project>/TASK-INDEX.md`**
-- **生成任务记忆** `dev-docs/projects/<project>/.ai-memory/`（详见 [common/task-memory.md](../common/task-memory.md)）
+- **生成任务记忆** `ai-dev-guidelines/projects/<project>/.ai-memory/`（详见 [common/task-memory.md](../common/task-memory.md)）
 
 **输出**: `04-conclusion.md`
 

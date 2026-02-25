@@ -99,7 +99,7 @@ A → B → C → E → F → D → G → H → I → J → K → L → M → N 
 ## 六、相关文档
 
 - 验证清单：[02-checklist.md](./02-checklist.md)
-- 项目规范：`dev-docs/projects/monSQLize/profile/`
+- 项目规范：`ai-dev-guidelines/projects/monSQLize/profile/`
 - 验证参考：`monSQLize/validation/checklists/connect.md`
 - 文档索引：`monSQLize/docs/INDEX.md`
 - 架构约束第 11 条：新功能必须加入验证清单

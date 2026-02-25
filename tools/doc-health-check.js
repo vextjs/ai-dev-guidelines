@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * 文档健康检查工具
- * 检查 dev-docs 项目的文档完整性和一致性
+ * 检查 ai-dev-guidelines 项目的文档完整性和一致性
  *
  * 用法: node doc-health-check.js [目录]
  */

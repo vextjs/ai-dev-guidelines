@@ -32,7 +32,7 @@
 - `templates/lite/refactoring-lite.md`
 - `projects/_template/profile/README.md`
 - `projects/_template/TASK-INDEX.md`
-- `projects/dev-docs/profile/README.md`
+- `projects/ai-dev-guidelines/profile/README.md`
 
 ---
 
@@ -161,7 +161,7 @@
 - ✅ 预检查简化为 3 项必做
 - ✅ 新增统一 profile/ 模块化项目规范模板
 - ✅ 新增 best-practices/WHEN-TO-USE.md
-- ✅ 新增 projects/dev-docs/ 项目规范
+- ✅ 新增 projects/ai-dev-guidelines/ 项目规范
 - ✅ 全面审计并修复 P1 问题
 
 ### v2.1.0 - 2026-02-24

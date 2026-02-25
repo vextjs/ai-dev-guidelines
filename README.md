@@ -92,7 +92,7 @@
 ## 📂 项目结构（AI 视角）
 
 ```
-dev-docs/
+ai-dev-guidelines/
 ├── README.md                          # 👈 你正在阅读的文件（AI 入口）
 ├── QUICK-REFERENCE.md                 # 📖 速查手册（推荐首先阅读）
 ├── STATUS.md                          # 📊 项目状态追踪
@@ -108,7 +108,7 @@ dev-docs/
 │   │       ├── README.md             # 规范入口
 │   │       └── 01-项目信息.md ...     # 各模块文件
 │   ├── chat/                         # chat 项目（profile/ + TASK-INDEX + 任务输出）
-│   ├── dev-docs/                     # 本项目规范
+│   ├── ai-dev-guidelines/                     # 本项目规范
 │   └── user-service/                 # 用户服务项目（示例）
 │
 ├── workflows/                         # 🤖 AI 执行流程（通用）
@@ -224,7 +224,7 @@ dev-docs/
 
 ## 🔗 相关说明
 
-> 本项目（dev-docs）是完全独立的 AI 开发执行手册，不依赖任何外部规范仓库。
+> 本项目（ai-dev-guidelines）是完全独立的 AI 开发执行手册，不依赖任何外部规范仓库。
 
 ---
 
