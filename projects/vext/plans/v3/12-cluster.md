@@ -144,6 +144,46 @@ interface VextClusterConfig {
 
 > **Rate Limit 重要说明**：框架内置的 `flex-rate-limit` 默认使用内存 store。cluster 模式下应配置 Redis store，否则限流不准确。
 
+### 4.1 Cluster 模式启动检测与警告（P1-4）
+
+框架在 cluster 模式启动时**自动检测**内存型 rate limiter，若 worker > 1 且使用内存 store，打印 WARN 日志：
+
+```typescript
+// vextjs/lib/cluster-checks.ts（框架内部，Worker bootstrap 时调用）
+export function checkClusterCompatibility(app: VextApp): void {
+  const workers = app.config.cluster?.workers
+  const workerCount = typeof workers === 'number' ? workers : os.cpus().length
+
+  if (workerCount <= 1) return  // 单 worker 无需检查
+
+  // 检查 rate limiter 是否使用内存 store
+  if (app.config.rateLimit?.enabled !== false && !app._rateLimiterOverridden) {
+    app.logger.warn(
+      '[vextjs] ⚠️ Cluster mode with %d workers detected, but rate limiter is using in-memory store.\n' +
+      '  Each worker has independent counters — actual rate = %d × config.rateLimit.max.\n' +
+      '  Recommendation: use Redis store via app.setRateLimiter() or disable rate limit.\n' +
+      '  Docs: https://vextjs.dev/guide/cluster#rate-limit',
+      workerCount, workerCount
+    )
+  }
+
+  // 检查其他内存依赖（如 session、缓存）
+  // 后续可扩展更多检测项
+}
+```
+
+**触发条件**：
+
+| 条件 | 行为 |
+|------|------|
+| `cluster.workers > 1` 且 rate limiter 未被 `app.setRateLimiter()` 替换 | 打印 WARN |
+| `cluster.workers > 1` 且已调用 `app.setRateLimiter()` | 不打印（假设用户已处理） |
+| `cluster.workers = 1` 或 cluster 未启用 | 不打印 |
+| `rateLimit.enabled = false` | 不打印 |
+
+> 此检测在每个 Worker 的 bootstrap 完成后执行（步骤⑧ onReady 之前），确保所有插件已加载。
+> 仅打印 WARN，不阻止启动——用户可能故意使用内存 store（如测试环境）。
+
 ---
 
 ## 5. 与 dev 模式的关系

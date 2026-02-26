@@ -1,7 +1,7 @@
 # 00 - 目录结构方案
 
 > **项目**: vext
-> **日期**: 2026-02-26
+> **日期**: 2026-02-26（最后更新: 2026-02-26 框架 types 目录 + req.valid 类型修复）
 > **状态**: ✅ 已确认
 > **说明**: 后续每个目录模块的详细设计以本文件为基础展开
 
@@ -186,21 +186,30 @@ export default {
 
 ```
 vext/src/
+├── types/                    # 框架核心类型定义（集中管理，公共导出）
+│   ├── request.ts            # VextRequest 接口（含 valid() 签名）
+│   ├── response.ts           # VextResponse 接口（用户可见类型，Omit 排除内部方法）
+│   ├── app.ts                # VextApp、VextServices、VextConfig 接口
+│   ├── middleware.ts          # VextMiddleware、VextErrorMiddleware、VextMiddlewareFactory
+│   ├── adapter.ts            # VextAdapter、VextServerHandle 接口
+│   ├── plugin.ts             # VextPlugin、definePlugin 签名
+│   ├── errors.ts             # HttpError、VextValidationError 类型
+│   └── globals.d.ts          # 全局类型声明（VextApp 等，用户项目无需 import 即可使用）
 ├── lib/
-│   ├── adapter.ts            # VextAdapter 接口定义
-│   ├── app.ts                # createApp() + VextApp 对象
-│   ├── globals.d.ts          # 全局类型声明（VextApp 等，service 无需 import 即可使用）
-│   ├── config.ts             # VextConfig 类型定义 + config-loader 合并逻辑
+│   ├── app.ts                # createApp() + VextApp 实现
+│   ├── config.ts             # config-loader 合并逻辑
 │   ├── define-routes.ts      # defineRoutes() + 三段式路由封装
 │   ├── router-loader.ts      # routes/ 文件路由自动扫描加载
 │   ├── middleware-loader.ts  # 按 config 白名单加载路由级中间件
 │   ├── plugin-loader.ts      # plugins/ 目录自动扫描加载
 │   ├── service-loader.ts     # services/ 自动扫描 + 构造函数注入
 │   ├── request-id.ts         # requestId 生成/透传/注入（框架核心，非插件）
-│   ├── plugin.ts             # definePlugin()
+│   ├── response-wrapper.ts   # 出口包装中间件（_enableWrap 标志，非 monkey-patch）
+│   ├── plugin.ts             # definePlugin() 实现
 │   ├── request-context.ts    # AsyncLocalStorage 请求上下文
-│   ├── logger.ts             # VextLogger 接口 + 内置实现（pino，插件可替换）
+│   ├── logger.ts             # VextLogger 内置实现（pino，插件可替换）
 │   ├── http-error.ts         # HttpError 类（app.throw 内置实现）+ VextValidationError
+│   ├── fetch.ts              # app.fetch 内置 HTTP 客户端
 │   └── dev/                  # 开发模式热重载（esbuild 预编译 + Soft Reload，详见 11-hot-reload.md）
 │       ├── compiler.ts       # DevCompiler（esbuild 预编译器）
 │       ├── cold-restart.ts   # ColdRestarter（Tier 3 进程替换）
@@ -211,12 +220,21 @@ vext/src/
 │       └── dev-bootstrap.ts      # Dev 模式 bootstrap 入口
 ├── adapters/
 │   └── hono/                 # Hono 适配器（当前实现）
+│       ├── index.ts          # 导出 createHonoAdapter()
+│       ├── adapter.ts        # VextAdapter 实现
+│       ├── request.ts        # HonoContext → VextRequest 转换
+│       └── response.ts       # HonoContext → VextResponse 转换（内建包装 + 延迟绑定）
 ├── cli/
-│   ├── index.ts              # bin 入口（vext dev / start / stop / reload / status）
+│   ├── index.ts              # bin 入口（vext dev / start / stop / reload / status / create）
 │   ├── dev.ts                # ColdRestarter + FileWatcher（详见 11-hot-reload.md）
-│   └── start.ts              # 生产模式（tsx 运行，含 cluster 分支）
-└── index.ts                  # 公共导出入口
+│   ├── start.ts              # 生产模式（tsx 运行，含 cluster 分支）
+│   └── create.ts             # vext create 脚手架（P0-3）
+└── index.ts                  # 公共导出入口（re-export types/ 下的所有公共类型）
 ```
+
+> **类型组织原则**：所有公共类型定义集中在 `types/` 目录，`lib/` 目录仅包含实现代码。
+> `index.ts` 统一 re-export `types/` 下的类型，用户通过 `import type { VextApp } from 'vextjs'` 访问。
+> `types/globals.d.ts` 声明全局类型（如 `VextApp`），用户项目中无需 import 即可使用。
 
 ---
 

@@ -1,7 +1,7 @@
 # 08 - Adapter 层详细方案
 
 > **项目**: vext (vextjs)
-> **日期**: 2026-02-26
+> **日期**: 2026-02-26（最后更新: 2026-02-26 P0-1/P1-7/P2-2/P2-5/P2-6 修复）
 > **状态**: ✅ 已确认
 > **依赖**: 路由层（`01-routes.md` ✅）、响应规范（`01c-response.md` ✅）、配置层（`05-config.md` ✅）
 
@@ -261,7 +261,10 @@ export function createHonoAdapter(app: VextApp): VextAdapter {
 
       hono[honoMethod](path, async (c) => {
         const req = createVextRequest(c, app)
-        const res = createVextResponse(c)
+        // P0-1 修复：延迟绑定 requestId（getter 函数）
+        // requestId 在 executeChain 过程中由 requestIdMiddleware 设置，
+        // 传入 getter 确保 json() 实际调用时才取值（此时 requestId 必然已生成）
+        const res = createVextResponse(c, () => req.requestId)
 
         try {
           // 全局中间件 + 路由级链
@@ -269,7 +272,19 @@ export function createHonoAdapter(app: VextApp): VextAdapter {
           await executeChain(fullChain, req, res)
         } catch (err) {
           if (errorHandler) {
-            errorHandler(err, req, res)
+            // P2-6 修复：errorHandler 自身抛异常的边界保护
+            // 防止 errorHandler 内部失败（如 logger 写入 DB transport 失败）
+            // 导致异常传播到 Hono 的 catch，产生非 JSON 的纯文本 500
+            try {
+              errorHandler(err, req, res)
+            } catch (handlerError) {
+              try {
+                res.rawJson({ code: 500, message: 'Internal Server Error' }, 500)
+              } catch {
+                // 完全放弃，让底层框架的 catch 处理
+                throw handlerError
+              }
+            }
           } else {
             throw err
           }
@@ -284,7 +299,12 @@ export function createHonoAdapter(app: VextApp): VextAdapter {
     registerNotFound(handler) {
       hono.notFound(async (c) => {
         const req = createVextRequest(c, app)
-        const res = createVextResponse(c)
+        // P2-5 修复：notFound 不经过中间件链，requestId 中间件不会执行。
+        // 内联生成 requestId，确保 404 响应也有有效的 requestId
+        if (!req.requestId) {
+          req.requestId = req.headers['x-request-id'] || crypto.randomUUID()
+        }
+        const res = createVextResponse(c, () => req.requestId)
         await handler(req, res, () => {})
       })
     },
@@ -392,19 +412,84 @@ function resolveProtocol(c: Context, trustProxy: boolean): 'http' | 'https' {
 // vextjs/src/adapters/hono/response.ts
 import type { Context } from 'hono'
 
-export function createVextResponse(c: Context): VextResponse {
+/**
+ * P0-1 修复：延迟绑定 + 内建包装方案
+ *
+ * 核心变更：
+ * 1. 新增 `getRequestId` getter 参数 — 延迟取值，解决 requestId 在创建时尚未生成的时序问题
+ * 2. 新增 `_wrapEnabled` 内部状态 — 由 response-wrapper 中间件通过 `_enableWrap()` 开启
+ * 3. json() 内部根据 `_wrapEnabled` 决定是否包装 `{ code: 0, data, requestId }`
+ * 4. 204 使用 `c.body(null)` 而非 `c.json(null)`（P1-7: RFC 9110 §15.3.5 合规）
+ * 5. rawJson() 独立实现，不受 `_wrapEnabled` 影响 — errorHandler 始终绕过包装
+ *
+ * 时序保证：
+ *   createVextResponse(c, () => req.requestId)
+ *     ↓ executeChain 开始
+ *   [requestIdMiddleware]        → req.requestId = 'a1b2c3d4...'
+ *   [responseWrapperMiddleware]  → res._enableWrap()
+ *     ↓
+ *   [handler] res.status(201).json(data)
+ *     → _wrapEnabled = true
+ *     → getRequestId() → 'a1b2c3d4...'（已设置）
+ *     → HTTP 201 ✅
+ */
+export function createVextResponse(
+  c: Context,
+  getRequestId: () => string,
+): VextResponse {
   let _status = 200
   const _headers: Record<string, string> = {}
+  let _wrapEnabled = false
+  let _sent = false       // P2-2: 重复发送保护标志
 
-  const res: VextResponse = {
-    json(data, status = _status) {
-      c.status(status as any)
+  const res: VextResponse & { _enableWrap(): void } = {
+    json(data, status?: number) {
+      // P2-2: 重复发送保护（dev 模式打印 WARN，生产模式静默忽略）
+      if (_sent) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn(
+            '[vextjs] ⚠️ res.json() called after response already sent. ' +
+            'This is a no-op. Check your handler for duplicate sends.'
+          )
+        }
+        return
+      }
+      _sent = true
+
+      const finalStatus = status ?? _status
+
+      // 设置响应头
+      c.status(finalStatus as any)
       for (const [k, v] of Object.entries(_headers)) c.header(k, v)
+
+      if (_wrapEnabled) {
+        // P1-7: 204 No Content 不能有消息体（RFC 9110 §15.3.5）
+        if (finalStatus === 204) {
+          return c.body(null)
+        }
+        // 出口包装：{ code: 0, data, requestId }
+        return c.json({ code: 0, data, requestId: getRequestId() })
+      }
+
+      // 未包装模式（_enableWrap 未调用时的降级行为）
       return c.json(data)
     },
 
-    rawJson(data, status = _status) {
-      c.status(status as any)
+    rawJson(data, status?: number) {
+      // P2-2: 重复发送保护
+      if (_sent) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn(
+            '[vextjs] ⚠️ res.rawJson() called after response already sent. ' +
+            'This is a no-op. Check your error handler for duplicate sends.'
+          )
+        }
+        return
+      }
+      _sent = true
+
+      const finalStatus = status ?? _status
+      c.status(finalStatus as any)
       for (const [k, v] of Object.entries(_headers)) c.header(k, v)
       return c.json(data)
     },
@@ -443,6 +528,15 @@ export function createVextResponse(c: Context): VextResponse {
     setHeader(name, value) {
       _headers[name] = value
       return res
+    },
+
+    /**
+     * 开启出口包装（内部方法，仅 response-wrapper 中间件调用）
+     * 用户代码不应直接调用此方法
+     * TypeScript 中通过 Omit<VextResponse, '_enableWrap'> 从用户可见类型中排除
+     */
+    _enableWrap() {
+      _wrapEnabled = true
     },
   }
 
@@ -642,13 +736,24 @@ const { app, internals } = createApp(finalConfig)
 | 路由匹配逻辑 | router-loader + 底层框架 | adapter 依赖底层框架的路由匹配 |
 | 校验 | validate 中间件 | adapter 不执行任何校验 |
 
-### 9.2 res.json monkey-patch 约束
+### 9.2 出口包装内建模型（P0-1 修复后）
 
-出口包装中间件（`response-wrapper`）通过覆盖 `res.json` 实现包装。这对 adapter 施加以下约束：
+出口包装已从 monkey-patch 模式重构为**内建包装模型**。adapter 的 `createVextResponse` 内置包装逻辑：
 
-1. `res.json` 必须是**可覆盖的**（不能是 frozen / getter-only）
-2. `res.rawJson` 必须**独立于** `res.json`，不受出口包装影响
-3. 覆盖发生在 response-wrapper 中间件执行时（层 1），adapter 无需处理
+1. `res.json()` 内部根据 `_wrapEnabled` 标志决定是否包装
+2. `res.rawJson()` 独立于 `res.json()`，始终不包装（仅供错误处理使用）
+3. `response-wrapper` 中间件仅调用 `res._enableWrap()` 开启包装标志，**不再 monkey-patch**
+4. `_enableWrap()` 通过 `Omit<VextResponse, '_enableWrap'>` 从用户可见类型中排除
+
+**链式调用场景验证**：
+
+| 调用方式 | `_status` | `json()` 的 status 参数 | `finalStatus` | 行为 |
+|---------|:---------:|:----------------------:|:------------:|------|
+| `res.json(data)` | 200 | undefined | 200 | 包装 + HTTP 200 ✅ |
+| `res.json(data, 201)` | 200 | 201 | 201 | 包装 + HTTP 201 ✅ |
+| `res.status(201).json(data)` | 201 | undefined | 201 | 包装 + HTTP 201 ✅ |
+| `res.status(204).json(null)` | 204 | undefined | 204 | 无 body + HTTP 204 ✅ |
+| `res.json(null, 204)` | 200 | 204 | 204 | 无 body + HTTP 204 ✅ |
 
 ### 9.3 未来扩展
 

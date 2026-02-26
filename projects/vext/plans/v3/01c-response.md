@@ -1,7 +1,7 @@
 # 01c - 响应规范（req / res / 统一响应格式）
 
 > **项目**: vext
-> **日期**: 2026-02-26（最后更新: 2026-02-28 P1 修复）
+> **日期**: 2026-02-26（最后更新: 2026-02-26 P0-1/P1-7 修复）
 > **状态**: ✅ 已确认（问题 A → A1：`{ code: 0, data: ... }` 出口包装）
 > **所属模块**: 路由层 → `01-routes.md`
 
@@ -65,7 +65,7 @@ HTTP 500 Internal Server Error
 | `res.json(data)` | 200 | `{ code: 0, data, requestId }` |
 | `res.json(data, 201)` | 201 | `{ code: 0, data, requestId }` |
 | `res.json(null)` | 200 | `{ code: 0, data: null, requestId }` |
-| `res.status(204).json(null)` | 204 | 无 body |
+| `res.status(204).json(null)` | 204 | 无 body（RFC 9110 §15.3.5：使用 `c.body(null)`，不发送 Content-Type） |
 | `app.throw(404, 'Not found')` | 404 | `{ code: 404, message, requestId }` |
 | `throw new VextValidationError(errors)` | 422 | `{ code: 422, message, errors, requestId }` |
 | 未捕获的 `Error` | 500 | `{ code: 500, message, requestId }` |
@@ -74,7 +74,7 @@ HTTP 500 Internal Server Error
 
 | 场景 | 推荐写法 | 原因 |
 |------|---------|------|
-| 删除成功，无返回数据 | `res.status(204).json(null)` | 语义明确，客户端无需解析 body |
+| 删除成功，无返回数据 | `res.status(204).json(null)` | 语义明确，框架内部使用 `c.body(null)` 确保无消息体（RFC 9110 合规） |
 | 查询结果为空（非错误） | `res.json(null)` 或 `res.json([])` | `null` = 单个资源不存在但合法，`[]` = 列表为空 |
 | 操作成功但无数据 | `res.json({ success: true })` | 避免客户端歧义 |
 
@@ -175,8 +175,15 @@ interface VextRequest {
    * - 必须在 options.validate 配置了对应位置后调用
    * - 未配置对应位置时返回 undefined
    * - schema-dsl 会自动做类型转换（如 query 中的数字字符串 → number）
+   *
+   * 默认返回 Record<string, any>，用户可直接访问属性：
+   *   req.valid('body').name    // ✅ 直接可用，无需泛型
+   *   req.valid('body').email   // ✅ 直接可用
+   *
+   * 也可传入泛型获取更精确的 IDE 提示（可选，非必须）：
+   *   req.valid<{ name: string; email: string }>('body')
    */
-  valid<T = unknown>(location: 'query' | 'body' | 'param' | 'header'): T
+  valid<T = Record<string, any>>(location: 'query' | 'body' | 'param' | 'header'): T
 
   // ── 中间件 / 插件扩展字段（通过 declare module 扩展类型）──
 
@@ -233,9 +240,17 @@ app.get('/', { middlewares: ['auth'] }, async (req, res) => {
 **使用示例**：
 
 ```typescript
-const query = req.valid<{ page: number; limit: number }>('query')
-const body  = req.valid<{ name: string; email: string }>('body')
+// ✅ 直接使用（推荐，validator 已保证数据正确性）
+const body = req.valid('body')
+body.name      // ✅ 直接可用，返回类型 Record<string, any>
+body.email     // ✅ 直接可用
+
+// ✅ 解构（最简洁）
+const { page, limit } = req.valid('query')
+
+// ✅ 加泛型获取更精确的 IDE 提示（可选）
 const param = req.valid<{ id: string }>('param')
+param.id       // IDE 知道是 string
 ```
 
 ---
@@ -245,15 +260,24 @@ const param = req.valid<{ id: string }>('param')
 ```typescript
 interface VextResponse {
   /**
-   * 返回 JSON 响应（经出口包装 → { code: 0, data, requestId }）
+   * 返回 JSON 响应
+   *
+   * 当出口包装开启时（response-wrapper 中间件已执行），自动包装为：
+   *   { code: 0, data, requestId }
+   * 当包装未开启时，直接发送原始 data。
+   *
+   * 204 特殊处理：无论包装是否开启，204 均不发送消息体（RFC 9110 §15.3.5）
+   *
    * @param data   业务数据，直接传，框架自动包装
-   * @param status HTTP 状态码（默认 200）
+   * @param status HTTP 状态码（可选，默认使用 .status() 设置的值或 200）
    */
   json(data: unknown, status?: number): void
 
   /**
    * 返回原始 JSON（不经过出口包装）
    * 仅框架内部错误处理使用，用户代码不应直接调用
+   *
+   * @internal 通过 Omit 从用户可见类型中排除
    */
   rawJson(data: unknown, status?: number): void
 
@@ -292,6 +316,15 @@ interface VextResponse {
    */
   setHeader(name: string, value: string): this
 
+  // ── 内部方法（用户不可见）──────────────────────────────
+  /**
+   * 开启出口包装标志（内部方法）
+   * 仅由 response-wrapper 中间件调用，用户代码不应直接调用
+   *
+   * @internal 通过 Omit<VextResponse, '_enableWrap'> 从用户可见类型中排除
+   */
+  _enableWrap(): void
+
   // ── 实时通信（⏳ 待开发，需安装对应插件）────────────────
   /**
    * 将当前请求升级为 SSE 连接（Server-Sent Events）
@@ -315,29 +348,34 @@ interface VextResponse {
 
 ---
 
-## 5. 出口包装中间件内部实现
+## 5. 出口包装机制（P0-1 修复后：内建模型）
+
+> **⚠️ P0-1 修复记录**（2026-02-26）：
+> 原设计使用 monkey-patch（覆盖 `res.json`）实现出口包装，存在严重 Bug：
+> `res.status(201).json(data)` 的链式调用中，patched `json` 使用 `status = 200` 默认值，
+> 忽略了 `_status = 201`，导致 HTTP 状态码始终为 200。
+>
+> 修复方案：将包装逻辑**内建到 `createVextResponse`**，使用 `_enableWrap()` 标志控制，
+> response-wrapper 中间件不再 monkey-patch。详见 `08-adapter.md` §4.4。
 
 ```typescript
 // vextjs/lib/response-wrapper.ts（框架内部，用户不感知）
+// P0-1 修复后：仅开启包装标志，不再 monkey-patch res.json
 import type { VextMiddleware } from './adapter'
 
 export const responseWrapperMiddleware: VextMiddleware = async (req, res, next) => {
-  const originalJson = res.json.bind(res)
-
-  res.json = (data: unknown, status = 200) => {
-    // 只有显式传 204 才无 body（如 res.status(204).json(null)）
-    if (status === 204) {
-      return originalJson(null, 204)
-    }
-    // res.json(null) → { code: 0, data: null, requestId }（合法的空结果）
-    return originalJson({ code: 0, data, requestId: req.requestId }, status)
-  }
-
+  // 开启内建包装标志 — json() 调用时会自动包装为 { code: 0, data, requestId }
+  // _enableWrap 是 VextResponse 的内部方法，用户不可见（通过 Omit 排除）
+  ;(res as any)._enableWrap()
   next()
 }
 ```
 
-**错误响应**由全局错误处理中间件统一格式化（绕过出口包装）：
+> **包装逻辑现在内建于 `createVextResponse` 的 `json()` 方法中**（见 `08-adapter.md` §4.4），
+> 通过闭包中的 `_wrapEnabled` 标志和 `getRequestId` getter 实现。
+> 这确保了 `status ?? _status` 的正确优先级，彻底解决链式调用状态码丢失问题。
+
+**错误响应**由全局错误处理中间件统一格式化（使用 `rawJson` 绕过包装）：
 
 ```typescript
 // vextjs/lib/error-handler.ts（框架内部）
@@ -392,7 +430,8 @@ export function createErrorHandler(config: VextConfig): VextErrorMiddleware {
 > app.adapter.registerErrorHandler(createErrorHandler(config))
 > ```
 
-> `res.rawJson()` 是框架内部方法，绕过出口包装直接发送，仅供错误处理使用，用户不可访问。
+> `res.rawJson()` 是框架内部方法，绕过出口包装直接发送，仅供错误处理使用。
+> 通过 `Omit<VextResponse, 'rawJson' | '_enableWrap'>` 从用户可见类型中排除。
 
 ---
 

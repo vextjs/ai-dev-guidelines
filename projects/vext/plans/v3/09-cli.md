@@ -1,7 +1,7 @@
-# 09 - CLI（vext dev / start）
+# 09 - CLI（vext dev / start / create）
 
 > **项目**: vext (vextjs)
-> **日期**: 2026-02-26
+> **日期**: 2026-02-26（最后更新: 2026-02-26 P0-3 vext create 设计）
 > **状态**: ✅ 已确认
 > **依赖**: 目录结构（`00-directory-structure.md` ✅）、配置层（`05-config.md` ✅）、内置模块（`06-built-ins.md` ✅）
 
@@ -729,12 +729,227 @@ export async function run() {
 
 ---
 
-## 11. 后续扩展规划
+## 11. `vext create` — 项目脚手架（P0-3）
+
+### 11.1 设计目标
+
+兑现"零样板"承诺：一条命令创建可运行的 vext 项目，开箱即用。
+
+```bash
+# 创建 TypeScript 项目（默认）
+vext create my-app
+
+# 创建 JavaScript 项目
+vext create my-app --js
+
+# 指定模板（后续支持）
+vext create my-app --template api    # REST API 模板（默认）
+# vext create my-app --template ws   # WebSocket 模板（后续）
+```
+
+### 11.2 交互流程
+
+```
+vext create <project-name> [--js] [--template <name>]
+  ↓
+检查目标目录是否存在（存在则询问是否覆盖）
+  ↓
+生成项目文件
+  ↓
+npm install（可选，--skip-install 跳过）
+  ↓
+打印成功提示 + 下一步操作指引
+```
+
+### 11.3 生成的项目结构
+
+```
+<project-name>/
+├── src/
+│   ├── routes/
+│   │   └── index.ts          # 示例路由：GET / → { message: 'Hello, Vext!' }
+│   ├── services/
+│   │   └── example.ts        # 示例 service
+│   ├── middlewares/           # 空目录（附 README 说明）
+│   ├── plugins/               # 空目录（附 README 说明）
+│   ├── config/
+│   │   ├── default.ts        # 基础配置（port: 3000, adapter: 'hono'）
+│   │   ├── development.ts    # 开发环境覆盖（logger pretty: true）
+│   │   └── production.ts     # 生产环境覆盖（logger pretty: false）
+│   └── types/
+│       └── services.d.ts     # VextServices 类型声明（含 example service）
+├── .gitignore                # node_modules/ + .vext/ + config/local.ts
+├── tsconfig.json             # TS 项目必须（targets: ESNext, module: ESNext）
+├── package.json              # scripts: { dev, start }，dependencies: { vextjs }
+└── README.md                 # 项目说明 + 常用命令
+```
+
+> JS 项目（`--js`）：省略 `tsconfig.json` 和 `types/`，所有 `.ts` 文件替换为 `.js`。
+
+### 11.4 模板文件内容
+
+#### package.json
+
+```json
+{
+  "name": "<project-name>",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vext dev",
+    "start": "vext start"
+  },
+  "dependencies": {
+    "vextjs": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}
+```
+
+#### src/routes/index.ts
+
+```typescript
+import { defineRoutes } from 'vextjs'
+
+export default defineRoutes((app) => {
+  app.get('/', {}, async (req, res) => {
+    res.json({ message: 'Hello, Vext!', timestamp: Date.now() })
+  })
+
+  app.get('/health', {}, async (req, res) => {
+    res.json({ status: 'ok' })
+  })
+})
+```
+
+#### src/services/example.ts
+
+```typescript
+export default class ExampleService {
+  constructor(private app: VextApp) {}
+
+  async greeting(name: string) {
+    this.app.logger.info('Generating greeting', { name })
+    return { message: `Hello, ${name}!` }
+  }
+}
+```
+
+#### src/config/default.ts
+
+```typescript
+export default {
+  port: 3000,
+  adapter: 'hono',
+  middlewares: [],
+}
+```
+
+### 11.5 实现
+
+```typescript
+// vextjs/src/cli/create.ts
+import fs from 'node:fs'
+import path from 'node:path'
+import { execSync } from 'node:child_process'
+
+interface CreateOptions {
+  name: string
+  language: 'ts' | 'js'
+  template: 'api'
+  skipInstall: boolean
+}
+
+export async function runCreate(options: CreateOptions) {
+  const targetDir = path.resolve(process.cwd(), options.name)
+
+  // 1. 检查目录
+  if (fs.existsSync(targetDir)) {
+    // 交互式询问是否覆盖（使用 readline）
+    throw new Error(`Directory "${options.name}" already exists`)
+  }
+
+  // 2. 创建目录结构
+  const dirs = [
+    'src/routes',
+    'src/services',
+    'src/middlewares',
+    'src/plugins',
+    'src/config',
+    ...(options.language === 'ts' ? ['src/types'] : []),
+  ]
+  for (const dir of dirs) {
+    fs.mkdirSync(path.join(targetDir, dir), { recursive: true })
+  }
+
+  // 3. 写入模板文件（内置模板，不依赖网络）
+  const templates = getTemplates(options)
+  for (const [filePath, content] of Object.entries(templates)) {
+    const full = path.join(targetDir, filePath)
+    fs.writeFileSync(full, content, 'utf-8')
+  }
+
+  // 4. npm install
+  if (!options.skipInstall) {
+    console.log('\n📦 Installing dependencies...\n')
+    execSync('npm install', { cwd: targetDir, stdio: 'inherit' })
+  }
+
+  // 5. 成功提示
+  console.log(`
+✅ Project "${options.name}" created successfully!
+
+  cd ${options.name}
+  npm run dev
+
+📖 Documentation: https://vextjs.dev
+  `)
+}
+```
+
+### 11.6 CLI 命令注册
+
+```typescript
+// cli/index.ts 中新增
+case 'create': {
+  const name = positionals[1]
+  if (!name) {
+    console.error('Usage: vext create <project-name> [--js] [--skip-install]')
+    process.exit(1)
+  }
+  const { runCreate } = await import('./create')
+  await runCreate({
+    name,
+    language: values.js ? 'js' : 'ts',
+    template: (values.template as string) ?? 'api',
+    skipInstall: !!values['skip-install'],
+  })
+  break
+}
+```
+
+### 11.7 预计工期
+
+| 子任务 | 预计 |
+|--------|:----:|
+| 模板文件设计与编写 | 1 天 |
+| CLI create 命令实现 | 1 天 |
+| 目录检测 + 交互式确认 | 0.5 天 |
+| 测试（TS/JS 两种模式） | 0.5 天 |
+| 文档 | 0.5 天 |
+| **合计** | **3-4 天** |
+
+---
+
+## 12. 后续扩展规划
 
 | 命令 | 说明 | 优先级 |
 |------|------|--------|
 | `vext build` | 编译 TypeScript → JavaScript（前端渲染支持后引入） | ⏳ 后续版本 |
 | `vext generate` | 脚手架：生成 route / service / plugin 模板文件 | ⏳ 后续版本 |
+| `vext generate:types` | 自动生成 `types/services.d.ts`（P1-1） | ⏳ Phase 1 |
 | `vext typecheck` | 运行 `tsc --noEmit`，检查项目类型 | ⏳ 后续版本 |
 | `vext routes` | 打印所有已注册路由表（调试用） | ⏳ 后续版本 |
 
@@ -745,3 +960,4 @@ export async function run() {
 | 类型名 | 文件位置 | 说明 |
 |-------|---------|------|
 | `ProjectInfo` | `cli/utils/detect-project.ts` | 项目检测结果（rootDir / srcDir / language） |
+| `CreateOptions` | `cli/create.ts` | `vext create` 命令选项 |

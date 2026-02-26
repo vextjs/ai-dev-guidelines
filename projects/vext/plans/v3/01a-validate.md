@@ -2,7 +2,7 @@
 # 01a - 校验体系（validate）
 
 > **项目**: vext
-> **日期**: 2026-02-26
+> **日期**: 2026-02-26（最后更新: 2026-02-26 P0-2→P2 降级说明）
 > **状态**: ✅ 已确认
 > **所属模块**: 路由层 → `01-routes.md`
 > **依赖**: schema-dsl（`dsl()` + `validate()`）
@@ -107,13 +107,34 @@ app.post('/', {
 校验通过的数据通过 `req.valid()` 获取（详见 `01c-response.md` VextRequest 定义）：
 
 ```typescript
-// 泛型显式指定（推荐，IDE 类型提示完整）
-const query = req.valid<{ page: number; limit: number }>('query')
-const body  = req.valid<{ name: string; email: string }>('body')
+// ✅ 直接使用（推荐，最简洁）
+// 返回类型默认 Record<string, any>，直接访问属性即可
+const body = req.valid('body')
+body.name      // ✅ 直接可用
+body.email     // ✅ 直接可用
+
+// ✅ 解构（更简洁）
+const { page, limit } = req.valid('query')
+const { name, email, password } = req.valid('body')
+
+// ✅ 加泛型获取更精确的 IDE 提示（可选，非必须）
 const param = req.valid<{ id: string }>('param')
+param.id       // IDE 知道是 string 类型
 ```
 
 > `req.valid()` 读取的是经 schema-dsl 转换后的**类型化数据**（如 `'number:1-'` 校验后 query 中的 page 已是 `number` 类型，而非原始字符串）。
+
+### 关于 `<T>` 泛型的说明
+
+`req.valid()` 的默认返回类型是 `Record<string, any>`，用户**直接 `.xxx` 访问属性即可**，无需写泛型。
+
+- **校验器（schema-dsl）已经定义了完整的字段规则**，运行时数据正确性由 validator 保证
+- `<T>` 是可选的 IDE 辅助——传入后 IDE 会给出更精确的字段补全和类型提示
+- **不传 `<T>` 也完全没问题**，`Record<string, any>` 允许直接访问任意属性
+
+> **设计取舍**：schema-dsl 使用字符串 DSL（如 `'string:1-50!'`），无法像 Zod 那样自动推导 TypeScript 类型。
+> 框架选择将默认返回类型设为 `Record<string, any>` 而非 `unknown`，优先保证易用性。
+> 如果需要完整的类型推导，可通过 `app.setValidator()` 切换为 Zod（见 §9.4），Zod schema 天然支持 `z.infer<typeof schema>` 类型推导。
 
 ---
 
@@ -133,6 +154,83 @@ HTTP 422 Unprocessable Entity
 ```
 
 > 422 响应**不经过**出口包装中间件（不会变成 `{ code: 0, data: ... }`），直接由全局错误处理返回。
+
+### 6.1 校验错误的 i18n 国际化路径（P1-5）
+
+校验失败的错误消息默认为 schema-dsl 内置的中文/英文提示。如果项目配置了 `src/locales/`，可以**自定义校验错误消息**。
+
+#### 默认行为（零配置）
+
+schema-dsl 内置了基本的校验错误消息模板：
+
+| DSL 规则 | 默认中文消息 | 默认英文消息 |
+|---------|-----------|-----------|
+| `'string:1-50!'` 缺失 | `"必填字段"` | `"Required field"` |
+| `'string:1-50!'` 超长 | `"最多 50 个字符"` | `"Maximum 50 characters"` |
+| `'email!'` 格式错误 | `"邮箱格式不正确"` | `"Invalid email format"` |
+| `'number:1-100'` 越界 | `"值必须在 1 到 100 之间"` | `"Value must be between 1 and 100"` |
+
+**消息语言由请求的 `Accept-Language` 头决定**（通过 AsyncLocalStorage 传递给 schema-dsl，见 `06b-error.md` §1.7）。
+
+#### 自定义校验错误消息
+
+在 `src/locales/` 语言文件中，使用 `validate.` 前缀的 key 覆盖默认消息：
+
+```typescript
+// src/locales/zh-CN.ts
+export default {
+  // 业务错误码（app.throw 使用）
+  'user.not_found':     { code: 40001, message: '用户不存在' },
+
+  // 校验错误消息覆盖（validate 前缀）
+  'validate.required':  { code: 422, message: '{{#field}} 不能为空' },
+  'validate.email':     { code: 422, message: '{{#field}} 不是有效的邮箱地址' },
+  'validate.min':       { code: 422, message: '{{#field}} 最少 {{#min}} 个字符' },
+  'validate.max':       { code: 422, message: '{{#field}} 最多 {{#max}} 个字符' },
+  'validate.range':     { code: 422, message: '{{#field}} 必须在 {{#min}} 到 {{#max}} 之间' },
+}
+```
+
+```typescript
+// src/locales/en-US.ts
+export default {
+  'user.not_found':     { code: 40001, message: 'User not found' },
+
+  'validate.required':  { code: 422, message: '{{#field}} is required' },
+  'validate.email':     { code: 422, message: '{{#field}} is not a valid email' },
+  'validate.min':       { code: 422, message: '{{#field}} must be at least {{#min}} characters' },
+  'validate.max':       { code: 422, message: '{{#field}} must be at most {{#max}} characters' },
+  'validate.range':     { code: 422, message: '{{#field}} must be between {{#min}} and {{#max}}' },
+}
+```
+
+#### i18n 流转路径
+
+```
+validate 中间件校验失败
+  ↓
+schema-dsl validate() 返回 { valid: false, errors: [...] }
+  ↓
+VextValidationError 构造（携带 errors 数组）
+  ↓
+全局错误处理（createErrorHandler）捕获
+  ↓
+对每个 error，尝试用 locale 文件翻译 message
+  - 匹配 validate.xxx key → 使用翻译后的消息（插值 {{#field}} 等）
+  - 未匹配 → 保留 schema-dsl 默认消息
+  ↓
+res.status(422).rawJson({
+  code: 422,
+  message: 'Validation failed',
+  errors: [
+    { field: 'email', message: '邮箱 不是有效的邮箱地址' },
+    { field: 'password', message: '密码 最少 8 个字符' },
+  ],
+  requestId: '...',
+})
+```
+
+> **注意**：校验错误 i18n 是**可选增强**，不配置 `validate.*` 的 locale key 时，框架使用 schema-dsl 内置的默认消息，功能完全正常。
 
 ---
 

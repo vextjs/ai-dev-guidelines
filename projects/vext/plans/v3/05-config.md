@@ -1,4 +1,4 @@
-# 05 - 配置层（config/）详细方案（最后更新: 2026-02-28 P1 修复）
+# 05 - 配置层（config/）详细方案（最后更新: 2026-02-26 P1-3 配置分级标注）
 
 > **项目**: vext
 > **日期**: 2026-02-26
@@ -31,28 +31,40 @@ src/config/
 
 ## 2. 完整配置项说明
 
+### 配置项分级说明（P1-3）
+
+每个配置项标注使用频率和重要性，帮助用户快速定位需要关注的配置：
+
+| 标签 | 含义 | 说明 |
+|:----:|------|------|
+| 🟢 **必配** | 几乎每个项目都需要设置 | `port`、`middlewares` |
+| 🔵 **常用** | 大多数项目会用到 | `cors`、`logger`、`rateLimit`、`trustProxy` |
+| 🟡 **按需** | 特定场景才需要 | `requestId.generate`、`router.prefix`、`locale` |
+| ⚪ **高级** | 极少需要修改，保持默认即可 | `request.timeout`、`shutdown.timeout`、`plugin.setupTimeout` |
+| 🔴 **企业级** | 生产部署 / 企业级项目必备 | `cluster`、`healthCheck`、`fetch` |
+
 ### 2.1 config/default.ts 完整示例
 
 ```typescript
 // src/config/default.ts
 export default {
 
-  // ── 服务器 ──────────────────────────────────────────────
+  // ── 🟢 必配：服务器 ─────────────────────────────────────
   port:       3000,
   host:       '0.0.0.0',
-  trustProxy: false,        // 是否信任反向代理的 X-Forwarded-* 头（nginx/caddy 前置时设 true）
+  trustProxy: false,        // 🔵 常用：反向代理（nginx/caddy）前置时设 true
 
-  // ── 适配器 ──────────────────────────────────────────────
+  // ── 🟢 必配：适配器 ─────────────────────────────────────
   adapter: 'hono',
 
-  // ── 中间件白名单（速率限制已内置，无需放这里）────────────
+  // ── 🟢 必配：中间件白名单（速率限制已内置，无需放这里）──
   middlewares: [
     'auth',
     'check-role',
     // 环境文件可通过 { name: 'xxx', enabled: false } 禁用某个中间件
   ],
 
-  // ── 速率限制（内置 flex-rate-limit，可通过 app.setRateLimiter() 替换）──
+  // ── 🔵 常用：速率限制（内置 flex-rate-limit，可通过 app.setRateLimiter() 替换）──
   rateLimit: {
     enabled:  true,
     max:      100,      // 每个窗口期最大请求数
@@ -61,13 +73,13 @@ export default {
     keyBy:    'ip',     // 限流维度：'ip' | 'user'（需 req.user）| 自定义函数
   },
 
-  // ── 请求 ────────────────────────────────────────────────
+  // ── ⚪ 高级：请求 ──────────────────────────────────────
   request: {
     maxBodySize: '1mb',
     timeout:     30000,
   },
 
-  // ── 请求追踪（企业级必备）────────────────────────────────
+  // ── 🔴 企业级：请求追踪 ────────────────────────────────
   requestId: {
     enabled:        true,
     // 从此请求头读取 requestId（网关透传），不存在则调用 generate()
@@ -78,7 +90,7 @@ export default {
     generate:       undefined,     // undefined = 框架内置 UUID v4
   },
 
-  // ── 响应 ────────────────────────────────────────────────
+  // ── 🟡 按需：响应 ──────────────────────────────────────
   response: {
     // 自定义 404 响应体（默认：{ code: 404, message: 'Not Found' }）
     notFound: undefined,    // 设为函数可完全自定义：(req) => ({ code: 404, message: '...' })
@@ -87,13 +99,13 @@ export default {
     hideInternalErrors: process.env.NODE_ENV === 'production',
   },
 
-  // ── 日志 ────────────────────────────────────────────────
+  // ── 🔵 常用：日志 ──────────────────────────────────────
   logger: {
     level:  'info',
     pretty: true,
   },
 
-  // ── CORS ────────────────────────────────────────────────
+  // ── 🔵 常用：CORS ──────────────────────────────────────
   cors: {
     enabled:     true,
     origins:     ['*'],
@@ -102,25 +114,25 @@ export default {
     credentials: false,
   },
 
-  // ── 路由 ────────────────────────────────────────────────
+  // ── 🟡 按需：路由 ──────────────────────────────────────
   router: {
     prefix:      '',        // 全局路由前缀（如 '/api/v1'）
     strictSlash: false,
   },
 
-  // ── 健康检查（企业级必备）────────────────────────────────
+  // ── 🔴 企业级：健康检查 ────────────────────────────────
   healthCheck: {
     enabled:   true,
     path:      '/health',   // liveness probe：服务存活
     readyPath: '/ready',    // readiness probe：流量就绪（可选）
   },
 
-  // ── 优雅关闭（企业级必备）────────────────────────────────
+  // ── 🔴 企业级：优雅关闭 ────────────────────────────────
   shutdown: {
     timeout: 10000,         // 等待飞行中请求完成的最长时间（毫秒），超时强制退出
   },
 
-  // ── HTTP 客户端（出站请求追踪，详见 06d-fetch.md）─────
+  // ── 🔴 企业级：HTTP 客户端（出站请求追踪，详见 06d-fetch.md）──
   fetch: {
     timeout:          10_000,   // 默认请求超时（毫秒）
     retry:            0,        // 默认重试次数（仅幂等方法 GET/HEAD/OPTIONS/PUT/DELETE）
@@ -128,13 +140,13 @@ export default {
     propagateHeaders: [],       // 除 x-request-id 外还需自动传播的请求头
   },
 
-  // ── 多语言（app.throw i18n）────────────────────────────
+  // ── 🟡 按需：多语言（app.throw i18n）──────────────────
   locale: {
     default:   'zh-CN',             // 默认语言（Accept-Language 缺失时使用）
     supported: ['zh-CN', 'en-US'],  // 可选：限制支持的语言列表（不在列表中的 fallback 到 default）
   },
 
-  // ── 开发 ────────────────────────────────────────────────
+  // ── ⚪ 高级：开发 ──────────────────────────────────────
   dev: {
     hot:          true,       // 启用 Soft Reload（Tier 1/2）；false = 所有变更走冷重启
     poll:         false,      // polling 模式（Docker bind mount 兼容，也可通过 VEXT_DEV_POLL=1 开启）
@@ -142,12 +154,12 @@ export default {
     debounce:     100,        // 防抖间隔（毫秒），窗口内多个变更合并为一次 reload
   },
 
-  // ── 插件 ────────────────────────────────────────────────
+  // ── ⚪ 高级：插件 ──────────────────────────────────────
   plugin: {
     setupTimeout: 30_000,   // 单个插件 setup() 最大等待时间（毫秒）
   },
 
-  // ── 多进程 Cluster（详见 12-cluster.md）────────────────
+  // ── 🔴 企业级：多进程 Cluster（详见 12-cluster.md）────
   cluster: {
     enabled:     false,     // 是否启用 cluster 模式（也可通过 VEXT_CLUSTER=1 开启）
     workers:     'auto',    // Worker 数量：'auto' = CPU 核心数，'auto-1' = 核心数-1，number = 指定
@@ -162,7 +174,7 @@ export default {
 
 ## 3. 各配置项详解
 
-### 3.1 `port` / `host` / `trustProxy`
+### 3.1 `port` / `host` / `trustProxy` 🟢必配 / 🔵常用
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
@@ -180,7 +192,7 @@ export default {
 
 ---
 
-### 3.2 `adapter`
+### 3.2 `adapter` 🟢必配
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
@@ -205,7 +217,7 @@ export default {
 
 ---
 
-### 3.3 `middlewares`
+### 3.3 `middlewares` 🟢必配
 
 中间件白名单，详见 `01b-middlewares.md`。
 
@@ -282,7 +294,7 @@ for (const decl of declarations) {
 
 ---
 
-### 3.4 `request`
+### 3.4 `request` ⚪高级
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
@@ -293,7 +305,7 @@ for (const decl of declarations) {
 
 ---
 
-### 3.5 `requestId`（企业级必备）
+### 3.5 `requestId` 🔴企业级
 
 框架内置请求追踪能力，每个请求自动生成或透传 `requestId`，注入到 `req.requestId`。
 
@@ -341,7 +353,7 @@ export default definePlugin({
 
 ---
 
-### 3.6 `healthCheck`（企业级必备）
+### 3.6 `healthCheck` 🔴企业级
 
 框架内置健康检查端点，供 Kubernetes Probe / 负载均衡器 / 监控系统探测。
 
@@ -369,7 +381,7 @@ GET /ready  → HTTP 200（onReady 钩子全部完成后）
 
 ---
 
-### 3.7 `shutdown`（企业级必备）
+### 3.7 `shutdown` 🔴企业级
 
 进程收到 `SIGTERM` / `SIGINT` 时框架自动执行优雅关闭：停止接受新请求 → 等待飞行中请求完成 → 退出。
 
@@ -386,7 +398,7 @@ export default {
 
 ---
 
-### 3.8 `response`
+### 3.8 `response` 🟡按需
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
@@ -404,7 +416,7 @@ export default {
 
 ---
 
-### 3.9 `logger`
+### 3.9 `logger` 🔵常用
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
@@ -423,7 +435,7 @@ export default {
 
 ---
 
-### 3.10 `cors`
+### 3.10 `cors` 🔵常用
 
 框架**内置 CORS 处理**，启动时根据 `config.cors` 自动注册全局 CORS 中间件，无需用户手动添加插件。
 
@@ -451,7 +463,7 @@ export default {
 
 ---
 
-### 3.11 `router`
+### 3.11 `router` 🟡按需
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
@@ -468,7 +480,7 @@ export default {
 
 ---
 
-### 3.11b `fetch`（内置 HTTP 客户端）
+### 3.11b `fetch` 🔴企业级（内置 HTTP 客户端）
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
@@ -493,7 +505,7 @@ export default {
 
 ---
 
-### 3.12 `dev`
+### 3.12 `dev` ⚪高级
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
@@ -512,7 +524,7 @@ export default {
 
 ---
 
-### 3.13 `plugin`
+### 3.13 `plugin` ⚪高级
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
@@ -527,7 +539,7 @@ export default {
 
 ---
 
-### 3.14 `locale`（多语言错误码）
+### 3.14 `locale` 🟡按需（多语言错误码）
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
@@ -550,7 +562,7 @@ export default {
 
 ---
 
-### 3.15 `cluster`（多进程）
+### 3.15 `cluster` 🔴企业级（多进程）
 
 | 字段 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|

@@ -1,7 +1,7 @@
 # vext 框架方案 v3 — 已确认内容
 
 > **项目**: vext
-> **日期**: 2026-02-26（最后更新: 2026-02-28 P0/P1 修复）
+> **日期**: 2026-02-26（最后更新: 2026-02-26 P0-1/P1-6/P1-7/P2-5/P2-6 修复）
 > **状态**: 🔄 部分确认，持续更新中
 
 ---
@@ -36,7 +36,7 @@
 | Q14 | schema-dsl ↔ HttpError 依赖方向 | 严格单向：vextjs 依赖 schema-dsl；vextjs 调用 `I18nError.create()` 获取翻译结果，再构造 HttpError 抛出（**P0 修正**：不再 try/catch `SchemaError`，改用 `I18nError.create()` 返回实例） | ✅ 已确认（`06b-error.md`）|
 | Q15 | `app.throw` message 语义 | 同时兼容 i18n key 和原始文本：schema-dsl 查找 key，找到则翻译，未找到则原样保留 | ✅ 已确认（`06b-error.md`）|
 | Q16 | 测试策略 | `createTestApp()` 工厂 + 分层测试（单元 / 集成 / E2E）；默认禁用插件和外部 I/O | ✅ 已确认（`10-testing.md`）|
-| Q17 | `req.valid<T>()` 类型安全 | 暂不处理，保持现状（泛型 `T` 与 schema 脱节是 DSL 固有限制） | ⏭️ 跳过 |
+| Q17 | `req.valid<T>()` 类型安全 | `<T>` 是纯 IDE 辅助，非运行时安全保证。schema-dsl 已保证数据正确性，JS 用户直接 `req.valid('body').xxx`，TS 用户可选加 `<T>` 或 `as any`。原 P0-2 降级为 P2（文档改善）。如需完整类型推导，通过 `app.setValidator()` 切换 Zod | ✅ 已确认（`01a-validate.md` §5 P0-2→P2 降级说明）|
 | Q18 | Locale 并发安全 | `Locale.currentLocale` 是全局静态变量，并发请求互相覆盖（竞态 Bug）。改为通过 AsyncLocalStorage（`requestContext`）存储请求级 locale，`defaultThrow` 显式传 locale 给 `I18nError.create()` 第 4 参数。**禁止**在中间件中调用 `Locale.setLocale()` | ✅ 已确认（`06b-error.md` P0 修复）|
 | Q19 | `app.throw` 参数插值 | `app.throw(status, message, paramsOrCode?, code?)` — 第三参数智能识别：`number` → 业务码，`object` → i18n 插值参数（`{{#xxx}}`）。与 schema-dsl 的 `paramsOrLocale` 智能识别模式一致 | ✅ 已确认（`06b-error.md` P1 改进）|
 | Q20 | 多语言错误码加载方式 | 默认按目录加载（`src/locales/`），框架启动时自动扫描 `zh-CN.ts`、`en-US.ts` 等并通过 `dsl.config({ i18n })` 注册。用户零配置即可使用。编程式 `Locale.addLocale()` 作为可选覆盖方式（适合远程配置中心等动态场景） | ✅ 已确认（`06b-error.md` §1.7、`00-directory-structure.md`）|
@@ -56,3 +56,6 @@
 | Q34 | `dev.hot` 配置项 | 原 `dev.hmr`（进程重启）已废弃。新 `dev.hot`（默认 `true`）= 启用 Soft Reload；`false` = 所有变更走冷重启。新增 `dev.poll` / `dev.pollInterval` / `dev.debounce` | ✅ 已确认（`05-config.md` §3.12）|
 | Q35 | `app.fetch` 内置 HTTP 客户端 | 封装 Node.js fetch，自动传播 `x-request-id` + 结构化日志。支持 `create()` 工厂、超时、重试。插件可通过 `app.setFetch()` 替换 | ✅ 已确认（`06d-fetch.md`）|
 | Q36 | bootstrap 错误边界 | try/catch 包裹步骤 0~⑧，失败时清理 serverHandle.close() + internals.shutdown()。修复 13-audit-report B-2 P0 | ✅ 已确认（`09-cli.md` §5.1）|
+| Q37 | P0-1: `res.status(N).json(data)` 状态码丢失修复 | 采用「延迟绑定 + 内建包装」方案：(1) `createVextResponse(c, () => req.requestId)` 传 getter 函数，json() 实际调用时才取 requestId；(2) 包装逻辑内建于 `json()` 方法，通过 `_wrapEnabled` 标志控制；(3) response-wrapper 中间件仅调用 `res._enableWrap()`，**不再 monkey-patch** `res.json`；(4) 204 使用 `c.body(null)` 确保 RFC 9110 合规（P1-7 一并修复）。变更文件：`08-adapter.md` §4.2/§4.4/§9.2、`01c-response.md` §4/§5 | ✅ 已确认（`08-adapter.md`、`01c-response.md` P0-1 修复）|
+| Q38 | P2-5/P2-6: `registerNotFound` + `errorHandler` 边界修复 | (1) `registerNotFound` 内联生成 requestId（从 `x-request-id` header 读取或 `crypto.randomUUID()`），确保 404 响应也有有效 requestId；(2) `errorHandler` 调用外包 try/catch 安全网，防止 handler 自身抛异常导致非 JSON 纯文本 500。变更文件：`08-adapter.md` §4.2 | ✅ 已确认（`08-adapter.md` P2-5/P2-6 修复）|
+| Q39 | P1-6/P2-7: README.md 过期信息修正 | (1) 热重载描述从「chokidar + 进程重启」更新为「fs.watch + 三层 Soft Reload」；(2) 决策表 Q6/Q9 与 confirmed.md 对齐；(3) 框架内部目录结构从 `dev-watcher.ts` 更新为 `lib/dev/` 子目录（compiler/file-watcher/cache-invalidator 等）；(4) 关键约定 #6/#8 更新 | ✅ 已确认（`README.md` P1-6/P2-7 修复）|
