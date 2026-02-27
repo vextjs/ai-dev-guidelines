@@ -128,8 +128,9 @@ changelogs/vX.Y.Z.md 必需章节:
 更新位置: ai-dev-guidelines/projects/<project>/.ai-memory/
 
 执行:
-  1. 生成单任务记忆 → .ai-memory/tasks/<date>-<type>-<id>.md
-  2. 更新 SUMMARY.md → 追加到"最近任务" + 更新"关键决策"
+  1. 生成单任务记忆 → .ai-memory/clients/<agent>/tasks/<YYYYMMDD>-<TYPE>-<id>.md
+  2. 更新 clients/<agent>/SUMMARY.md → 追加到最近任务
+  3. 同步关键决策到全局 .ai-memory/SUMMARY.md
 
 详见: workflows/common/task-memory.md
 ```

@@ -13,11 +13,35 @@ task_identification:
   keywords:
     requirement_dev:
       weight: 10
-      patterns: ["实现", "开发", "添加", "新增", "集成", "对接", "接入", "新功能", "新特性"]
+      patterns:
+        [
+          "实现",
+          "开发",
+          "添加",
+          "新增",
+          "集成",
+          "对接",
+          "接入",
+          "新功能",
+          "新特性",
+        ]
 
     bug_fix:
       weight: 10
-      patterns: ["修复", "解决", "Bug", "bug", "问题", "错误", "报错", "异常", "崩溃", "不工作", "失败"]
+      patterns:
+        [
+          "修复",
+          "解决",
+          "Bug",
+          "bug",
+          "问题",
+          "错误",
+          "报错",
+          "异常",
+          "崩溃",
+          "不工作",
+          "失败",
+        ]
 
     optimization:
       weight: 10
@@ -55,14 +79,14 @@ task_identification:
     incident: "workflows/08-incident/"
 
 # ===========================================
-# 强制预检查 (v2.0 简化版 - 3项必做)
+# 强制预检查 (v2.5 - 4项必做 + Agent 标识)
 # ===========================================
 mandatory_precheck:
   name: "强制启动协议"
   priority: "P0"
-  version: "v2.0"
+  version: "v2.5"
 
-  # v2.0 简化为 3 项必做检查
+  # v2.5 改为 4 项必做检查（新增 Agent 标识）
   steps:
     - step: 1
       action: "确认工作区"
@@ -74,25 +98,57 @@ mandatory_precheck:
       action: "识别任务类型"
       method: "关键词权重匹配"
       ambiguous_handling: "询问用户确认"
+      keywords:
+        深度分析: ["分析", "审查", "评估", "深度分析", "架构分析"]
 
     - step: 3
       action: "确定输出位置"
       pattern: "projects/<project>/<task-type>/<task-id>/"
 
+    - step: 4
+      action: "确定 Agent 标识"
+      method: "自动检测编辑器+AI 组合"
+      agent_table:
+        zed_copilot: "zed-copilot"
+        webstorm_copilot: "webstorm-copilot"
+        vscode_copilot: "vscode-copilot"
+        cursor: "cursor"
+        vscode_cline: "vscode-cline"
+        windsurf: "windsurf"
+        unknown: "unknown-agent"
+      detection_priority:
+        - "工具环境/系统信息推断"
+        - "用户在对话中提及的编辑器名称"
+        - "无法确定时使用 unknown-agent 并提示用户确认"
+
   # 按需检查（涉及代码修改时）
   optional_steps:
-    - step: 4
+    - step: 5
       action: "加载项目规范"
       condition: "涉及代码修改"
       target: "projects/<project>/profile/README.md"
       fallback: "projects/_template/profile/README.md"
+
+    - step: 6
+      action: "加载任务记忆"
+      target: "projects/<project>/.ai-memory/SUMMARY.md"
+      agent_filter: "优先显示当前 Agent 的记忆，但展示所有 Agent 条目"
 
   output_format: |
     📋 预检查:
     1. 工作区: <路径>
     2. 任务类型: <类型>
     3. 输出位置: <projects/...>
-    4. 项目规范: ✅ 已加载 / ⚠️ 未找到（按需）
+    4. Agent: <agent 标识>
+    5. 项目规范: ✅ 已加载 / ⚠️ 未找到（按需）
+    6. 任务记忆: ✅ 已读取 / ⚠️ 无历史记忆（按需）
+
+  # 日期强制必填（v2.5 新增）
+  date_enforcement:
+    rule: "所有输出文件名必须以 YYYYMMDD- 开头，文档头部日期字段禁止留占位符"
+    filename_format: "<YYYYMMDD>-<描述>.md"
+    memory_filename_format: "<YYYYMMDD>-<agent>-<TYPE>-<id>.md"
+    obtain_date: "优先使用 now() 工具获取真实日期"
 
   failure_handling:
     condition: "任何步骤失败"
@@ -347,4 +403,3 @@ references:
   validation: "best-practices/validation/README.md"
   constraints: "CONSTRAINTS.md"
   quick_reference: "QUICK-REFERENCE.md"
-

@@ -4,6 +4,54 @@
 
 ---
 
+## 🔴 必填字段规范（所有模板通用）
+
+> **此规范优先级高于一切模板内容。AI 生成任何文档时必须遵守。**
+
+### 强制必填字段
+
+| 字段 | 要求 | 格式 | 违规后果 |
+|------|------|------|---------|
+| **创建日期** | 🔴 必须替换为真实日期 | `YYYY-MM-DD`（ISO 8601） | 报告无法判断新旧，失去价值 |
+| **最后更新** | 🔴 必须替换为真实日期 | `YYYY-MM-DD`（ISO 8601） | 无法追踪变更时间线 |
+| **项目** | 🔴 必须填写真实项目名 | 纯文本 | 无法归属项目 |
+| **Agent** | 🔴 必须标识当前编辑器/AI | 见下方标识表 | 多编辑器记忆混乱 |
+| **状态** | 🔴 必须选择一个状态 | emoji + 文字 | 无法判断文档阶段 |
+
+### Agent 标识表
+
+| 编辑器 + AI | 标识值 |
+|------------|--------|
+| Zed + GitHub Copilot | `zed-copilot` |
+| WebStorm + GitHub Copilot | `webstorm-copilot` |
+| VS Code + GitHub Copilot | `vscode-copilot` |
+| Cursor | `cursor` |
+| VS Code + Cline | `vscode-cline` |
+| 其他 | `<editor>-<ai-provider>` |
+
+### 文件名日期前缀
+
+所有输出文件（报告、分析、记忆等）的文件名**必须**以 `YYYYMMDD-` 开头：
+
+```yaml
+✅ 正确: 20260226-analysis-v3-architecture-deep-review.md
+❌ 错误: v3-architecture-deep-analysis.md  # 缺少日期前缀
+❌ 错误: 2026-02-26-analysis-xxx.md        # 日期格式错误（有分隔符）
+```
+
+### AI 自检清单（生成文档前必须确认）
+
+```yaml
+🔴 每次生成文档前，AI 必须逐项确认:
+  - [ ] 日期字段不包含 "YYYY" 占位符？
+  - [ ] 日期是通过 now() 工具获取的真实日期？
+  - [ ] Agent 字段已填写当前编辑器/AI 标识？
+  - [ ] 文件名以 YYYYMMDD- 开头？
+  - [ ] 项目名称为真实项目名？
+```
+
+---
+
 ## 📁 目录结构
 
 ```
@@ -17,7 +65,8 @@ templates/
 │   ├── bug-analysis-lite.md
 │   ├── optimization-lite.md      # 🆕
 │   ├── research-lite.md          # 🆕
-│   └── refactoring-lite.md       # 🆕
+│   ├── refactoring-lite.md       # 🆕
+│   └── analysis-lite.md          # 🆕 深度分析/架构分析
 ├── core/                  # 核心模板（完整模式）
 │   ├── requirement-template.md
 │   ├── technical-template.md
@@ -70,7 +119,7 @@ templates/
 ## 🎯 模板分类
 
 ### Lite Templates（精简模板）🆕
-用于快速模式，章节数 3-5 个：
+用于快速模式，章节数 3-6 个：
 
 | 模板文件 | 用途 | 章节数 |
 |---------|------|-------|
@@ -81,6 +130,7 @@ templates/
 | `optimization-lite.md` | 性能优化 | 5 |
 | `research-lite.md` | 技术调研 | 5 |
 | `refactoring-lite.md` | 架构重构 | 5 |
+| `analysis-lite.md` 🆕 | 深度分析/架构分析 | 6 |
 
 ### Core Templates（核心模板）
 用于 Tier 1 任务，使用频率 80%：
@@ -118,6 +168,16 @@ templates/
 ---
 
 ## 📋 模板使用规范
+
+### 规范 0: 🔴 必填字段不可留占位符
+```
+❌ 错误: 创建日期: YYYY-MM-DD    ← 留了占位符
+❌ 错误: Agent: [编辑器]         ← 留了占位符
+❌ 错误: 文件名 analysis.md      ← 没有日期前缀
+✅ 正确: 创建日期: 2026-02-26    ← 替换为真实日期
+✅ 正确: Agent: zed-copilot      ← 填写了真实标识
+✅ 正确: 文件名 20260226-analysis-xxx.md ← 有日期前缀
+```
 
 ### 规范 1: 严格按模板结构
 ```
