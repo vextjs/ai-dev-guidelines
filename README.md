@@ -2,11 +2,11 @@
 
 > **版本**: v2.11.0  
 > **最后更新**: 2026-02-27  
-> **核心定位**: 轻量、灵活、实用的 AI 文档生成工具
+> **核心定位**: AI 工作操作系统 — 给 AI Agent 完整的工程任务执行框架
 > 
 > **目标用户**: AI Agent（GitHub Copilot / Claude / GPT）
 > 
-> **核心价值**: 快速生成结构化文档，高效完成开发任务
+> **核心价值**: 全流程标准化 + 持久化记忆 + 多 Agent 协同 + 规范自修复
 
 ---
 
@@ -96,7 +96,7 @@ ai-dev-guidelines/
 ├── README.md                          # 👈 你正在阅读的文件（AI 入口）
 ├── QUICK-REFERENCE.md                 # 📖 速查手册（推荐首先阅读）
 ├── STATUS.md                          # 📊 项目状态追踪
-├── CONSTRAINTS.md                     # ⛔ 约束清单（19 条）
+├── CONSTRAINTS.md                     # ⛔ 约束清单（20 条）
 ├── CHANGELOG.md                       # 📜 版本变更索引
 │
 ├── projects/                          # 🗂️ 项目特定规范（关键）
@@ -158,7 +158,7 @@ ai-dev-guidelines/
 │   ├── triggers/                     # 触发机制
 │   └── records/                      # 修复记录
 │
-├── tools/                             # 🔧 工具脚本（4 个）
+├── tools/                             # 🔧 工具脚本（7 个）
 ├── examples/                          # 📚 完整示例（供 AI 学习）
 └── changelogs/                        # 📜 版本变更详情（v1.0~v2.0）
 ```
@@ -217,6 +217,8 @@ ai-dev-guidelines/
 | 内容 | 位置 | 说明 |
 |------|------|------|
 | 预检查格式、任务映射、确认点、输出路径 | [QUICK-REFERENCE.md](./QUICK-REFERENCE.md) | ⭐ 执行任务时首先阅读 |
+| 新 Agent 快速上手 | [ONBOARDING.md](./ONBOARDING.md) | 🆕 首次接入规范体系的 AI Agent 指引 |
+| 设计理念与演进路线 | [docs/DESIGN-PHILOSOPHY.md](./docs/DESIGN-PHILOSOPHY.md) | 🆕 架构哲学 + Agent 化路线图 |
 | 工作流清单、Tier 分级 | [workflows/README.md](./workflows/README.md) | 各类任务的执行流程 |
 | 模板选择指南 | [templates/README.md](./templates/README.md) | 快速/完整模式模板 |
 | 完整输出示例 | [examples/README.md](./examples/README.md) | 需求/Bug 修复等示例 |

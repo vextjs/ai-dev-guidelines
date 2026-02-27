@@ -67,6 +67,14 @@ task_identification:
       weight: 9
       patterns: ["故障", "复盘", "宕机", "事故", "P0", "紧急"]
 
+    analysis:
+      weight: 7
+      patterns: ["分析", "审查", "评估", "深度分析", "全面检查", "健康检查", "评审"]
+
+    opensource_init:
+      weight: 8
+      patterns: ["新项目", "开源", "npm包", "初始化", "脚手架", "项目模板"]
+
   # 任务类型到工作流映射
   workflow_mapping:
     requirement_dev: "workflows/01-requirement-dev/"
@@ -77,14 +85,16 @@ task_identification:
     database: "workflows/06-database/"
     security: "workflows/07-security/"
     incident: "workflows/08-incident/"
+    opensource_init: "workflows/09-opensource-init/"
+    analysis: "workflows/10-analysis/"
 
 # ===========================================
-# 强制预检查 (v2.11 - 5项必做 + Agent 标识 + 上次记忆)
+# 强制预检查 (v2.11.0 - 5项必做 + Agent 标识 + 上次记忆)
 # ===========================================
 mandatory_precheck:
   name: "强制启动协议"
   priority: "P0"
-  version: "v2.11"
+  version: "v2.11.0"
 
   # v2.7 改为 5 项必做检查（新增上次记忆）
   steps:
@@ -156,8 +166,8 @@ mandatory_precheck:
 
   # 日期强制必填（v2.5 新增，v2.7 维持）
   date_enforcement:
-    rule: "报告文件名必须以 YYYYMMDD-NN- 开头（NN 仅扫描 reports/ 目录），记忆文件名必须为 YYYYMMDD.md（每天一文件，无 NN），文档头部日期字段禁止留占位符"
-    filename_format: "<YYYYMMDD>-<NN>-<类型>-<简述>.md  # 报告文件，NN 仅扫描 reports/<子目录>/"
+    rule: "报告文件存放于 reports/<子目录>/<agent>/YYYYMMDD/ 目录下，文件名为 NN-<类型>-<简述>.md（NN 仅扫描该目录计算）；记忆文件名必须为 YYYYMMDD.md（每天一文件，无 NN）；文档头部日期字段禁止留占位符"
+    report_path_format: "reports/<子目录>/<agent>/YYYYMMDD/<NN>-<类型>-<简述>.md  # 日期在目录层级，NN 仅扫描 reports/<子目录>/<agent>/YYYYMMDD/ 目录"
     memory_filename_format: "<YYYYMMDD>.md  # 记忆文件，在 clients/<agent>/tasks/ 目录下，每天一文件，会话内以 ## 会话 NN 分段"
     obtain_date: "优先使用 now() 工具获取真实日期"
 
@@ -267,7 +277,7 @@ inquiry_points:
       - "S: 跳过"
 
 # ===========================================
-# 禁止项（编号对齐 CONSTRAINTS.md 的 19 条约束）
+# 禁止项（编号对齐 CONSTRAINTS.md 的 20 条约束）
 # ===========================================
 constraints:
   # 对应 CONSTRAINTS.md 核心约束
@@ -310,7 +320,7 @@ constraints:
 
     - id: 9
       rule: "文件名带日期+序号"
-      violation: "输出文件名未以 YYYYMMDD-NN- 开头，或缺少当日递增序号"
+      violation: "报告文件未存放于 reports/<子目录>/<agent>/YYYYMMDD/ 目录下，或文件名未使用 NN-<类型>-<简述>.md 格式，或记忆文件未使用 YYYYMMDD.md 格式"
 
     - id: 10
       rule: "多 Agent 目录隔离"
@@ -351,6 +361,10 @@ constraints:
     - id: 19
       rule: "报告/记忆序号独立"
       violation: "报告 NN 未仅扫描 reports/ 目录；记忆文件未使用 YYYYMMDD.md 无序号格式；报告和记忆共享全局序号池"
+
+    - id: 20
+      rule: "文件过大必须拆分"
+      violation: "AI 新创建的单个 .md 文件超过 500 行而不拆分；向已接近 500 行的文件大量追加内容而不考虑拆分（已有文件豁免）"
 
   # 附加禁止项（未在 CONSTRAINTS.md 中编号，但在决策树中强制）
   additional_forbidden:

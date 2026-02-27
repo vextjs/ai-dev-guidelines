@@ -1,0 +1,146 @@
+# ============================================
+# META.yaml — 单一真相源 (Single Source of Truth)
+# ============================================
+# 本文件是版本号和约束条数的唯一权威来源。
+# 所有引用这些值的文件都应从此文件获取。
+#
+# 🔴 修改流程:
+#   1. 修改本文件中的值
+#   2. 运行 node tools/bump-version.js
+#   3. 脚本会自动同步到所有引用文件
+#
+# 🔴 禁止行为:
+#   - 禁止手动逐文件修改版本号或约束条数
+#   - 禁止在其他文件中硬编码版本号而不在此注册
+#
+# 最后更新: 2026-02-27
+# ============================================
+
+# 当前版本号
+version: "2.11.0"
+
+# 当前约束条数
+constraint_count: 20
+
+# 最后更新日期
+last_updated: "2026-02-27"
+
+# ============================================
+# 版本号同步文件清单 (8 个文件)
+# ============================================
+# 与 QUICK-REFERENCE.md §版本号文件清单 保持一致
+version_files:
+  - path: ".github/copilot-instructions.md"
+    pattern: "\\*\\*版本\\*\\*: v{version}"
+    description: "入口文件"
+
+  - path: "README.md"
+    pattern: "\\*\\*版本\\*\\*: v{version}"
+    description: "项目主入口"
+
+  - path: "QUICK-REFERENCE.md"
+    pattern: "\\*\\*版本\\*\\*: v{version}"
+    description: "速查手册（头部 + 尾部两处）"
+
+  - path: "CONSTRAINTS.md"
+    pattern: "\\*\\*版本\\*\\*: v{version}"
+    description: "约束清单"
+
+  - path: "STATUS.md"
+    pattern: "\\*\\*当前版本\\*\\*: v{version}"
+    description: "项目状态"
+
+  - path: "CHANGELOG.md"
+    pattern: "版本概览表新增行"
+    description: "变更日志（需手动维护条目内容）"
+
+  - path: "workflows/decision-tree.yaml"
+    pattern: 'version: "{version}"'
+    description: "决策树配置（L1 注释 + L4 version 字段 + L82 注释 + L87 mandatory_precheck.version）"
+
+  - path: "workflows/00-pre-check/README.md"
+    pattern: "\\*\\*版本\\*\\*: v{version}"
+    description: "预检查工作流（头部 + 尾部两处）"
+
+# ============================================
+# 约束条数同步文件清单 (11 个文件)
+# ============================================
+# 与 QUICK-REFERENCE.md §约束条数引用清单 保持一致
+constraint_files:
+  - path: "CONSTRAINTS.md"
+    locations:
+      - "§标题 `核心约束（{count} 条）`"
+      - "§速查表"
+      - "§尾部变更"
+    description: "约束清单主文件"
+
+  - path: "QUICK-REFERENCE.md"
+    locations:
+      - "§标题 `核心约束 ({count}条)`"
+    description: "速查手册"
+
+  - path: ".github/copilot-instructions.md"
+    locations:
+      - "入口表 `执行约束（{count} 条）`"
+    description: "入口文件"
+
+  - path: "README.md"
+    locations:
+      - "目录树注释 `约束清单（{count} 条）`"
+    description: "项目主入口"
+
+  - path: "STATUS.md"
+    locations:
+      - "v2.0 核心改进表 `约束体系 {count} 条`"
+    description: "项目状态"
+
+  - path: "workflows/decision-tree.yaml"
+    locations:
+      - "注释 `编号对齐 CONSTRAINTS.md 的 {count} 条约束`"
+      - "constraints 条目数"
+    description: "决策树配置"
+
+  - path: "projects/dev-docs/profile/README.md"
+    locations:
+      - "目录树注释"
+      - "关键文档表格"
+    description: "项目规范入口（两处）"
+
+  - path: "projects/dev-docs/profile/01-项目信息.md"
+    locations:
+      - "目录树注释"
+      - "关键指标表格"
+    description: "项目信息（两处）"
+
+  - path: "projects/dev-docs/profile/02-架构约束.md"
+    locations:
+      - "相关文档链接描述"
+    description: "架构约束"
+
+  - path: "changelogs/v2.11.0.md"
+    locations:
+      - "相关链接描述"
+    description: "当前版本 changelog"
+    note: "发布新版本时此条目需更新为新版本的 changelog 文件"
+
+  - path: "spec-self-fix/detection/conflict-detection.md"
+    locations:
+      - "§规则 6 检测示例基准值"
+    description: "冲突检测模块"
+
+# ============================================
+# 独立版本号文件 (不在主版本号同步范围内)
+# ============================================
+# 这些文件使用独立的版本号，不随主版本号变更
+independent_versions:
+  - path: "workflows/common/task-memory.md"
+    version: "1.8"
+    description: "任务记忆规范"
+
+  - path: "workflows/common/temp-reports.md"
+    version: "1.7"
+    description: "临时报告规范"
+
+  - path: "spec-self-fix/README.md"
+    version: "2.5"
+    description: "自修复机制"

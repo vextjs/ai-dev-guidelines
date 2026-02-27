@@ -22,9 +22,64 @@
 
 | 脚本 | 用途 | 使用方法 |
 |-----|------|---------|
-| `validate-links.js` | 检查文档链接有效性 | `node validate-links.js` |
+| `validate-links.js` | 检查文档链接有效性（支持 `.linksignore`） | `node validate-links.js` |
 | `validate-structure.js` | 检查目录结构规范 | `node validate-structure.js` |
 | `doc-health-check.js` | 文档健康检查（综合） | `node doc-health-check.js [目录]` |
+| `bump-version.js` | 版本号/约束条数/日期自动同步 | `node bump-version.js [--apply]` |
+| `update-task-index.js` | TASK-INDEX.md 自动生成 | `node update-task-index.js [项目名]` |
+| `add-constraint.js` | 约束新增自动化（同步 11+ 文件） | `node add-constraint.js --interactive` |
+| `spec-health-check.js` | 规范健康检查 | `node spec-health-check.js` |
+
+### bump-version.js
+
+**功能**：
+- 从 `META.yaml`（单一真相源）读取版本号和约束条数
+- 自动扫描并同步到所有引用文件（版本号 8 文件、约束条数 11 文件）
+- 同步 `最后更新` 日期字段
+- 交叉检查 `CHANGELOG.md` ↔ `changelogs/` 目录一致性
+
+**使用示例**：
+```bash
+cd ai-dev-guidelines
+
+# 检查模式（只报告差异，不修改文件）
+node tools/bump-version.js
+
+# 应用模式（实际写入修改）
+node tools/bump-version.js --apply
+
+# 同时更新日期
+node tools/bump-version.js --apply --date 2026-03-01
+
+# 详细输出（显示每处替换的行号和内容）
+node tools/bump-version.js --verbose
+```
+
+**工作流程**：
+1. 修改 `META.yaml` 中的 `version` 或 `constraint_count`
+2. 运行 `node tools/bump-version.js` 预览变更
+3. 确认无误后运行 `node tools/bump-version.js --apply` 写入
+
+> ⚠️ `CHANGELOG.md` 的版本条目内容需手动维护，脚本仅检查条目是否存在。
+
+---
+
+### update-task-index.js
+
+**功能**：
+- 扫描 `reports/`、`changelogs/`、`.ai-memory/` 目录
+- 自动生成或更新 `TASK-INDEX.md` 中的任务条目
+- 减少手动维护频率，避免索引过时
+
+**使用示例**：
+```bash
+cd ai-dev-guidelines
+
+# 更新 dev-docs 项目的 TASK-INDEX
+node tools/update-task-index.js dev-docs
+```
+
+---
 
 ### doc-health-check.js
 
@@ -550,11 +605,14 @@ await grep_search({
 
 ### validate-links.js
 
-验证 Markdown 文件中的内部链接是否有效。
+验证 Markdown 文件中的内部链接是否有效。支持 `.linksignore` 智能过滤。
 
 ```bash
-# 运行验证
+# 标准模式（使用 .linksignore 过滤模板/占位链接）
 node tools/validate-links.js
+
+# 严格模式（忽略 .linksignore，所有断链都报错）
+node tools/validate-links.js --strict
 
 # 显示建议修复
 node tools/validate-links.js --fix
@@ -563,24 +621,69 @@ node tools/validate-links.js --fix
 **功能**:
 - 检测所有 `.md` 文件中的相对链接
 - 验证链接目标是否存在
-- 报告断链和建议修复
+- 🆕 **`.linksignore` 支持**: 从项目根目录加载 `.linksignore` 文件，按 glob 模式过滤已知无害的断链（模板占位符、代码误匹配等）
+- 🆕 **分类输出**: 真实断链（❌）和已忽略断链（⏭️）分开显示
+- 🆕 **CI 友好退出码**: 仅真实断链导致非零退出码，已忽略断链不影响 CI
+- 🆕 **`--strict` 模式**: 忽略 `.linksignore`，所有断链都报错（用于全量审计）
+
+**.linksignore 格式**:
+```
+# 注释行
+# 支持 glob 模式: *, **, ?
+templates/**                    # 忽略模板目录中的所有断链
+**/reports/**                   # 忽略报告引用（reports/ 在 .gitignore 中）
+QUICK-REFERENCE.md:./path      # source:link 精确匹配
+```
 
 **输出示例**:
 ```
 🔍 开始验证 Markdown 链接...
-📁 找到 107 个 Markdown 文件
+📋 已加载 .linksignore（63 条忽略模式）
+📁 找到 299 个 Markdown 文件
 
 📊 验证结果:
-   总链接数: 256
-   有效链接: 254
-   断开链接: 2
+   总链接数:   700
+   有效链接:   578
+   真实断链:   0
+   已忽略断链: 122
 
-❌ 发现以下断链:
-📄 some-file.md
-   ❌ [不存在的链接](./missing-file.md)
+✅ 无真实断链（122 条已忽略）
 ```
 
-> 注意：示例中的链接是演示用途，实际运行时会显示真实的断链。
+### add-constraint.js
+
+约束新增自动化工具，自动同步约束条数到 11+ 文件。
+
+```bash
+# 交互式向导（推荐）
+node tools/add-constraint.js --interactive
+
+# 命令行模式
+node tools/add-constraint.js --id 21 --rule "规则名" --category "behavior" --violation "违反描述"
+
+# 预览模式（不写入文件）
+node tools/add-constraint.js --interactive --dry-run
+```
+
+**功能**:
+- 自动读取 META.yaml 获取当前约束条数
+- 计算新约束编号（N+1）
+- 自动在 CONSTRAINTS.md 速查表追加行
+- 自动在 decision-tree.yaml constraints 中追加条目
+- 更新 META.yaml `constraint_count`
+- 调用 bump-version.js 同步条数到所有 11 个引用文件
+- 输出变更摘要报告
+
+**工作流程**:
+1. 运行 `node tools/add-constraint.js --interactive`
+2. 按提示输入约束信息（规则名、分类、违反描述等）
+3. 预览变更文件清单
+4. 确认后自动写入
+5. 在 CONSTRAINTS.md 中手动补充约束正文详细内容
+
+> ⚠️ 工具自动处理速查表行和条数同步，但约束正文（`### N. 规则名` 下的详细说明）需手动编写。
+
+---
 
 ### validate-structure.js
 
@@ -620,4 +723,4 @@ node tools/validate-structure.js
 
 ---
 
-**最后更新**: 2026-02-12
+**最后更新**: 2026-02-27

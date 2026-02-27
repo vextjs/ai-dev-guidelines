@@ -44,7 +44,7 @@
 ai-dev-guidelines/
 ├── README.md                 # 项目入口（AI 首读）
 ├── QUICK-REFERENCE.md        # 快速参考
-├── CONSTRAINTS.md            # 约束清单（19 条）
+├── CONSTRAINTS.md            # 约束清单（20 条）
 ├── STATUS.md                 # 项目状态
 ├── CHANGELOG.md              # 变更日志索引
 │
@@ -98,7 +98,7 @@ ai-dev-guidelines/
 | 文件名（内容） | kebab-case.md | `error-handling.md` |
 | 模板文件 | xxx-template.md | `requirement-template.md` |
 | 精简模板 | xxx-lite.md | `technical-lite.md` |
-| 输出文件 | YYYYMMDD-NN-描述.md | `20260227-01-analysis-xxx.md` |
+| 输出文件（报告） | NN-&lt;类型&gt;-&lt;简述&gt;.md | `01-analysis-xxx.md`（在 `<agent>/YYYYMMDD/` 目录下） |
 
 ### 文档结构规范
 
@@ -208,7 +208,7 @@ ai-dev-guidelines/
 |-----|------|------|
 | 入口文档 | `README.md` | AI 首读文档 |
 | 快速参考 | `QUICK-REFERENCE.md` | 执行时速查 |
-| 约束清单 | `CONSTRAINTS.md` | 核心约束（19 条） |
+| 约束清单 | `CONSTRAINTS.md` | 核心约束（20 条） |
 | 项目状态 | `STATUS.md` | 完成度追踪 |
 | 决策树 | `workflows/decision-tree.yaml` | 任务路由 |
 

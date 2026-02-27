@@ -1,8 +1,21 @@
 # 任务索引
 
 > **用途**: 追溯 ai-dev-guidelines 项目的所有历史任务  
-> **更新时机**: 每次任务完成后 AI 自动更新  
+> **更新时机**: 版本发布时运行 `node tools/update-task-index.js dev-docs` 自动更新（无需每次会话手动维护）  
 > **最后更新**: 2026-02-27
+
+---
+
+## 🔧 自动维护说明
+
+本文件支持 `tools/update-task-index.js` 自动维护：
+
+| 维护方式 | 说明 |
+|---------|------|
+| **自动更新** | 运行 `node tools/update-task-index.js dev-docs` 扫描 reports/changelogs/.ai-memory 自动生成条目 |
+| **手动维护** | 需求开发(REQ)、Bug修复(BUG)、架构重构(REF) 等分类表格仍可手动编辑 |
+| **更新频率** | 🔴 ~~每次会话~~ → ✅ **版本发布时**运行一次即可（降低 AI token 开销） |
+| **预览模式** | `node tools/update-task-index.js dev-docs --dry-run` 预览变更不写入 |
 
 ---
 
@@ -62,6 +75,27 @@
 | BUG-020 | 2026-02-27 | TASK-INDEX.md 严重过时（最后更新 2026-02-12） | P1 | ✅ 修复 | 本文件 |
 | BUG-021 | 2026-02-27 | TASK-INDEX.md 中 VAL-001 报告路径失效 | P2 | ✅ 修复 | 本文件（见 VAL-001 备注） |
 | BUG-022 | 2026-02-27 | copilot-instructions.md 入口文件"上次记忆检测方法"缺少 glob 禁令，AI 在预检查早期阶段仍用 find_path/glob 扫描 .ai-memory 导致误判"无记忆"（BUG-015 修复不彻底） | P0 | ✅ 修复 | `.github/copilot-instructions.md`, `workflows/decision-tree.yaml` |
+| BUG-023 | 2026-02-27 | README.md 版本号 v2.9.0（应为 v2.10.0），约束条数 18（应为 19） | P0 | ✅ 修复 | `README.md` |
+| BUG-024 | 2026-02-27 | QUICK-REFERENCE.md 记忆文件示例仍为旧格式 YYYYMMDD-NN-TYPE.md | P0 | ✅ 修复 | `QUICK-REFERENCE.md` |
+| BUG-025 | 2026-02-27 | copilot-instructions.md 入口表约束条数 18（应为 19） | P0 | ✅ 修复 | `.github/copilot-instructions.md` |
+| BUG-026 | 2026-02-27 | STATUS.md 版本号、约束条数、路线图未对齐 v2.10.0 | P1 | ✅ 修复 | `STATUS.md` |
+| BUG-027 | 2026-02-27 | decision-tree.yaml 版本号、memory_filename_format、约束 #19 缺失 | P1 | ✅ 修复 | `workflows/decision-tree.yaml` |
+| BUG-028~031 | 2026-02-27 | 版本号跨文件不一致（多处滞后于 v2.11.0） | P0 | ✅ 修复 | 多文件（见 changelogs/v2.11.0.md） |
+| BUG-032 | 2026-02-27 | README.md 目录树注释约束条数 19（应为 20） | P0 | ✅ 修复 | `README.md` |
+| BUG-033 | 2026-02-27 | STATUS.md 核心改进表约束条数 19（应为 20） | P0 | ✅ 修复 | `STATUS.md` |
+| BUG-034 | 2026-02-27 | decision-tree.yaml 注释 19 条 + 缺少约束 #20 条目 | P0 | ✅ 修复 | `workflows/decision-tree.yaml` |
+| BUG-035 | 2026-02-27 | profile/README.md 两处约束条数 19（应为 20） | P1 | ✅ 修复 | `projects/dev-docs/profile/README.md` |
+| BUG-036 | 2026-02-27 | profile/01-项目信息.md 两处约束条数 19（应为 20） | P1 | ✅ 修复 | `projects/dev-docs/profile/01-项目信息.md` |
+| BUG-037 | 2026-02-27 | profile/02-架构约束.md 链接描述约束条数 19（应为 20） | P1 | ✅ 修复 | `projects/dev-docs/profile/02-架构约束.md` |
+| BUG-038 | 2026-02-27 | changelogs/v2.11.0.md 相关链接约束条数 19（应为 20） | P1 | ✅ 修复 | `changelogs/v2.11.0.md` |
+| BUG-039 | 2026-02-27 | TASK-INDEX.md 约束扩展 15→19（应为 15→20） | P1 | ✅ 修复 | 本文件 |
+| BUG-040 | 2026-02-27 | CONSTRAINTS.md 约束 #20 标注 v2.12.0（幽灵版本号，应为 v2.11.0） | P1 | ✅ 修复 | `CONSTRAINTS.md` |
+| BUG-041 | 2026-02-27 | user-intent-detection.md 文件头版本号 v2.0（应为 v2.1） | P1 | ✅ 修复 | `spec-self-fix/triggers/user-intent-detection.md` |
+| BUG-042 | 2026-02-27 | conflict-detection.md 约束条数检测基准仍为 19（应为 20） | P1 | ✅ 修复 | `spec-self-fix/detection/conflict-detection.md` |
+| BUG-043 | 2026-02-27 | QUICK-REFERENCE.md 约束 #20 标注 v2.12.0 残留（BUG-040 修复不彻底） | P0 | ✅ 修复 | `QUICK-REFERENCE.md` |
+| BUG-044 | 2026-02-27 | TASK-INDEX.md 记忆表 20260227.md 会话数过时（2→9） | P1 | ✅ 修复 | 本文件 |
+| BUG-045 | 2026-02-27 | CHANGELOG.md 版本概览 v2.11.0 摘要不完整（遗漏约束#20+BUG-032~042） | P1 | ✅ 修复 | `CHANGELOG.md` |
+| BUG-046 | 2026-02-27 | CHANGELOG.md 变更统计 v2.11.0 数据过时（修复5→16） | P1 | ✅ 修复 | `CHANGELOG.md` |
 
 ---
 
@@ -81,14 +115,22 @@
 
 | ID | 日期 | 标题 | 结论 | 状态 | 路径 |
 |----|------|------|------|------|------|
-| ANA-001 | 2026-02-27 | 记忆存储流程深度分析 | "先写后干"四阶段策略；预检查扫描记忆（禁止glob） | ✅ 完成 | `reports/analysis/20260227-05-analysis-memory-storage-flow.md` |
-| ANA-002 | 2026-02-27 | 记忆流程重设计 | 4阶段→消息驱动5阶段；v2.8.0→v2.9.0 | ✅ 完成 | `reports/analysis/20260227-06-analysis-memory-flow-redesign.md` |
-| ANA-003 | 2026-02-27 | 全项目深度分析（8维度） | 综合评分7.5/10；发现4Bug+12建议 | ✅ 完成 | `reports/analysis/20260227-07-analysis-ai-dev-guidelines-deep-review.md` |
-| ANA-004 | 2026-02-27 | 自修复分析（glob事故+阶段0违规） | glob跳过隐藏目录致序号冲突；规范防复现已落地 | ✅ 完成 | `reports/analysis/20260227-08-analysis-self-fix-memory-flow.md` |
-| ANA-005 | 2026-02-27 | 三轮全方位深度验证 | 综合评分7.8/10；5🔴+6🟡+14💡 | ✅ 完成 | `reports/analysis/20260227-09-analysis-triple-deep-verification.md` |
-| ANA-006 | 2026-02-27 | 5个Bug修复+三轮审计 | 修复B-1~B-5；全面审计 | ✅ 完成 | `reports/analysis/20260227-10-bugfix-five-bugs-triple-audit.md` |
-| ANA-007 | 2026-02-27 | NN序号规范分析+每日记忆方案 | 共享NN不合理→每日一文件方案→规范落地 | ✅ 完成 | `reports/analysis/20260227-11-analysis-nn-sharing-and-daily-memory.md` |
-| ANA-008 | 2026-02-27 | 全面规范审计（入口瘦身+SUMMARY优化+体系检查） | 5🔴Bug修复+入口瘦身+SUMMARY精简 | ✅ 完成 | `reports/analysis/20260227-13-analysis-full-spec-audit-three-issues.md` |
+| ANA-001 | 2026-02-27 | 记忆存储流程深度分析 | "先写后干"四阶段策略；预检查扫描记忆（禁止glob） | ✅ 完成 | `reports/analysis/zed-copilot/20260227/02-analysis-memory-storage-flow.md` |
+| ANA-002 | 2026-02-27 | 记忆流程重设计 | 4阶段→消息驱动5阶段；v2.8.0→v2.9.0 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/03-analysis-memory-flow-redesign.md` |
+| ANA-003 | 2026-02-27 | 全项目深度分析（8维度） | 综合评分7.5/10；发现4Bug+12建议 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/04-analysis-ai-dev-guidelines-deep-review.md` |
+| ANA-004 | 2026-02-27 | 自修复分析（glob事故+阶段0违规） | glob跳过隐藏目录致序号冲突；规范防复现已落地 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/05-analysis-self-fix-memory-flow.md` |
+| ANA-005 | 2026-02-27 | 三轮全方位深度验证 | 综合评分7.8/10；5🔴+6🟡+14💡 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/06-analysis-triple-deep-verification.md` |
+| ANA-006 | 2026-02-27 | 5个Bug修复+三轮审计 | 修复B-1~B-5；全面审计 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/07-bugfix-five-bugs-triple-audit.md` |
+| ANA-007 | 2026-02-27 | NN序号规范分析+每日记忆方案 | 共享NN不合理→每日一文件方案→规范落地 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/08-analysis-nn-sharing-and-daily-memory.md` |
+| ANA-008 | 2026-02-27 | 全面规范审计（入口瘦身+SUMMARY优化+体系检查） | 5🔴Bug修复+入口瘦身+SUMMARY精简 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/10-analysis-full-spec-audit-three-issues.md` |
+| ANA-009 | 2026-02-27 | 全面规范审计 v3 | 深度分析+流程优化 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/09-analysis-full-spec-audit-v3.md` |
+| ANA-010 | 2026-02-27 | 继续深入分析+遗漏问题修复 | 2🔴+3🟡+4💡修复；报告输出前必须验证 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/11-analysis-continued-deep-review-and-fix.md` |
+| ANA-011 | 2026-02-27 | 记忆规范执行自查+全面问题检查 | 版本号全量同步清单(8文件)+阶段0时序强制规则 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/12-analysis-memory-compliance-and-full-check.md` |
+| ANA-012 | 2026-02-27 | 自修复：版本号同步+阶段0时序 | BUG-030/031修复；版本号8文件清单+时序规则落地 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/13-selffix-version-sync-and-stage0-timing.md` |
+| ANA-013 | 2026-02-27 | 自修复：知识库回写 | spec-self-fix 6子模块v1.0→v2.0；闭环验证机制 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/14-selffix-knowledge-base-writeback.md` |
+| ANA-014 | 2026-02-27 | 一致性审计（三项问题） | SUMMARY日期精度升级+文件拆分规范(约束#20)+自我修复模式6 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/15-analysis-consistency-audit-three-issues.md` |
+| ANA-015 | 2026-02-27 | 约束条数跨文件同步审计 | BUG-032~042修复；防复现机制(约束条数引用清单11文件+auto-triggers场景8) | ✅ 完成 | `reports/analysis/zed-copilot/20260227/16-analysis-constraint-count-sync-audit.md` |
+| ANA-016 | 2026-02-27 | 全面深度审计 v4 | BUG-043~046；综合评分8.4/10；6个优化建议 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/17-analysis-full-depth-audit-v4.md` |
 
 ---
 
@@ -107,7 +149,7 @@
 | ID | 日期 | 标题 | 状态 | 路径 |
 |----|------|------|------|------|
 | VAL-001 | 2026-02-12 | 综合验证报告 | ✅ 完成 | ⚠️ 原路径 `reports/COMPREHENSIVE-VALIDATION-REPORT-20260212.md` 已失效（顶层 reports/ 已删除）。验证结果已归档至 `changelogs/v2.0.0.md` |
-| VAL-002 | 2026-02-27 | 修复验证（6/6 通过） | ✅ 完成 | `reports/analysis/20260227-09-analysis-triple-deep-verification.md` §1 |
+| VAL-002 | 2026-02-27 | 修复验证（6/6 通过） | ✅ 完成 | `reports/analysis/zed-copilot/20260227/06-analysis-triple-deep-verification.md` §1 |
 
 ---
 
@@ -115,7 +157,7 @@
 
 | 版本 | 日期 | 主题 | 变更日志 |
 |------|------|------|---------|
-| v2.11.0 | 2026-02-27 | 入口瘦身+SUMMARY精简+全面审计修复5Bug | — |
+| v2.11.0 | 2026-02-27 | 入口瘦身+约束#20+审计修复16Bug+防复现机制 | `changelogs/v2.11.0.md` |
 | v2.10.0 | 2026-02-27 | 每日一文件记忆+序号独立+约束#19 | — |
 | v2.9.0 | 2026-02-27 | 消息驱动5阶段记忆 + 约束#18 | `changelogs/v2.9.0.md` |
 | v2.8.0 | 2026-02-27 | 报告为主体+记忆为索引 + 约束#17 | `changelogs/v2.8.0.md` |
@@ -149,7 +191,7 @@
 |------|---------|
 | 2026-02-12 | v2.0 发布、综合验证、项目规范创建、自修复机制增强 |
 | 2026-02-24 | v2.1~v2.2 发布、工作流统一升级、项目规范模块化重构、任务记忆机制 |
-| 2026-02-27 | v2.3~v2.11 发布、预检查增强(3→5项)、约束扩展(15→19条)、记忆流程重设计(4阶段→5阶段)、每日一文件记忆、入口文件瘦身、多轮深度分析与自修复 |
+| 2026-02-27 | v2.3~v2.11 发布、预检查增强(3→5项)、约束扩展(15→20条)、记忆流程重设计(4阶段→5阶段)、每日一文件记忆、入口文件瘦身、多轮深度分析与自修复 |
 
 ### 按记忆文件查找（v1.7 每日一文件格式）
 
@@ -159,7 +201,7 @@
 | 日期文件 | 会话数 | 涵盖内容 |
 |---------|:------:|---------|
 | `20260226.md` | 11 | §01 规范全面检查 / §02 后续任务跟进 / §03 验证修复 / §04 三轮深度检查 / §05 记忆存储分析 / §06 记忆流程重设计 / §07 全项目深度分析 / §08 修复验证+三轮分析 / §09 5Bug修复+审计 / §10 NN序号分析+每日记忆方案 / §11 规范落地执行 |
-| `20260227.md` | 2 | §01 NN序号规范分析+每日记忆方案+规范落地 / §02 全面规范审计（入口瘦身+SUMMARY优化+体系检查） |
+| `20260227.md` | 9 | §01 NN序号规范分析+每日记忆方案+规范落地 / §02 全面规范审计（入口瘦身+SUMMARY优化+体系检查） / §03 全方面深度分析规范项目 / §04 继续深入分析+自我修复+遗漏修复 / §05 记忆规范执行自查+全面问题检查 / §06 spec-self-fix知识库回写修复 / §07 规范一致性审计（文件拆分+SUMMARY时间精度+自我修复验证） / §08 约束条数跨文件同步审计+防复现机制 / §09 全面深度审计+合理优化建议 |
 
 > 记忆文件存放于 `.ai-memory/clients/zed-copilot/tasks/` 目录下
 

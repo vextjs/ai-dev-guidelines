@@ -42,17 +42,17 @@
 所有输出文件**必须**以日期开头（报告和记忆格式不同）：
 
 ```yaml
-# 报告文件（reports/ 下）— YYYYMMDD-NN-<类型>-<简述>.md:
-✅ 正确: 20260226-01-analysis-v3-architecture-deep-review.md
-✅ 正确: 20260227-02-bug-login-timeout.md
+# 报告文件（reports/<子目录>/<agent>/YYYYMMDD/ 下）— NN-<类型>-<简述>.md（🆕 v1.6）:
+✅ 正确: reports/analysis/zed-copilot/20260226/01-analysis-v3-architecture-deep-review.md
+✅ 正确: reports/bugs/webstorm-copilot/20260227/02-bug-login-timeout.md
 
 # 记忆文件（.ai-memory/clients/<agent>/tasks/ 下）— YYYYMMDD.md（🆕 v1.7 每天一文件，无 NN）:
 ✅ 正确: 20260226.md
 ✅ 正确: 20260227.md
 
-❌ 错误: v3-architecture-deep-analysis.md           # 缺少日期前缀
-❌ 错误: 2026-02-26-analysis-xxx.md                 # 日期格式错误（有分隔符）
-❌ 错误: 20260227-analysis-xxx.md                   # 报告缺少序号 NN
+❌ 错误: reports/analysis/20260226-01-analysis-xxx.md  # 旧格式（缺少 agent/YYYYMMDD 目录层级）
+❌ 错误: reports/analysis/zed-copilot/01-analysis-xxx.md  # 缺少日期目录
+❌ 错误: reports/analysis/zed-copilot/20260227/20260227-01-analysis-xxx.md  # 文件名重复包含日期
 ❌ 错误: 20260227-01-REQ-user-auth.md               # 记忆文件不应有 NN（v1.6 旧格式）
 ```
 
@@ -63,7 +63,7 @@
   - [ ] 日期字段不包含 "YYYY" 占位符？（已替换为真实日期）
   - [ ] 日期通过 now() 工具获取？
   - [ ] Agent 字段已填写当前编辑器/AI 标识？
-  - [ ] 文件名以 YYYYMMDD- 开头？
+  - [ ] 文件名符合命名规范？（报告: `NN-<类型>-<简述>.md` 在日期目录下；记忆: `YYYYMMDD.md`）
   - [ ] 项目名称为真实项目名？
 ```
 
@@ -84,7 +84,7 @@
 | 安全、漏洞、加固 | 安全修复 | `workflows/07-security/` |
 | 事故、故障、复盘 | 事故复盘 | `workflows/08-incident/` |
 | 新项目、开源、npm包、初始化 | 开源项目初始化 | `workflows/09-opensource-init/` 🆕 |
-| 分析、审查、评估、深度分析 | 深度分析 | 模板: `templates/lite/analysis-lite.md` 🆕 |
+| 分析、审查、评估、深度分析 | 深度分析 | `workflows/10-analysis/` 🆕 |
 
 ---
 
@@ -149,16 +149,23 @@ projects/<project-name>/
 │   └── <SEC-xxx>/
 ├── incidents/      # 事故复盘输出
 │   └── <INC-xxx>/
-└── reports/        # 临时报告（gitignore 忽略）
+├── reports/        # 临时报告（gitignore 忽略）
     ├── diagnostics/    # 诊断报告
+    │   └── <agent>/YYYYMMDD/   # 🆕 v1.6 按 Agent+日期目录隔离
     ├── bugs/           # Bug 分析报告
+    │   └── <agent>/YYYYMMDD/
     ├── requirements/   # 需求分析报告
+    │   └── <agent>/YYYYMMDD/
     ├── optimizations/  # 优化分析报告
-    ├── analysis/       # 🆕 深度分析/架构分析报告
+    │   └── <agent>/YYYYMMDD/
+    ├── analysis/       # 深度分析/架构分析报告
+    │   └── <agent>/YYYYMMDD/   # 如 analysis/zed-copilot/20260227/
+    │       ├── 01-analysis-xxx.md
+    │       └── 02-bug-yyy.md
     └── .temp/          # 临时文件（可随时清理）
 ```
 
-> ⚠️ `reports/` 下所有文件名必须以 `YYYYMMDD-` 开头。详见 [workflows/common/temp-reports.md](./workflows/common/temp-reports.md)
+> ⚠️ `reports/` 按 `<agent>/YYYYMMDD/NN-<类型>-<简述>.md` 组织，每个 Agent 每天独立编号。详见 [workflows/common/temp-reports.md](./workflows/common/temp-reports.md)
 
 ---
 
@@ -184,22 +191,22 @@ projects/<project-name>/
 
 ```yaml
 架构:
-  报告文件（reports/）  = 完整分析内容（主体），命名 YYYYMMDD-NN-<类型>-<简述>.md
+  报告文件（reports/）  = 完整分析内容（主体），存放于 <agent>/YYYYMMDD/，命名 NN-<类型>-<简述>.md（🆕 v1.6）
   记忆文件（.ai-memory/）= 摘要 + 报告链接 + 对话记录（索引），命名 YYYYMMDD.md（🆕 v1.7 每天一文件）
   对话输出             = 结论摘要 + 报告路径
 
-🔴 序号独立规则（🆕 v2.10.0 / task-memory v1.7）:
-  - 报告 NN 序号: 仅扫描 reports/<子目录>/ 目录计算，与记忆无关
+🔴 序号独立规则（v2.10.0 / task-memory v1.8 / temp-reports v1.7）:
+  - 报告 NN 序号: 仅扫描 reports/<子目录>/<agent>/YYYYMMDD/ 目录计算，与记忆无关
   - 记忆文件: 不再使用 NN 序号，直接以日期命名（YYYYMMDD.md）
   - 记忆内部会话编号: 文件内以 ## 会话 NN 分段（NN 为当天第几个会话）
   - ❌ 禁止报告和记忆共享全局序号（v1.6 及之前的设计缺陷，已废弃）
 
-🔴 消息驱动 5 阶段触发时机（task-memory v1.7）:
+🔴 消息驱动 5 阶段触发时机（task-memory v1.8）:
   阶段 0: 会话初始化（首条消息时 — 预检查 + 创建/追加记忆 YYYYMMDD.md）
   阶段 1: 用户发消息时（捕获用户输入 — 新意图/需求/修正）
   阶段 2: AI 回复时（写报告 + 更新记忆 + 追加对话记录含关联引用）
-  阶段 3: AI 执行完毕时（记录变更清单 — 与阶段 2 通常合并写入）
-  阶段 4: 任务结束时（最终状态更新 ✅）
+  阶段 3: AI 执行完毕时（记录变更清单 + 🔴 实时更新报告中已完成问题项状态 — 与阶段 2 通常合并写入）
+  阶段 4: 任务结束时（最终状态更新 ✅ — 含报告头部状态 📝→✅）
 
   典型顺序: 0 → 1 → 2+3 → 1 → 2+3 → ... → 4
   阶段 1 过滤: 纯确认（"好的"/"Y"）、流程控制（"继续"）不触发
@@ -218,8 +225,17 @@ projects/<project-name>/
 projects/<project>/
 ├── reports/                          # 🔴 AI 会话报告（每次会话必须输出）
 │   ├── analysis/                     # 深度分析/架构分析报告
+│   │   ├── zed-copilot/              # 🆕 v1.6 按 Agent 隔离
+│   │   │   ├── 20260226/             # 按天分目录
+│   │   │   │   ├── 01-analysis-xxx.md
+│   │   │   │   └── 02-bug-yyy.md
+│   │   │   └── 20260227/
+│   │   └── webstorm-copilot/
+│   │       └── 20260227/
 │   ├── diagnostics/                  # 诊断分析报告
+│   │   └── <agent>/YYYYMMDD/
 │   ├── bugs/                         # Bug 分析报告
+│   │   └── <agent>/YYYYMMDD/
 │   └── ...
 │
 └── .ai-memory/                       # 🔴 记忆索引（摘要+报告链接）
@@ -258,9 +274,9 @@ projects/<project>/
   | 轮次 | 方向 | 摘要 | 关联引用 |
   |:----:|:----:|------|----------|
   | 1 | 👤→ | 分析 vext v3 的架构问题，重点看热重载 | 🧠 20260226.md, 📋 profile/README.md |
-  | 1 | 🤖← | 完成架构分析，发现 3 个 P0 问题 | 📄 20260227-01-analysis-xxx |
+  | 1 | 🤖← | 完成架构分析，发现 3 个 P0 问题 | 📄 01-analysis-xxx |
   | 2 | 👤→ | 还要看集群部分的设计 | |
-  | 2 | 🤖← | 完成集群分析，新增 2 个建议 | 📄 20260227-02-analysis-yyy |
+  | 2 | 🤖← | 完成集群分析，新增 2 个建议 | 📄 02-analysis-yyy |
 
   关联引用标记:
     📋 项目规范    📄 报告文件    🧠 记忆文件    📑 规范文件
@@ -278,7 +294,11 @@ projects/<project>/
   ## 📄 关联报告
   | 报告文件 | 类型 | 说明 |
   |----------|------|------|
-  | [reports/analysis/20260227-01-xxx.md](...) | 深度分析 | 完整分析内容 |
+  | [01-analysis-xxx.md](../../../../../reports/analysis/zed-copilot/20260227/01-analysis-xxx.md) | 深度分析 | 完整分析内容 |
+
+  🆕 v1.6 链接路径说明:
+    从 .ai-memory/clients/<agent>/tasks/YYYYMMDD.md 到 reports/<子目录>/<agent>/YYYYMMDD/ 的相对路径:
+    ../../../../../reports/<子目录>/<agent>/YYYYMMDD/NN-<类型>-<简述>.md
 ```
 
 ### 恢复任务时的 Agent 过滤
@@ -296,6 +316,12 @@ projects/<project>/
 ```yaml
 🔴 扫描 .ai-memory 时必须使用 list_directory 逐层进入
 🔴 禁止使用 find_path/glob 扫描（glob 引擎默认跳过 . 开头的隐藏目录）
+🔴 list_directory 返回空时必须二次验证（🆕 v2.11.0 — BUG-047）:
+   - list_directory 首次调用可能因工具缓存/索引未就绪返回错误的空结果
+   - 返回 "is empty" 或 "Path not found" 时，尝试 read_file 已知文件（如 SUMMARY.md）交叉验证
+   - read_file 成功 → list_directory 结果不可靠，再次调用获取真实列表
+   - read_file 也失败 → 确认目录确实为空
+   - 已发生事故: list_directory("clients/zed-copilot") 返回空，但文件实际存在
 ```
 
 ### 关键规则
@@ -339,7 +365,7 @@ projects/<project>/
 
 ---
 
-## ⚠️ 核心约束 (19条)
+## ⚠️ 核心约束 (20条)
 
 1. **删除操作需确认** - 删除代码/文件前必须用户确认
 2. **Git 操作需确认** - commit/push 前必须用户确认
@@ -349,7 +375,7 @@ projects/<project>/
 6. **禁止硬编码** - 敏感信息必须用环境变量
 7. **结构化输出** - 所有输出必须结构化
 8. **报告需验证** - 分析报告必须逐项验证，按 🔴/🟡/💡/❌ 分类
-9. **🔴 文件名日期规则** - 报告文件必须 `YYYYMMDD-NN-<描述>.md`（NN 仅扫描 reports/ 目录）；记忆文件必须 `YYYYMMDD.md`（每天一文件，无 NN）
+9. **🔴 文件名日期规则** - 报告文件在 `<agent>/YYYYMMDD/` 目录下命名 `NN-<类型>-<简述>.md`（NN 仅扫描该目录）；记忆文件必须 `YYYYMMDD.md`（每天一文件，无 NN）
 10. **🔴 多 Agent 目录隔离** - 记忆写入 `clients/<agent>/`，不写入其他 Agent 目录
 11. **修复需扫描** - 修复后必须全局扫描同类问题+数据联动检查
 12. **主动合理性分析** - 收到指令先评估合理性，有更好建议先提出
@@ -360,6 +386,7 @@ projects/<project>/
 17. **🔴 报告+记忆自动输出** - 每次会话必须：自动写入报告文件（reports/）+ 更新记忆（.ai-memory/），禁止询问用户
 18. **🔴 消息驱动记忆触发** - 记忆写入以消息事件为锚点（阶段 0~4），用户发消息时捕获输入（阶段 1），AI 回复时写报告（阶段 2），执行完毕记录变更（阶段 3）
 19. **🔴 报告/记忆序号独立** - 报告 NN 仅扫描 reports/ 目录；记忆使用 YYYYMMDD.md 无序号；禁止共享全局序号池（🆕 v2.10.0）
+20. **🔴 文件过大必须拆分** - AI 新创建的 `.md` 文件超过 500 行必须拆分（已有文件豁免）（🆕 v2.11.0）
 
 > 完整说明见 [CONSTRAINTS.md](./CONSTRAINTS.md)
 
@@ -382,7 +409,13 @@ projects/<project>/
 | `QUICK-REFERENCE.md` | `copilot-instructions.md` | 约束条数、关键原则 |
 | `CONSTRAINTS.md` | `QUICK-REFERENCE.md`、`copilot-instructions.md`、`decision-tree.yaml` | 约束条数、约束内容一致性 |
 | `standards/doc-standards.md` | `temp-reports.md`、`QUICK-REFERENCE.md` | 文件命名规范 |
-| **任何涉及版本号变更** | **下方版本号文件清单全部 8 个** | **版本号 + 最后更新日期** |
+| `CHANGELOG.md` | `changelogs/v<当前版本>.md` | 版本概览条目是否存在 + 变更摘要一致 |
+| `changelogs/v<新版本>.md` | `CHANGELOG.md` | 概览表是否已新增对应行 + 链接有效 |
+| `META.yaml` | `bump-version.js` 同步的所有文件 | 运行 `node tools/bump-version.js` 验证 |
+| **任何涉及版本号变更** | **先修改 `META.yaml`，再运行 `bump-version.js --apply`** | **版本号 + 最后更新日期（8 文件自动同步）** |
+| **新增/删除约束** | **先修改 `META.yaml`，再运行 `bump-version.js --apply`** | **约束条数数值（11 文件自动同步）+ 标题/注释/描述一致** |
+| `workflows/common/task-memory.md` 版本号变更 | `META.yaml` `independent_versions`、`memory-and-rules.md` 标题、`QUICK-REFERENCE.md` 引用处、`CONSTRAINTS.md` #9 引用处 | 🔴 独立版本号必须同步到 META.yaml + 全文搜索旧版本号引用 |
+| `workflows/common/temp-reports.md` 版本号变更 | `META.yaml` `independent_versions`、`QUICK-REFERENCE.md` 引用处、`CONSTRAINTS.md` #9 引用处 | 🔴 独立版本号必须同步到 META.yaml + 全文搜索旧版本号引用 |
 
 ### 🔴 版本号文件清单（发布新版本时必须全部同步）
 
@@ -399,17 +432,39 @@ projects/<project>/
 | 7 | `workflows/decision-tree.yaml` | L1 注释 + L4 `version` 字段 + L82 注释 + L87 `mandatory_precheck.version` | 决策树配置 |
 | 8 | `workflows/00-pre-check/README.md` | L3 `> **版本**: vX.Y.Z` + 文件末尾 `**版本**: vX.Y.Z`（两处） | 预检查工作流 |
 
-> ⚠️ 此清单新增文件时必须同步更新。非入口文件（如 task-memory.md v1.7、temp-reports.md v1.5）使用独立版本号，不在此清单中。
+> ⚠️ 此清单新增文件时必须同步更新。独立版本号文件（如 task-memory.md v1.8、temp-reports.md v1.7）不在此清单中，见下方独立版本号检查规则。
+
+### 🔴 约束条数引用清单（新增/删除约束时必须全部同步）
+
+> **为什么单独列出？** 约束条数遗漏与版本号遗漏属于同一类跨文件数值同步问题（BUG-032~042）。根因是没有一份"哪些文件引用了约束条数"的完整清单，每次新增约束只改了 CONSTRAINTS/QUICK-REFERENCE/copilot-instructions 三处，遗漏了其他 8+ 处。以下文件包含约束条数数值，新增或删除约束时**必须全部检查并更新**：
+
+| # | 文件路径 | 引用位置 | 当前值 |
+|:-:|---------|---------|:------:|
+| 1 | `CONSTRAINTS.md` | §标题 `核心约束（20 条）` + §速查表 + §尾部变更 | 20 |
+| 2 | `QUICK-REFERENCE.md` | §标题 `核心约束 (20条)` | 20 |
+| 3 | `.github/copilot-instructions.md` | 入口表 `执行约束（20 条）` | 20 |
+| 4 | `README.md` | 目录树注释 `约束清单（20 条）` | 20 |
+| 5 | `STATUS.md` | v2.0 核心改进表 `约束体系 20 条` | 20 |
+| 6 | `workflows/decision-tree.yaml` | 注释 `编号对齐 CONSTRAINTS.md 的 20 条约束` + constraints 条目数 | 20 |
+| 7 | `projects/dev-docs/profile/README.md` | 目录树注释 + 关键文档表格（两处） | 20 |
+| 8 | `projects/dev-docs/profile/01-项目信息.md` | 目录树注释 + 关键指标表格（两处） | 20 |
+| 9 | `projects/dev-docs/profile/02-架构约束.md` | 相关文档链接描述 | 20 |
+| 10 | `changelogs/v<当前>.md` | 相关链接描述 | 20 |
+| 11 | `spec-self-fix/detection/conflict-detection.md` | §规则 6 检测示例基准值 | 20 |
+
+> ⚠️ 此清单新增引用文件时必须同步更新。与版本号清单独立维护（版本号 8 文件 ≠ 约束条数 11 文件）。
 
 ### 检查清单（每次修改后逐条确认）
 
 ```yaml
 □ 预检查项数: copilot-instructions.md / 00-pre-check / QUICK-REFERENCE 三处一致？
-□ 文件命名: 报告使用 YYYYMMDD-NN 格式（NN 独立）？记忆使用 YYYYMMDD.md 格式（无 NN）？
+□ 文件命名: 报告在 `<agent>/YYYYMMDD/` 目录下使用 `NN-<类型>-<简述>.md` 格式（NN 独立）？记忆使用 YYYYMMDD.md 格式（无 NN）？
 □ 多 Agent 方案: 目录隔离 clients/<agent>/（非共享目录+文件名前缀）？
-□ 约束条数: QUICK-REFERENCE / CONSTRAINTS / copilot-instructions 三处标题数字与实际条目数一致？
+□ 🔴 约束条数（主动全量）: 上方约束条数引用清单 11 个文件是否全部一致？（逐个 read_file 确认，禁止推断）（当前 20 条）
 □ 版本号（被动）: 修改的文件已更新版本号和最后更新日期？
-□ 🔴 版本号（主动全量）: 上方 8 个文件的版本号是否全部一致？（逐个 read_file 确认，禁止推断）
+□ 🔴 版本号（主动全量）: 上方 8 个文件的版本号是否全部一致？（逐个 read_file 确认，禁止推断）或运行 `node tools/bump-version.js` 自动检查
+□ 🔴 独立版本号（主动）: META.yaml `independent_versions` 中的版本号与各文件头部实际版本号一致？（task-memory.md / temp-reports.md / spec-self-fix/README.md）全文搜索旧版本号确认无残留引用？
+□ 🔴 CHANGELOG ↔ changelogs/ 同步: CHANGELOG.md 概览表是否包含当前版本？changelogs/v<当前版本>.md 是否存在？（bump-version.js 已含此检查）
 □ 禁止行为: copilot-instructions.md 和 00-pre-check 的禁止清单对齐？
 □ 交叉引用路径: 所有 [链接](./path) 指向的文件确实存在？
 ```
