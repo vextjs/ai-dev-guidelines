@@ -1,7 +1,7 @@
 # 工作流 00 - 简化预检查 v2
 
-> **版本**: v2.7.0  
-> **核心改进**: 5 项必做检查 + Agent 标识 + 上次记忆 + 任务记忆加载 + 日期强制必填
+> **版本**: v2.11.0  
+> **核心改进**: 5 项必做检查 + Agent 标识 + 上次记忆 + 任务记忆加载 + 日期强制必填 + 每日记忆文件
 
 ---
 
@@ -147,31 +147,49 @@
   - 不做任何检测就跳过
 ```
 
-### Step 5: 上次记忆（🆕 v2.7.0）
+### Step 5: 上次记忆（🆕 v2.7.0 / 更新 v2.10.0）
 
 ```yaml
 执行: 扫描当前 Agent 的 .ai-memory 目录，找到最新记忆文件并输出
 
-🔍 扫描逻辑:
+🔍 扫描逻辑（🆕 v2.10.0 — 每日一文件格式）:
   1. 确定当前 Agent 标识（Step 4 已获取）
-  2. 扫描 ai-dev-guidelines/projects/*/.ai-memory/clients/<agent>/tasks/ 目录
-  3. 按文件名日期+序号排序（YYYYMMDD-NN 自然排序即可）
-  4. 取最新一条文件
-  5. 读取该文件头部，提取状态字段（🔄 进行中 / ✅ 完成）
+  2. 🔴 使用 list_directory 逐层进入目录（绝对禁止 find_path / glob）:
+     a. list_directory("projects/<project>/.ai-memory") → 确认 clients/ 存在
+     b. list_directory("projects/<project>/.ai-memory/clients/<agent>/tasks") → 获取文件列表
+     ⚠️ 为什么禁止 glob/find_path：glob 引擎默认跳过 "." 开头的隐藏目录（如 .ai-memory/），
+        会返回空结果导致误判"无记忆"（已发生过的事故）
+  3. 从文件列表中找到最新日期的文件:
+     - 新格式: YYYYMMDD.md（每天一文件，优先匹配）
+     - 旧格式: YYYYMMDD-NN-TYPE-id.md（向后兼容）
+  4. 按文件名日期排序，取最新日期文件
+  5. 读取该文件:
+     - 新格式（YYYYMMDD.md）→ 读取末尾最新会话段落（## 会话 NN），提取状态和会话数
+     - 旧格式 → 读取头部提取状态字段
+  6. 记录今天是否已有记忆文件（供阶段 0 判断创建 vs 追加）
 
-输出格式:
-  找到记忆: "5. 上次记忆: projects/dev-docs/.ai-memory/clients/zed-copilot/tasks/20260227-01-OPT-spec-full-check.md (✅ 完成)"
-  无记忆:   "5. 上次记忆: ⚠️ 无（首次任务 / 未找到记忆文件）"
-  目录不存在: "5. 上次记忆: ⚠️ 无（.ai-memory 目录不存在）"
+输出格式（🔴 必须包含实际扫描路径，即使结果为空）:
+  找到记忆（新格式）: "5. 上次记忆: projects/dev-docs/.ai-memory/clients/zed-copilot/tasks/20260227.md §会话03 (✅ 完成)（已扫描 tasks/ 目录）"
+  找到记忆（旧格式）: "5. 上次记忆: projects/dev-docs/.ai-memory/clients/zed-copilot/tasks/20260226.md §会话11 (✅ 完成)（已扫描 tasks/ 目录）"
+  无记忆:   "5. 上次记忆: ⚠️ 无（已扫描 projects/dev-docs/.ai-memory/clients/zed-copilot/tasks/ — 目录为空）"
+  目录不存在: "5. 上次记忆: ⚠️ 无（projects/dev-docs/.ai-memory/clients/zed-copilot/tasks/ 目录不存在，将在阶段 0 创建）"
+
+  ⚠️ 为什么必须输出扫描路径:
+    - 用户可以立即判断 AI 是否扫描了正确的位置
+    - 扫描路径错误时用户能及时纠正（如项目名、Agent 名不对）
+    - 避免 AI 声称"无记忆"但实际是扫描了错误路径
 
 💡 设计目的:
   - 用户立即知道当前对话基于哪条记忆延续
   - 快速跳转查看上次任务做了什么
   - 在多 Agent 场景下确认记忆归属
+  - 判断今天是否已有记忆文件（创建 vs 追加）
 
 🔴 禁止行为:
   - 上次记忆字段留空或不扫描就输出
   - 未实际扫描目录就声称"无记忆"
+  - 使用 find_path / glob 扫描 .ai-memory（glob 跳过隐藏目录）
+  - 输出"⚠️ 无"时不附带实际扫描路径
 ```
 
 ### Step 6: 项目规范加载（按需）
@@ -338,18 +356,18 @@ Step 5 — 继续执行:
 
 ---
 
-## 📤 任务记忆（消息驱动 5 阶段策略 — v1.6）
+## 📤 任务记忆（消息驱动 5 阶段策略 — v1.7）
 
 > **核心问题**：AI 无法感知剩余 token，输出截断时没有机会执行收尾动作。
-> **解决方案**：以对话消息事件为锚点驱动记忆写入，开始前先创建记忆，每条用户消息、每次 AI 回复、每次执行完毕都增量更新。
+> **解决方案**：以对话消息事件为锚点驱动记忆写入，开始前先创建/追加记忆，每条用户消息、每次 AI 回复、每次执行完毕都增量更新。
 > **详见**: [workflows/common/task-memory.md §触发时机](../common/task-memory.md)
 
 ### 5 阶段总览
 
 ```yaml
-阶段 0: 会话初始化（首条消息时 — 预检查 + 创建记忆）
-阶段 1: 用户发消息时（捕获用户输入 — 每条有实质内容的消息）  ← 🆕 v1.6
-阶段 2: AI 回复时（写报告 + 更新记忆）
+阶段 0: 会话初始化（首条消息时 — 预检查 + 创建/追加记忆 YYYYMMDD.md）
+阶段 1: 用户发消息时（捕获用户输入 — 每条有实质内容的消息）
+阶段 2: AI 回复时（写报告 + 更新记忆 + 追加对话记录含关联引用）
 阶段 3: AI 执行完毕时（记录变更清单）
 阶段 4: 任务结束时（最终状态更新 ✅）
 
@@ -364,34 +382,46 @@ Step 5 — 继续执行:
 ```yaml
 触发条件: AI 收到本次会话的第一条用户消息，预检查完成后
 
-AI 自动执行:
+🔴 时序强制规则（NO EXCEPTIONS）:
+  阶段 0 的全部步骤（预检查 + 记忆写入）必须在 AI 开始分析用户问题之前完成。
+  禁止"先分析问题、再补写记忆"— 这会导致记忆写入被遗忘或延迟。
+  正确顺序: 预检查 → 写入记忆(§会话NN) → 输出"📝 记忆已更新" → 然后才开始分析用户问题
+  错误顺序: 预检查 → 分析问题 → 输出结论 → 最后才补写记忆 ❌（已发生事故：§会话05）
+
+AI 自动执行（🆕 v1.7 简化）:
   1. 确定当前 Agent 标识（预检查第 4 项已获取）
   2. 确保 .ai-memory/clients/<agent>/tasks/ 目录存在（不存在则创建）
-  3. 获取当前真实日期
-  4. 扫描 tasks/ 目录，统计当天已有文件数量，确定序号 NN（max+1 或 01）
-  5. 创建 .ai-memory/clients/<agent>/tasks/<YYYYMMDD>-<NN>-<TYPE>-<id>.md（状态 🔄）
+  3. 获取当前真实日期和时间（使用 now() 工具）
+  4. 确定今天的记忆文件:
+     a. 文件路径 = tasks/YYYYMMDD.md（纯日期，无序号）
+     b. 文件已存在 → 读取文件，统计已有 ## 会话 NN 的最大 NN
+     c. 文件不存在 → 创建新文件（写入头部信息）
+  5. 追加新会话段落:
+     - 文件已存在 → 追加 ## 会话 NN+1
+     - 文件新建 → 写入 ## 会话 01
+     - 状态标记为 🔄 进行中
      - 写入任务目标（来自用户首条消息）
-     - 📨 对话记录 → 记录首条用户消息摘要（轮次 1, 👤→）
+     - 📨 对话记录 → 记录首条用户消息摘要（轮次 1, 👤→, 含关联引用）
   6. 更新 .ai-memory/clients/<agent>/SUMMARY.md（追加到最近任务，状态 🔄）
 
-输出: "📝 初始记忆已创建 → .ai-memory/clients/<agent>/tasks/<filename>.md"
+输出: "📝 记忆已更新 → .ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话 NN"
 
 文件名示例（在各 Agent 目录内）:
-clients/zed-copilot/tasks/20260226-01-ANALYSIS-v3-deep-review.md
-clients/zed-copilot/tasks/20260226-02-FIX-arch-verification.md
-clients/webstorm-copilot/tasks/20260227-01-REQ-user-auth.md
+clients/zed-copilot/tasks/20260226.md    # 2026-02-26 的所有会话
+clients/zed-copilot/tasks/20260227.md    # 2026-02-27 的所有会话
+clients/webstorm-copilot/tasks/20260227.md
 
-注意: 下次新会话预检查时，第 5 项"上次记忆"将自动指向此文件
+注意: 下次新会话预检查时，第 5 项"上次记忆"将自动指向最新日期文件的最新会话段落
 ```
 
-### 阶段 1：用户发消息时（捕获用户输入）🆕
+### 阶段 1：用户发消息时（捕获用户输入）
 
 ```yaml
 触发条件: 用户发送包含新意图/新需求/方向修正的消息（后续消息，非首条）
 不触发: 纯确认（"好的"/"Y"）、流程控制（"继续"/"接着"）、情绪表达
 
 AI 自动执行:
-  1. 📨 对话记录 → 追加用户消息摘要（1 行）
+  1. 📨 对话记录 → 追加用户消息摘要（1 行 + 关联引用）
   2. 如用户修正方向 → 更新 🎯 任务摘要
   3. 如用户补充需求 → 追加到 ⚠️ 待跟进
 
@@ -405,8 +435,8 @@ AI 自动执行:
 触发条件: AI 准备向用户输出结果 + 工具调用全部完成
 
 AI 自动执行:
-  阶段 2（写报告 + 更新记忆）:
-    1. 写入报告文件到 reports/<子目录>/（完整分析内容）
+  阶段 2（写报告 + 更新记忆 + 追加对话记录含关联引用）:
+    1. 写入报告文件到 reports/<子目录>/（完整分析内容，报告 NN 独立于记忆）
     2. 📄 关联报告 → 追加报告链接
     3. 📨 对话记录 → 追加 AI 回复摘要（轮次 N, 🤖←）
     4. 对话中只输出结论摘要 + 报告路径
@@ -465,19 +495,32 @@ AI 自动执行:
 
 ---
 
-## 🔴 日期强制必填（v2.5.0 新增）
+## 🔴 日期强制必填（v2.5.0 新增 / v2.10.0 更新）
 
 > 所有 AI 生成的文档/报告/记忆文件必须包含真实日期，禁止留占位符。
 
-### 文件名日期前缀
+### 文件名日期规则（🆕 v2.10.0 拆分报告/记忆）
 
 ```yaml
-所有输出文件必须以 YYYYMMDD-NN- 开头:
-  ✅ 正确: clients/zed-copilot/tasks/20260226-01-ANALYSIS-v3-architecture.md
-  ✅ 正确: clients/webstorm-copilot/tasks/20260227-01-REQ-user-auth.md
+报告文件（reports/）— 使用 YYYYMMDD-NN- 前缀:
+  ✅ 正确: reports/analysis/20260227-01-analysis-deep-review.md
+  ✅ 正确: reports/bugs/20260227-02-bug-login-timeout.md
+  NN 来源: 仅扫描 reports/<子目录>/ 目录，与记忆无关
+
+记忆文件（.ai-memory/.../tasks/）— 使用 YYYYMMDD.md 纯日期:
+  ✅ 正确: clients/zed-copilot/tasks/20260226.md
+  ✅ 正确: clients/webstorm-copilot/tasks/20260227.md
+  ❌ 错误: clients/zed-copilot/tasks/20260226-01-ANALYSIS-xxx.md  # v1.6 旧格式（已废弃）
+
+通用错误:
   ❌ 错误: v3-architecture-deep-analysis.md     # 缺少日期前缀
   ❌ 错误: 2026-02-26-analysis-xxx.md           # 日期格式错误（有分隔符）
   ❌ 错误: analysis.md                          # 缺少日期前缀
+
+🔴 报告 NN 和记忆序号完全独立（约束 #19）:
+  - 报告 NN 仅扫描 reports/ 目录
+  - 记忆文件无 NN，用纯日期定位
+  - ❌ 禁止报告和记忆共享全局序号池
 ```
 
 ### 文档头部日期字段
@@ -511,9 +554,12 @@ AI 自动执行:
     ├── webstorm-copilot/               # WebStorm 专属
     │   ├── SUMMARY.md                  # 任务列表
     │   └── tasks/
+    │       └── 20260227.md             # 🆕 v1.7: 每天一个记忆文件
     └── zed-copilot/                    # Zed 专属
         ├── SUMMARY.md
         └── tasks/
+            ├── 20260226.md             # 每天一个文件，会话内以 ## 会话 NN 分段
+            └── 20260227.md
 ```
 
 ### 关键规则
@@ -533,15 +579,18 @@ AI 自动执行:
   - 已有的根目录 tasks/ 和 SUMMARY.md 保持不变（历史数据）
   - 新任务写入 clients/<agent>/ 目录
   - 首次使用时自动创建 clients/<agent>/ 目录结构
+  - 🆕 v1.7: 旧格式文件（YYYYMMDD-NN-TYPE-id.md）保留可读，新会话一律使用 YYYYMMDD.md
 ```
 
 > 完整规范详见 [workflows/common/task-memory.md §多 Agent 支持](../common/task-memory.md)
 
 ---
 
-**版本**: v2.7.0  
+**版本**: v2.11.0  
 **更新日期**: 2026-02-27  
 **变更记录**:
+- v2.11.0: 版本号对齐 v2.11.0；阶段 0 新增 🔴 时序强制规则（记忆写入必须在分析问题之前完成，禁止延迟）
+- v2.10.0: Step 5 上次记忆扫描改为 YYYYMMDD.md 格式（读取末尾最新会话段落）；阶段 0 改为创建/追加每日记忆文件（不再计算 NN 序号）；阶段 2 对话记录从 3 列→4 列（新增"关联引用"列）；日期规则拆分报告/记忆（报告 YYYYMMDD-NN / 记忆 YYYYMMDD.md）；存储结构示例更新；task-memory v1.6→v1.7；约束 18→19 条
 - v2.7.0: 预检查从 4 项改为 5 项必做（新增"上次记忆"）；按需检查编号调整为 6/7；输出格式全面更新
 - v2.6.0: 多编辑器策略从"共享目录+Agent前缀"改回"目录隔离+全局摘要"；新增任务完成验证；对齐 copilot-instructions v2.6.0 / task-memory v1.3
 - v2.5.0: 多编辑器策略改为共享目录+Agent前缀（已由 v2.6.0 替代）

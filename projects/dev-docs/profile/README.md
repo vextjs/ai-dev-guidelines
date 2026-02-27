@@ -1,8 +1,8 @@
 # ai-dev-guidelines 项目规范
 
 > **最后更新**: 2026-02-27  
-> **版本**: v2.9.0  
-> **维护者**: AI 规范团队
+> **维护者**: AI 规范团队  
+> **主项目版本**: 见 [README.md](../../README.md)
 
 ---
 
@@ -44,7 +44,7 @@
 ai-dev-guidelines/
 ├── README.md                 # 项目入口（AI 首读）
 ├── QUICK-REFERENCE.md        # 快速参考
-├── CONSTRAINTS.md            # 约束清单（18 条）
+├── CONSTRAINTS.md            # 约束清单（19 条）
 ├── STATUS.md                 # 项目状态
 ├── CHANGELOG.md              # 变更日志索引
 │
@@ -208,7 +208,7 @@ ai-dev-guidelines/
 |-----|------|------|
 | 入口文档 | `README.md` | AI 首读文档 |
 | 快速参考 | `QUICK-REFERENCE.md` | 执行时速查 |
-| 约束清单 | `CONSTRAINTS.md` | 核心约束（18 条） |
+| 约束清单 | `CONSTRAINTS.md` | 核心约束（19 条） |
 | 项目状态 | `STATUS.md` | 完成度追踪 |
 | 决策树 | `workflows/decision-tree.yaml` | 任务路由 |
 

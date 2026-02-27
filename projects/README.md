@@ -107,7 +107,7 @@ projects/<project>/                    # 如 projects/chat/
         └── <agent>/                  # 如 zed-copilot/、webstorm-copilot/
             ├── SUMMARY.md            # 该 Agent 的任务摘要
             └── tasks/
-                └── <YYYYMMDD>-<NN>-<TYPE>-<id>.md
+                └── <YYYYMMDD>.md     # 每天一个文件，会话内以 ## 会话 NN 分段
 ```
 
 > **为什么在 ai-dev-guidelines/projects/ 下？**

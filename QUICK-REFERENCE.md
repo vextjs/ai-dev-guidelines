@@ -2,7 +2,7 @@
 
 > AI 执行任务时的速查手册
 
-**版本**: v2.9.0  
+**版本**: v2.11.0  
 **最后更新**: 2026-02-27
 
 ---
@@ -15,7 +15,7 @@
 2. 任务类型: [需求/Bug/优化/分析/...]
 3. 输出位置: [projects/<project>/...]
 4. Agent: [zed-copilot / webstorm-copilot / cursor / vscode-copilot / ...]
-5. 上次记忆: [.ai-memory/clients/<agent>/tasks/最新文件路径 + 状态] 或 [⚠️ 无] ← 🆕
+5. 上次记忆: [.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN + 状态] 或 [⚠️ 无]
 ```
 
 ### 🏷️ Agent 标识速查
@@ -39,20 +39,21 @@
 
 ### 文件名日期前缀
 
-所有输出文件（报告、分析、记忆等）**必须**以 `YYYYMMDD-` 开头：
+所有输出文件**必须**以日期开头（报告和记忆格式不同）：
 
 ```yaml
-# 报告文件（reports/ 下）:
+# 报告文件（reports/ 下）— YYYYMMDD-NN-<类型>-<简述>.md:
 ✅ 正确: 20260226-01-analysis-v3-architecture-deep-review.md
 ✅ 正确: 20260227-02-bug-login-timeout.md
 
-# 记忆文件（.ai-memory/clients/<agent>/tasks/ 下，Agent 由目录隔离保证）:
-✅ 正确: 20260227-01-REQ-user-auth.md
-✅ 正确: 20260227-02-FIX-spec-verify.md
+# 记忆文件（.ai-memory/clients/<agent>/tasks/ 下）— YYYYMMDD.md（🆕 v1.7 每天一文件，无 NN）:
+✅ 正确: 20260226.md
+✅ 正确: 20260227.md
 
-❌ 错误: v3-architecture-deep-analysis.md    # 缺少日期前缀
-❌ 错误: 2026-02-26-analysis-xxx.md          # 日期格式错误（有分隔符）
-❌ 错误: 20260227-analysis-xxx.md            # 缺少序号 NN
+❌ 错误: v3-architecture-deep-analysis.md           # 缺少日期前缀
+❌ 错误: 2026-02-26-analysis-xxx.md                 # 日期格式错误（有分隔符）
+❌ 错误: 20260227-analysis-xxx.md                   # 报告缺少序号 NN
+❌ 错误: 20260227-01-REQ-user-auth.md               # 记忆文件不应有 NN（v1.6 旧格式）
 ```
 
 ### 文档头部必填字段
@@ -179,18 +180,24 @@ projects/<project-name>/
 
 ## 🤖 多编辑器 / 多 Agent 速查
 
-### 🔴 报告为主体、记忆为索引 + 消息驱动 5 阶段（v2.9.0）
+### 🔴 报告为主体、记忆为索引 + 消息驱动 5 阶段（v2.10.0）
 
 ```yaml
 架构:
-  报告文件（reports/）  = 完整分析内容（主体）
-  记忆文件（.ai-memory/）= 摘要 + 报告链接 + 对话记录（索引）
+  报告文件（reports/）  = 完整分析内容（主体），命名 YYYYMMDD-NN-<类型>-<简述>.md
+  记忆文件（.ai-memory/）= 摘要 + 报告链接 + 对话记录（索引），命名 YYYYMMDD.md（🆕 v1.7 每天一文件）
   对话输出             = 结论摘要 + 报告路径
 
-🔴 消息驱动 5 阶段触发时机（🆕 v2.9.0 / task-memory v1.6）:
-  阶段 0: 会话初始化（首条消息时 — 预检查 + 创建记忆）
-  阶段 1: 用户发消息时（捕获用户输入 — 新意图/需求/修正）  ← 🆕
-  阶段 2: AI 回复时（写报告 + 更新记忆 + 追加对话记录）
+🔴 序号独立规则（🆕 v2.10.0 / task-memory v1.7）:
+  - 报告 NN 序号: 仅扫描 reports/<子目录>/ 目录计算，与记忆无关
+  - 记忆文件: 不再使用 NN 序号，直接以日期命名（YYYYMMDD.md）
+  - 记忆内部会话编号: 文件内以 ## 会话 NN 分段（NN 为当天第几个会话）
+  - ❌ 禁止报告和记忆共享全局序号（v1.6 及之前的设计缺陷，已废弃）
+
+🔴 消息驱动 5 阶段触发时机（task-memory v1.7）:
+  阶段 0: 会话初始化（首条消息时 — 预检查 + 创建/追加记忆 YYYYMMDD.md）
+  阶段 1: 用户发消息时（捕获用户输入 — 新意图/需求/修正）
+  阶段 2: AI 回复时（写报告 + 更新记忆 + 追加对话记录含关联引用）
   阶段 3: AI 执行完毕时（记录变更清单 — 与阶段 2 通常合并写入）
   阶段 4: 任务结束时（最终状态更新 ✅）
 
@@ -199,7 +206,7 @@ projects/<project-name>/
 
 ❌ 绝对禁止询问用户是否写入报告/记忆（约束 #17）
 
-下次会话恢复: 读记忆 → 读📨对话记录（快速回忆脉络）→ 跟链接读报告 → 完整上下文
+下次会话恢复: 读记忆（最新日期文件末尾）→ 读📨对话记录（快速回忆脉络）→ 跟链接读报告 → 完整上下文
 ```
 
 > 详见 [workflows/common/task-memory.md §触发时机](./workflows/common/task-memory.md)
@@ -221,36 +228,44 @@ projects/<project>/
         ├── webstorm-copilot/         # WebStorm 专属
         │   ├── SUMMARY.md
         │   └── tasks/
+        │       └── 20260227.md       # 🆕 v1.7: 每天一个记忆文件
         └── zed-copilot/              # Zed 专属
             ├── SUMMARY.md
             └── tasks/
+                ├── 20260226.md       # 每天一个文件，会话内以 ## 会话 NN 分段
+                └── 20260227.md
 ```
 
-### 记忆文件命名
+### 记忆文件命名（🆕 v1.7）
 
 ```yaml
-格式: <YYYYMMDD>-<NN>-<TYPE>-<id>.md（在各 Agent 目录内）
+格式: <YYYYMMDD>.md（在各 Agent 目录内，每天一个文件）
 
-✅ 正确: clients/zed-copilot/tasks/20260226-01-ANALYSIS-v3-deep-review.md
-✅ 正确: clients/webstorm-copilot/tasks/20260227-01-REQ-user-auth.md
-✅ 正确: clients/webstorm-copilot/tasks/20260227-02-FIX-spec-verify.md
-❌ 错误: clients/zed-copilot/tasks/20260226-ANALYSIS-v3-deep-review.md  # 缺少序号
+✅ 正确: clients/zed-copilot/tasks/20260226.md      # 纯日期命名
+✅ 正确: clients/webstorm-copilot/tasks/20260227.md  # 纯日期命名
+❌ 错误: clients/zed-copilot/tasks/20260226-01-ANALYSIS-v3-deep-review.md  # v1.6 旧格式（已废弃）
+
+创建 vs 追加:
+  - tasks/ 下不存在 YYYYMMDD.md → 创建新文件
+  - tasks/ 下已存在 YYYYMMDD.md → 读取已有会话数 → 追加 ## 会话 NN+1
 ```
 
-### 记忆文件中的对话记录（🆕 v2.9.0）
+### 记忆文件中的对话记录（🆕 v2.10.0 — 4 列表格）
 
 ```yaml
-记忆文件新增 §📨 对话记录，记录每轮用户消息和 AI 回复摘要:
+对话记录使用 4 列表格（🆕 v1.7 新增"关联引用"列）:
 
-  ## 📨 对话记录
-  | 轮次 | 方向 | 摘要 |
-  |:----:|:----:|------|
-  | 1 | 👤→ | 分析 vext v3 的架构问题，重点看热重载 |
-  | 1 | 🤖← | 完成架构分析，发现 3 个 P0 问题 → 报告 xxx |
-  | 2 | 👤→ | 还要看集群部分的设计 |
-  | 2 | 🤖← | 完成集群分析，新增 2 个建议 → 报告 yyy |
+  | 轮次 | 方向 | 摘要 | 关联引用 |
+  |:----:|:----:|------|----------|
+  | 1 | 👤→ | 分析 vext v3 的架构问题，重点看热重载 | 🧠 20260226.md, 📋 profile/README.md |
+  | 1 | 🤖← | 完成架构分析，发现 3 个 P0 问题 | 📄 20260227-01-analysis-xxx |
+  | 2 | 👤→ | 还要看集群部分的设计 | |
+  | 2 | 🤖← | 完成集群分析，新增 2 个建议 | 📄 20260227-02-analysis-yyy |
 
-  💡 跨会话恢复时读此表格即可快速回忆对话脉络
+  关联引用标记:
+    📋 项目规范    📄 报告文件    🧠 记忆文件    📑 规范文件
+
+  💡 对话记录关联引用列 = 时间线视角；§全天关联报告汇总 = 汇总视角，互补不重复
   💡 由阶段 1（用户发消息）和阶段 2（AI 回复）自动追加
   💡 纯确认性消息（"好的"/"Y"/"继续"）不记录
 ```
@@ -270,8 +285,8 @@ projects/<project>/
 
 ```yaml
 用户在 Zed 中说"继续":
-  → 只扫描 clients/zed-copilot/ 下的未完成任务
-  → 读取 📨 对话记录 → 快速回忆对话脉络（🆕 v1.6）
+  → 只扫描 clients/zed-copilot/tasks/ 下最新日期文件（YYYYMMDD.md）
+  → 读取文件末尾最新会话的 📨 对话记录 → 快速回忆对话脉络
   → 读取记忆中的报告链接 → 读取报告文件恢复详细上下文
   → 全局 SUMMARY.md 中若有其他 Agent 未完成任务，提示用户确认后才恢复
 ```
@@ -324,7 +339,7 @@ projects/<project>/
 
 ---
 
-## ⚠️ 核心约束 (18条)
+## ⚠️ 核心约束 (19条)
 
 1. **删除操作需确认** - 删除代码/文件前必须用户确认
 2. **Git 操作需确认** - commit/push 前必须用户确认
@@ -334,7 +349,7 @@ projects/<project>/
 6. **禁止硬编码** - 敏感信息必须用环境变量
 7. **结构化输出** - 所有输出必须结构化
 8. **报告需验证** - 分析报告必须逐项验证，按 🔴/🟡/💡/❌ 分类
-9. **🔴 文件名必须带日期+序号** - 所有输出文件必须 `YYYYMMDD-NN-<描述>.md` 格式（NN 为当日递增序号）
+9. **🔴 文件名日期规则** - 报告文件必须 `YYYYMMDD-NN-<描述>.md`（NN 仅扫描 reports/ 目录）；记忆文件必须 `YYYYMMDD.md`（每天一文件，无 NN）
 10. **🔴 多 Agent 目录隔离** - 记忆写入 `clients/<agent>/`，不写入其他 Agent 目录
 11. **修复需扫描** - 修复后必须全局扫描同类问题+数据联动检查
 12. **主动合理性分析** - 收到指令先评估合理性，有更好建议先提出
@@ -344,6 +359,7 @@ projects/<project>/
 16. **🔴 文件修改需确认** - 涉及文件修改/删除操作必须先输出变更计划，等待用户确认后再执行（纯分析/只读/报告/记忆写入除外）
 17. **🔴 报告+记忆自动输出** - 每次会话必须：自动写入报告文件（reports/）+ 更新记忆（.ai-memory/），禁止询问用户
 18. **🔴 消息驱动记忆触发** - 记忆写入以消息事件为锚点（阶段 0~4），用户发消息时捕获输入（阶段 1），AI 回复时写报告（阶段 2），执行完毕记录变更（阶段 3）
+19. **🔴 报告/记忆序号独立** - 报告 NN 仅扫描 reports/ 目录；记忆使用 YYYYMMDD.md 无序号；禁止共享全局序号池（🆕 v2.10.0）
 
 > 完整说明见 [CONSTRAINTS.md](./CONSTRAINTS.md)
 
@@ -364,17 +380,36 @@ projects/<project>/
 | `workflows/common/task-memory.md` | `copilot-instructions.md`、`00-pre-check/README.md`、`temp-reports.md` | 文件名格式、Agent 方案（共享 vs 隔离）、报告与记忆关系、恢复流程 |
 | `workflows/common/temp-reports.md` | `copilot-instructions.md`、`QUICK-REFERENCE.md`、`task-memory.md`、`doc-standards.md` | 报告命名格式、报告与记忆关系、自动输出规则 |
 | `QUICK-REFERENCE.md` | `copilot-instructions.md` | 约束条数、关键原则 |
-| `CONSTRAINTS.md` | `QUICK-REFERENCE.md`、`copilot-instructions.md` | 约束条数、约束内容一致性 |
+| `CONSTRAINTS.md` | `QUICK-REFERENCE.md`、`copilot-instructions.md`、`decision-tree.yaml` | 约束条数、约束内容一致性 |
 | `standards/doc-standards.md` | `temp-reports.md`、`QUICK-REFERENCE.md` | 文件命名规范 |
+| **任何涉及版本号变更** | **下方版本号文件清单全部 8 个** | **版本号 + 最后更新日期** |
+
+### 🔴 版本号文件清单（发布新版本时必须全部同步）
+
+> **为什么单独列出？** 版本号遗漏已反复发生 3 次（BUG-023~031），根因是没有一份明确的"哪些文件含版本号"清单。以下 8 个文件包含版本号字段，发布新版本时**必须全部检查并更新**：
+
+| # | 文件路径 | 版本号位置 | 说明 |
+|:-:|---------|-----------|------|
+| 1 | `.github/copilot-instructions.md` | L1 `**版本**: vX.Y.Z` | 入口文件 |
+| 2 | `README.md` | L3 `> **版本**: vX.Y.Z` | 项目主入口 |
+| 3 | `QUICK-REFERENCE.md` | L5 `**版本**: vX.Y.Z` | 速查手册 |
+| 4 | `CONSTRAINTS.md` | L6 `**版本**: vX.Y.Z` | 约束清单 |
+| 5 | `STATUS.md` | L5 `**当前版本**: vX.Y.Z` | 项目状态 |
+| 6 | `CHANGELOG.md` | 版本概览表新增行 | 变更日志 |
+| 7 | `workflows/decision-tree.yaml` | L1 注释 + L4 `version` 字段 + L82 注释 + L87 `mandatory_precheck.version` | 决策树配置 |
+| 8 | `workflows/00-pre-check/README.md` | L3 `> **版本**: vX.Y.Z` + 文件末尾 `**版本**: vX.Y.Z`（两处） | 预检查工作流 |
+
+> ⚠️ 此清单新增文件时必须同步更新。非入口文件（如 task-memory.md v1.7、temp-reports.md v1.5）使用独立版本号，不在此清单中。
 
 ### 检查清单（每次修改后逐条确认）
 
 ```yaml
 □ 预检查项数: copilot-instructions.md / 00-pre-check / QUICK-REFERENCE 三处一致？
-□ 文件命名序号: 报告和记忆文件都使用 YYYYMMDD-NN 格式？
+□ 文件命名: 报告使用 YYYYMMDD-NN 格式（NN 独立）？记忆使用 YYYYMMDD.md 格式（无 NN）？
 □ 多 Agent 方案: 目录隔离 clients/<agent>/（非共享目录+文件名前缀）？
 □ 约束条数: QUICK-REFERENCE / CONSTRAINTS / copilot-instructions 三处标题数字与实际条目数一致？
-□ 版本号: 修改的文件已更新版本号和最后更新日期？
+□ 版本号（被动）: 修改的文件已更新版本号和最后更新日期？
+□ 🔴 版本号（主动全量）: 上方 8 个文件的版本号是否全部一致？（逐个 read_file 确认，禁止推断）
 □ 禁止行为: copilot-instructions.md 和 00-pre-check 的禁止清单对齐？
 □ 交叉引用路径: 所有 [链接](./path) 指向的文件确实存在？
 ```
@@ -393,8 +428,10 @@ projects/<project>/
 
 ---
 
-**版本**: v2.9.0  
+**版本**: v2.11.0  
 **最后更新**: 2026-02-27  
+**v2.11.0 变更**: 入口文件瘦身（~120行→~36行）；SUMMARY.md 精简优化；全面审计修复5个Bug（BUG-023~027）；QUICK-REFERENCE/CONSTRAINTS 版本号对齐 v2.11.0  
+**v2.10.0 变更**: 记忆从"每会话一文件"改为"每天一文件"（YYYYMMDD.md）；取消记忆 NN 序号；报告 NN 独立于记忆（仅扫描 reports/）；对话记录表格从 3 列→4 列（新增"关联引用"列）；新增约束 #19；约束从 18→19 条；task-memory v1.6→v1.7；temp-reports v1.4→v1.5  
 **v2.9.0 变更**: 记忆触发时机从"AI 内部 4 阶段"升级为"消息驱动 5 阶段"（阶段 0~4）；新增阶段 1（用户发消息时捕获输入）；记忆模板新增 §📨 对话记录；新增约束 #18；约束从 17→18 条  
 **v2.8.0 变更**: 新增约束 #17"报告+记忆自动输出"；新增"报告为主体、记忆为索引"架构说明；约束从 16→17 条；交叉验证对照表增加 CONSTRAINTS.md 和 temp-reports.md 关联；预检查扫描注意事项（禁止 glob 扫描隐藏目录）  
 **v2.7.0 变更**: 预检查从 4 项改为 5 项必做（新增"上次记忆"）；约束从 15→16 条（新增 #16"文件修改需确认"）  

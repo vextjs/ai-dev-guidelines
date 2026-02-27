@@ -1,7 +1,7 @@
-# AI 决策树配置文件 v2.8.0
+# AI 决策树配置文件 v2.11.0
 # 用于快速场景识别和任务路由
 
-version: "2.9.0"
+version: "2.11.0"
 last_updated: "2026-02-27"
 description: "ai-dev-guidelines AI 执行规范的结构化决策树"
 
@@ -79,12 +79,12 @@ task_identification:
     incident: "workflows/08-incident/"
 
 # ===========================================
-# 强制预检查 (v2.8 - 5项必做 + Agent 标识 + 上次记忆)
+# 强制预检查 (v2.11 - 5项必做 + Agent 标识 + 上次记忆)
 # ===========================================
 mandatory_precheck:
   name: "强制启动协议"
   priority: "P0"
-  version: "v2.9"
+  version: "v2.11"
 
   # v2.7 改为 5 项必做检查（新增上次记忆）
   steps:
@@ -125,9 +125,10 @@ mandatory_precheck:
       action: "输出上次记忆"
       method: "扫描 .ai-memory/clients/<agent>/tasks/ 取最新文件"
       scan_logic:
-        - "用 list_directory 逐层进入 projects/*/.ai-memory/clients/<agent>/tasks/ 目录（禁止使用 find_path/glob，glob 跳过隐藏目录）"
-        - "按文件名日期+序号排序，取最新一条"
-        - "读取文件头部提取状态（🔄 / ✅）"
+        - "🔴 绝对禁止使用 find_path/glob 扫描 .ai-memory（glob 引擎跳过隐藏目录，已发生事故 BUG-015/BUG-022）"
+        - "🔴 必须使用 list_directory 逐层进入：先 list_directory('projects/<project>/.ai-memory') → 再 list_directory('.../.ai-memory/clients/<agent>/tasks')"
+        - "按文件名日期排序，取最新日期文件（YYYYMMDD.md 格式）"
+        - "读取文件末尾最新会话段落提取状态（🔄 / ✅）"
         - "目录不存在或无文件时输出 ⚠️ 无"
 
   # 按需检查（涉及代码修改时）
@@ -155,9 +156,9 @@ mandatory_precheck:
 
   # 日期强制必填（v2.5 新增，v2.7 维持）
   date_enforcement:
-    rule: "所有输出文件名必须以 YYYYMMDD- 开头，文档头部日期字段禁止留占位符"
-    filename_format: "<YYYYMMDD>-<描述>.md"
-    memory_filename_format: "<YYYYMMDD>-<NN>-<TYPE>-<id>.md  # 在 clients/<agent>/tasks/ 目录下，Agent 由目录隔离保证"
+    rule: "报告文件名必须以 YYYYMMDD-NN- 开头（NN 仅扫描 reports/ 目录），记忆文件名必须为 YYYYMMDD.md（每天一文件，无 NN），文档头部日期字段禁止留占位符"
+    filename_format: "<YYYYMMDD>-<NN>-<类型>-<简述>.md  # 报告文件，NN 仅扫描 reports/<子目录>/"
+    memory_filename_format: "<YYYYMMDD>.md  # 记忆文件，在 clients/<agent>/tasks/ 目录下，每天一文件，会话内以 ## 会话 NN 分段"
     obtain_date: "优先使用 now() 工具获取真实日期"
 
   failure_handling:
@@ -266,7 +267,7 @@ inquiry_points:
       - "S: 跳过"
 
 # ===========================================
-# 禁止项（编号对齐 CONSTRAINTS.md 的 18 条约束）
+# 禁止项（编号对齐 CONSTRAINTS.md 的 19 条约束）
 # ===========================================
 constraints:
   # 对应 CONSTRAINTS.md 核心约束
@@ -346,6 +347,10 @@ constraints:
     - id: 18
       rule: "消息驱动记忆触发"
       violation: "记忆写入不以消息事件为锚点；用户发消息时不记录到📨对话记录；阶段编号与执行顺序不一致；使用主观'关键节点'而非客观'执行完毕'作为触发条件"
+
+    - id: 19
+      rule: "报告/记忆序号独立"
+      violation: "报告 NN 未仅扫描 reports/ 目录；记忆文件未使用 YYYYMMDD.md 无序号格式；报告和记忆共享全局序号池"
 
   # 附加禁止项（未在 CONSTRAINTS.md 中编号，但在决策树中强制）
   additional_forbidden:

@@ -137,5 +137,5 @@ dist
 
 # AI生成的规划和报告目录（不提交到Git）
 reports/
+records/
 .ai-memory/
-
