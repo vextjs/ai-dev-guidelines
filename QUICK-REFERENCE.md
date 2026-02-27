@@ -1,9 +1,8 @@
-9. **修复需扫描** - 修复后必须全局扫描同类问题+数据联动检查
 # 快速参考
 
 > AI 执行任务时的速查手册
 
-**版本**: v2.3.0  
+**版本**: v2.9.0  
 **最后更新**: 2026-02-27
 
 ---
@@ -15,7 +14,8 @@
 1. 工作区: [当前路径]
 2. 任务类型: [需求/Bug/优化/分析/...]
 3. 输出位置: [projects/<project>/...]
-4. Agent: [zed-copilot / webstorm-copilot / cursor / vscode-copilot / ...] ← 🆕
+4. Agent: [zed-copilot / webstorm-copilot / cursor / vscode-copilot / ...]
+5. 上次记忆: [.ai-memory/clients/<agent>/tasks/最新文件路径 + 状态] 或 [⚠️ 无] ← 🆕
 ```
 
 ### 🏷️ Agent 标识速查
@@ -42,10 +42,17 @@
 所有输出文件（报告、分析、记忆等）**必须**以 `YYYYMMDD-` 开头：
 
 ```yaml
-✅ 正确: 20260226-analysis-v3-architecture-deep-review.md
-✅ 正确: 20260227-zed-copilot-REQ-user-auth.md
+# 报告文件（reports/ 下）:
+✅ 正确: 20260226-01-analysis-v3-architecture-deep-review.md
+✅ 正确: 20260227-02-bug-login-timeout.md
+
+# 记忆文件（.ai-memory/clients/<agent>/tasks/ 下，Agent 由目录隔离保证）:
+✅ 正确: 20260227-01-REQ-user-auth.md
+✅ 正确: 20260227-02-FIX-spec-verify.md
+
 ❌ 错误: v3-architecture-deep-analysis.md    # 缺少日期前缀
 ❌ 错误: 2026-02-26-analysis-xxx.md          # 日期格式错误（有分隔符）
+❌ 错误: 20260227-analysis-xxx.md            # 缺少序号 NN
 ```
 
 ### 文档头部必填字段
@@ -172,18 +179,51 @@ projects/<project-name>/
 
 ## 🤖 多编辑器 / 多 Agent 速查
 
+### 🔴 报告为主体、记忆为索引 + 消息驱动 5 阶段（v2.9.0）
+
+```yaml
+架构:
+  报告文件（reports/）  = 完整分析内容（主体）
+  记忆文件（.ai-memory/）= 摘要 + 报告链接 + 对话记录（索引）
+  对话输出             = 结论摘要 + 报告路径
+
+🔴 消息驱动 5 阶段触发时机（🆕 v2.9.0 / task-memory v1.6）:
+  阶段 0: 会话初始化（首条消息时 — 预检查 + 创建记忆）
+  阶段 1: 用户发消息时（捕获用户输入 — 新意图/需求/修正）  ← 🆕
+  阶段 2: AI 回复时（写报告 + 更新记忆 + 追加对话记录）
+  阶段 3: AI 执行完毕时（记录变更清单 — 与阶段 2 通常合并写入）
+  阶段 4: 任务结束时（最终状态更新 ✅）
+
+  典型顺序: 0 → 1 → 2+3 → 1 → 2+3 → ... → 4
+  阶段 1 过滤: 纯确认（"好的"/"Y"）、流程控制（"继续"）不触发
+
+❌ 绝对禁止询问用户是否写入报告/记忆（约束 #17）
+
+下次会话恢复: 读记忆 → 读📨对话记录（快速回忆脉络）→ 跟链接读报告 → 完整上下文
+```
+
+> 详见 [workflows/common/task-memory.md §触发时机](./workflows/common/task-memory.md)
+> 详见 [workflows/common/temp-reports.md §核心规则](./workflows/common/temp-reports.md)
+
 ### 记忆目录结构
 
 ```
-.ai-memory/
-├── SUMMARY.md                    # 全局只读摘要（关键决策汇总）
-└── clients/
-    ├── webstorm-copilot/         # WebStorm 专属
-    │   ├── SUMMARY.md
-    │   └── tasks/
-    └── zed-copilot/              # Zed 专属
-        ├── SUMMARY.md
-        └── tasks/
+projects/<project>/
+├── reports/                          # 🔴 AI 会话报告（每次会话必须输出）
+│   ├── analysis/                     # 深度分析/架构分析报告
+│   ├── diagnostics/                  # 诊断分析报告
+│   ├── bugs/                         # Bug 分析报告
+│   └── ...
+│
+└── .ai-memory/                       # 🔴 记忆索引（摘要+报告链接）
+    ├── SUMMARY.md                    # 全局只读摘要（关键决策汇总）
+    └── clients/
+        ├── webstorm-copilot/         # WebStorm 专属
+        │   ├── SUMMARY.md
+        │   └── tasks/
+        └── zed-copilot/              # Zed 专属
+            ├── SUMMARY.md
+            └── tasks/
 ```
 
 ### 记忆文件命名
@@ -197,12 +237,50 @@ projects/<project-name>/
 ❌ 错误: clients/zed-copilot/tasks/20260226-ANALYSIS-v3-deep-review.md  # 缺少序号
 ```
 
+### 记忆文件中的对话记录（🆕 v2.9.0）
+
+```yaml
+记忆文件新增 §📨 对话记录，记录每轮用户消息和 AI 回复摘要:
+
+  ## 📨 对话记录
+  | 轮次 | 方向 | 摘要 |
+  |:----:|:----:|------|
+  | 1 | 👤→ | 分析 vext v3 的架构问题，重点看热重载 |
+  | 1 | 🤖← | 完成架构分析，发现 3 个 P0 问题 → 报告 xxx |
+  | 2 | 👤→ | 还要看集群部分的设计 |
+  | 2 | 🤖← | 完成集群分析，新增 2 个建议 → 报告 yyy |
+
+  💡 跨会话恢复时读此表格即可快速回忆对话脉络
+  💡 由阶段 1（用户发消息）和阶段 2（AI 回复）自动追加
+  💡 纯确认性消息（"好的"/"Y"/"继续"）不记录
+```
+
+### 记忆文件中的报告引用
+
+```yaml
+记忆文件精简为摘要+报告链接+对话记录，不再堆砌分析细节:
+
+  ## 📄 关联报告
+  | 报告文件 | 类型 | 说明 |
+  |----------|------|------|
+  | [reports/analysis/20260227-01-xxx.md](...) | 深度分析 | 完整分析内容 |
+```
+
 ### 恢复任务时的 Agent 过滤
 
 ```yaml
 用户在 Zed 中说"继续":
   → 只扫描 clients/zed-copilot/ 下的未完成任务
+  → 读取 📨 对话记录 → 快速回忆对话脉络（🆕 v1.6）
+  → 读取记忆中的报告链接 → 读取报告文件恢复详细上下文
   → 全局 SUMMARY.md 中若有其他 Agent 未完成任务，提示用户确认后才恢复
+```
+
+### 预检查扫描注意事项
+
+```yaml
+🔴 扫描 .ai-memory 时必须使用 list_directory 逐层进入
+🔴 禁止使用 find_path/glob 扫描（glob 引擎默认跳过 . 开头的隐藏目录）
 ```
 
 ### 关键规则
@@ -211,6 +289,7 @@ projects/<project-name>/
 - 全局 `SUMMARY.md` 仅存放关键决策摘要，不存任务列表
 - AI 绝不写入其他 Agent 的 `clients/` 目录
 - 首次使用时自动创建 `clients/<agent>/` 目录结构
+- 🔴 报告和记忆的写入是 AI 自动行为，**绝不询问用户**
 
 > 详见 [workflows/common/task-memory.md §多 Agent 支持](./workflows/common/task-memory.md)
 
@@ -245,7 +324,7 @@ projects/<project-name>/
 
 ---
 
-## ⚠️ 核心约束 (15条)
+## ⚠️ 核心约束 (18条)
 
 1. **删除操作需确认** - 删除代码/文件前必须用户确认
 2. **Git 操作需确认** - commit/push 前必须用户确认
@@ -262,6 +341,9 @@ projects/<project-name>/
 13. **自动关联文件检查** - 修改文件时自动扫描关联文件并同步
 14. **🔴 规范修改需交叉验证** - 修改任何规范文件后，必须逐个检查所有引用该规范的文件是否需要同步更新（见下方交叉验证清单）
 15. **🔴 任务完成验证** - 声称任务完成前必须验证：输出文件存在性 + 内容结构完整性 + 记忆已更新（见 task-memory.md §任务完成验证）
+16. **🔴 文件修改需确认** - 涉及文件修改/删除操作必须先输出变更计划，等待用户确认后再执行（纯分析/只读/报告/记忆写入除外）
+17. **🔴 报告+记忆自动输出** - 每次会话必须：自动写入报告文件（reports/）+ 更新记忆（.ai-memory/），禁止询问用户
+18. **🔴 消息驱动记忆触发** - 记忆写入以消息事件为锚点（阶段 0~4），用户发消息时捕获输入（阶段 1），AI 回复时写报告（阶段 2），执行完毕记录变更（阶段 3）
 
 > 完整说明见 [CONSTRAINTS.md](./CONSTRAINTS.md)
 
@@ -279,9 +361,10 @@ projects/<project-name>/
 |-------------|------------|---------|
 | `.github/copilot-instructions.md` | `00-pre-check/README.md`、`QUICK-REFERENCE.md` | 预检查项数、禁止行为、格式示例 |
 | `workflows/00-pre-check/README.md` | `copilot-instructions.md`、`task-memory.md` | 预检查项数、记忆写入路径、Agent 检测逻辑 |
-| `workflows/common/task-memory.md` | `copilot-instructions.md`、`00-pre-check/README.md` | 文件名格式、Agent 方案（共享 vs 隔离）、恢复流程 |
-| `workflows/common/temp-reports.md` | `copilot-instructions.md`、`QUICK-REFERENCE.md`、`doc-standards.md` | 报告命名格式、Agent 字段 |
+| `workflows/common/task-memory.md` | `copilot-instructions.md`、`00-pre-check/README.md`、`temp-reports.md` | 文件名格式、Agent 方案（共享 vs 隔离）、报告与记忆关系、恢复流程 |
+| `workflows/common/temp-reports.md` | `copilot-instructions.md`、`QUICK-REFERENCE.md`、`task-memory.md`、`doc-standards.md` | 报告命名格式、报告与记忆关系、自动输出规则 |
 | `QUICK-REFERENCE.md` | `copilot-instructions.md` | 约束条数、关键原则 |
+| `CONSTRAINTS.md` | `QUICK-REFERENCE.md`、`copilot-instructions.md` | 约束条数、约束内容一致性 |
 | `standards/doc-standards.md` | `temp-reports.md`、`QUICK-REFERENCE.md` | 文件命名规范 |
 
 ### 检查清单（每次修改后逐条确认）
@@ -290,7 +373,7 @@ projects/<project-name>/
 □ 预检查项数: copilot-instructions.md / 00-pre-check / QUICK-REFERENCE 三处一致？
 □ 文件命名序号: 报告和记忆文件都使用 YYYYMMDD-NN 格式？
 □ 多 Agent 方案: 目录隔离 clients/<agent>/（非共享目录+文件名前缀）？
-□ 约束条数: QUICK-REFERENCE 标题数字与实际条目数一致？
+□ 约束条数: QUICK-REFERENCE / CONSTRAINTS / copilot-instructions 三处标题数字与实际条目数一致？
 □ 版本号: 修改的文件已更新版本号和最后更新日期？
 □ 禁止行为: copilot-instructions.md 和 00-pre-check 的禁止清单对齐？
 □ 交叉引用路径: 所有 [链接](./path) 指向的文件确实存在？
@@ -310,6 +393,10 @@ projects/<project-name>/
 
 ---
 
-**版本**: v2.5.0  
+**版本**: v2.9.0  
 **最后更新**: 2026-02-27  
+**v2.9.0 变更**: 记忆触发时机从"AI 内部 4 阶段"升级为"消息驱动 5 阶段"（阶段 0~4）；新增阶段 1（用户发消息时捕获输入）；记忆模板新增 §📨 对话记录；新增约束 #18；约束从 17→18 条  
+**v2.8.0 变更**: 新增约束 #17"报告+记忆自动输出"；新增"报告为主体、记忆为索引"架构说明；约束从 16→17 条；交叉验证对照表增加 CONSTRAINTS.md 和 temp-reports.md 关联；预检查扫描注意事项（禁止 glob 扫描隐藏目录）  
+**v2.7.0 变更**: 预检查从 4 项改为 5 项必做（新增"上次记忆"）；约束从 15→16 条（新增 #16"文件修改需确认"）  
+**v2.6.0 变更**: 版本号统一为 v2.6.0；多 Agent 策略改回目录隔离；新增任务完成验证  
 **v2.3.0 变更**: 预检查新增 Agent 标识（第 4 项）、新增日期强制执行规范、新增 analysis-lite 模板条目、新增多编辑器/多 Agent 速查段落

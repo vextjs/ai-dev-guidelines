@@ -1,8 +1,8 @@
-# AI 决策树配置文件 v2.1.0
+# AI 决策树配置文件 v2.8.0
 # 用于快速场景识别和任务路由
 
-version: "2.1.0"
-last_updated: "2026-02-24"
+version: "2.9.0"
+last_updated: "2026-02-27"
 description: "ai-dev-guidelines AI 执行规范的结构化决策树"
 
 # ===========================================
@@ -79,14 +79,14 @@ task_identification:
     incident: "workflows/08-incident/"
 
 # ===========================================
-# 强制预检查 (v2.5 - 4项必做 + Agent 标识)
+# 强制预检查 (v2.8 - 5项必做 + Agent 标识 + 上次记忆)
 # ===========================================
 mandatory_precheck:
   name: "强制启动协议"
   priority: "P0"
-  version: "v2.5"
+  version: "v2.9"
 
-  # v2.5 改为 4 项必做检查（新增 Agent 标识）
+  # v2.7 改为 5 项必做检查（新增上次记忆）
   steps:
     - step: 1
       action: "确认工作区"
@@ -121,15 +121,24 @@ mandatory_precheck:
         - "用户在对话中提及的编辑器名称"
         - "无法确定时使用 unknown-agent 并提示用户确认"
 
+    - step: 5
+      action: "输出上次记忆"
+      method: "扫描 .ai-memory/clients/<agent>/tasks/ 取最新文件"
+      scan_logic:
+        - "用 list_directory 逐层进入 projects/*/.ai-memory/clients/<agent>/tasks/ 目录（禁止使用 find_path/glob，glob 跳过隐藏目录）"
+        - "按文件名日期+序号排序，取最新一条"
+        - "读取文件头部提取状态（🔄 / ✅）"
+        - "目录不存在或无文件时输出 ⚠️ 无"
+
   # 按需检查（涉及代码修改时）
   optional_steps:
-    - step: 5
+    - step: 6
       action: "加载项目规范"
       condition: "涉及代码修改"
       target: "projects/<project>/profile/README.md"
       fallback: "projects/_template/profile/README.md"
 
-    - step: 6
+    - step: 7
       action: "加载任务记忆"
       target: "projects/<project>/.ai-memory/SUMMARY.md"
       agent_filter: "优先显示当前 Agent 的记忆，但展示所有 Agent 条目"
@@ -140,14 +149,15 @@ mandatory_precheck:
     2. 任务类型: <类型>
     3. 输出位置: <projects/...>
     4. Agent: <agent 标识>
-    5. 项目规范: ✅ 已加载 / ⚠️ 未找到（按需）
-    6. 任务记忆: ✅ 已读取 / ⚠️ 无历史记忆（按需）
+    5. 上次记忆: <.ai-memory/clients/<agent>/tasks/最新文件 + 状态> 或 <⚠️ 无>
+    6. 项目规范: ✅ 已加载 / ⚠️ 未找到（按需）
+    7. 任务记忆: ✅ 已读取 / ⚠️ 无历史记忆（按需）
 
-  # 日期强制必填（v2.5 新增）
+  # 日期强制必填（v2.5 新增，v2.7 维持）
   date_enforcement:
     rule: "所有输出文件名必须以 YYYYMMDD- 开头，文档头部日期字段禁止留占位符"
     filename_format: "<YYYYMMDD>-<描述>.md"
-    memory_filename_format: "<YYYYMMDD>-<agent>-<TYPE>-<id>.md"
+    memory_filename_format: "<YYYYMMDD>-<NN>-<TYPE>-<id>.md  # 在 clients/<agent>/tasks/ 目录下，Agent 由目录隔离保证"
     obtain_date: "优先使用 now() 工具获取真实日期"
 
   failure_handling:
@@ -256,7 +266,7 @@ inquiry_points:
       - "S: 跳过"
 
 # ===========================================
-# 禁止项（编号对齐 CONSTRAINTS.md 的 11 条约束）
+# 禁止项（编号对齐 CONSTRAINTS.md 的 18 条约束）
 # ===========================================
 constraints:
   # 对应 CONSTRAINTS.md 核心约束
@@ -298,16 +308,44 @@ constraints:
       violation: "基于推断列出问题而未实际读取文件验证，未按 🔴/🟡/💡/❌ 分类"
 
     - id: 9
+      rule: "文件名带日期+序号"
+      violation: "输出文件名未以 YYYYMMDD-NN- 开头，或缺少当日递增序号"
+
+    - id: 10
+      rule: "多 Agent 目录隔离"
+      violation: "记忆未写入 clients/<agent>/ 目录，或写入了其他 Agent 的目录"
+
+    - id: 11
       rule: "修复需扫描"
       violation: "修复完成后未执行全局同类扫描+数据联动检查就声称修复完毕"
 
-    - id: 10
+    - id: 12
       rule: "主动合理性分析"
-      violation: "收到指令后不评估合理性、不提出更好建议就直接执行"
+      violation: "收到用户指令后不评估合理性、不提出更好建议就直接执行"
 
-    - id: 11
+    - id: 13
       rule: "自动关联文件检查"
-      violation: "修改文件后未扫描关联文件、未同步更新"
+      violation: "修改文件时未自动扫描关联文件并同步更新"
+
+    - id: 14
+      rule: "规范修改需交叉验证"
+      violation: "修改规范文件后未逐个检查所有引用该规范的文件是否需要同步更新"
+
+    - id: 15
+      rule: "任务完成验证"
+      violation: "声称任务完成前未验证：输出文件存在性 + 内容结构完整性 + 记忆已更新"
+
+    - id: 16
+      rule: "文件修改需确认"
+      violation: "涉及文件修改/删除操作未先输出变更计划、未等待用户确认就直接执行（纯分析/只读/报告/记忆写入除外）"
+
+    - id: 17
+      rule: "报告+记忆自动输出"
+      violation: "询问用户是否写入报告/记忆；对话中堆砌大段分析内容而不写报告文件；会话结束时没有报告文件产出"
+
+    - id: 18
+      rule: "消息驱动记忆触发"
+      violation: "记忆写入不以消息事件为锚点；用户发消息时不记录到📨对话记录；阶段编号与执行顺序不一致；使用主观'关键节点'而非客观'执行完毕'作为触发条件"
 
   # 附加禁止项（未在 CONSTRAINTS.md 中编号，但在决策树中强制）
   additional_forbidden:

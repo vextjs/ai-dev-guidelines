@@ -1,12 +1,28 @@
 # Stop & Save 机制
 
-> 允许用户中途保存进度后退出
+> ⚠️ **已弃用（Deprecated since v2.6.0）**
+> 
+> 本机制已被 [`task-memory.md`](./task-memory.md) 的 **"先写后干"（Write-First）策略** 取代。
+> 新机制的优势：
+> - **自动触发**：无需用户主动选择，任务开始时自动创建记忆
+> - **增量更新**：关键节点自动快照，token 耗尽也不丢失上下文
+> - **多 Agent 支持**：通过 `clients/<agent>/` 目录隔离，支持多编辑器并行
+> - **统一存储**：记忆统一存放在 `.ai-memory/clients/<agent>/tasks/`
+>
+> **迁移指南**：
+> - 原 `projects/<project>/tasks/<id>/PROGRESS.md` → 改用 `.ai-memory/clients/<agent>/tasks/<YYYYMMDD>-<NN>-<TYPE>-<id>.md`
+> - 原"用户主动触发保存" → 改为"先写后干"自动记忆
+> - 原"读取 PROGRESS.md 恢复" → 改为读取 `clients/<agent>/SUMMARY.md` + 扫描 🔄 状态任务
+>
+> 以下为历史文档，仅供参考。
 
 ---
 
 ## 📋 概述
 
 Stop & Save 是一种允许用户在任务执行过程中暂停并保存当前进度的机制。用户可以在任意确认点选择此选项，稍后继续执行。
+
+> ⛔ **请使用新机制**：详见 [`task-memory.md §先写后干`](./task-memory.md)
 
 ---
 
@@ -197,5 +213,7 @@ AI 响应:
 
 ---
 
-**最后更新**: 2026-02-12
+**版本**: v1.0（已弃用，由 task-memory.md v1.3 取代）  
+**最后更新**: 2026-02-27  
+**弃用说明**: 本机制自 v2.6.0 起不再推荐使用，请参阅 [task-memory.md](./task-memory.md) 的"先写后干"策略
 

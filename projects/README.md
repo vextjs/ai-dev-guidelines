@@ -10,9 +10,10 @@
 |-----|------|---------|
 | `_template` | 项目规范模板 | `_template/profile/README.md` |
 | `chat` | AITA 核心聊天服务（对话、行程、AI Agent） | `chat/profile/README.md` |
-| `ai-dev-guidelines` | AI 开发执行手册（本项目） | `ai-dev-guidelines/profile/README.md` |
+| `dev-docs` | AI 开发执行手册（本项目，即 ai-dev-guidelines） | `dev-docs/profile/README.md` |
 | `monSQLize` | 轻量级 MongoDB ORM（多级缓存 + Saga 事务 + 122 操作符） | `monSQLize/profile/README.md` |
 | `user-service` | 用户服务（示例项目） | `user-service/profile/README.md` |
+| `vext` | vext 项目 | `vext/profile/README.md` |
 
 ---
 
@@ -96,12 +97,17 @@ projects/<project>/                    # 如 projects/chat/
 │   ├── diagnostics/                  # 诊断分析
 │   ├── bugs/                         # Bug 分析
 │   ├── requirements/                 # 需求分析
+│   ├── optimizations/                # 优化分析
+│   ├── analysis/                     # 深度分析/架构分析
 │   └── .temp/                        # 中间过程文件（可随时清理）
 │
 └── .ai-memory/                       # 🧠 AI 任务记忆（gitignore 忽略）
-    ├── SUMMARY.md                    # 总摘要（AI 首先读取）
-    └── tasks/                        # 各任务的详细记忆
-        └── <date>-<type>-<id>.md
+    ├── SUMMARY.md                    # 全局只读摘要（关键决策汇总）
+    └── clients/                      # 🔴 按 Agent 目录隔离（v1.3）
+        └── <agent>/                  # 如 zed-copilot/、webstorm-copilot/
+            ├── SUMMARY.md            # 该 Agent 的任务摘要
+            └── tasks/
+                └── <YYYYMMDD>-<NN>-<TYPE>-<id>.md
 ```
 
 > **为什么在 ai-dev-guidelines/projects/ 下？**
@@ -375,4 +381,4 @@ cp -r projects/_template projects/new-service
 
 ---
 
-**最后更新**: 2026-02-24
+**最后更新**: 2026-02-27

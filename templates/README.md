@@ -34,9 +34,10 @@
 所有输出文件（报告、分析、记忆等）的文件名**必须**以 `YYYYMMDD-` 开头：
 
 ```yaml
-✅ 正确: 20260226-analysis-v3-architecture-deep-review.md
+✅ 正确: 20260226-01-analysis-v3-architecture-deep-review.md
 ❌ 错误: v3-architecture-deep-analysis.md  # 缺少日期前缀
 ❌ 错误: 2026-02-26-analysis-xxx.md        # 日期格式错误（有分隔符）
+❌ 错误: 20260226-analysis-xxx.md          # 缺少序号 NN
 ```
 
 ### AI 自检清单（生成文档前必须确认）
@@ -176,7 +177,7 @@ templates/
 ❌ 错误: 文件名 analysis.md      ← 没有日期前缀
 ✅ 正确: 创建日期: 2026-02-26    ← 替换为真实日期
 ✅ 正确: Agent: zed-copilot      ← 填写了真实标识
-✅ 正确: 文件名 20260226-analysis-xxx.md ← 有日期前缀
+✅ 正确: 文件名 20260226-01-analysis-xxx.md ← 有日期前缀+序号
 ```
 
 ### 规范 1: 严格按模板结构

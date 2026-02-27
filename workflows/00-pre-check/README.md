@@ -1,7 +1,7 @@
 # 工作流 00 - 简化预检查 v2
 
-> **版本**: v2.5.0  
-> **核心改进**: 4 项必做检查 + Agent 标识 + 任务记忆加载 + 日期强制必填
+> **版本**: v2.7.0  
+> **核心改进**: 5 项必做检查 + Agent 标识 + 上次记忆 + 任务记忆加载 + 日期强制必填
 
 ---
 
@@ -19,11 +19,12 @@
 - 快速完成，减少摩擦
 - 按需加载项目规范
 - Agent 标识解决多编辑器记忆归属问题
+- 上次记忆输出让用户立即知道当前对话的上下文来源
 - 日期强制必填确保文档可追溯
 
 ---
 
-## 📋 简化预检查（4 项必做）
+## 📋 简化预检查（5 项必做）
 
 ### ✅ 检查清单
 
@@ -33,6 +34,7 @@
 2. 任务类型: [需求/Bug/优化/分析/...]
 3. 输出位置: [projects/<project>/...]
 4. Agent: [zed-copilot / webstorm-copilot / cursor / vscode-copilot / ...]
+5. 上次记忆: [.ai-memory/clients/<agent>/tasks/最新文件路径 + 状态] 或 [⚠️ 无]
 ```
 
 ### 检查项说明
@@ -43,6 +45,7 @@
 | 2 | 任务类型识别 | 分析用户请求关键词 | ✅ 必须 |
 | 3 | 输出位置确认 | 基于项目名构建路径 | ✅ 必须 |
 | 4 | Agent 标识 | 自动检测编辑器+AI 组合 | ✅ 必须 |
+| 5 | 上次记忆 | 扫描 .ai-memory/clients/\<agent\>/tasks/ 最新文件 | ✅ 必须 |
 
 ---
 
@@ -52,8 +55,8 @@
 
 ```text
 🔍 扩展检查:
-5. 项目规范: ✅ 已加载 / ⚠️ 未找到（使用默认规范）
-6. 任务记忆: ✅ 已读取 / ⚠️ 无历史记忆（首次任务）
+6. 项目规范: ✅ 已加载 / ⚠️ 未找到（使用默认规范）
+7. 任务记忆: ✅ 已读取 / ⚠️ 无历史记忆（首次任务）
 ```
 
 ### 任务记忆加载逻辑
@@ -144,7 +147,34 @@
   - 不做任何检测就跳过
 ```
 
-### Step 5: 项目规范加载（按需）
+### Step 5: 上次记忆（🆕 v2.7.0）
+
+```yaml
+执行: 扫描当前 Agent 的 .ai-memory 目录，找到最新记忆文件并输出
+
+🔍 扫描逻辑:
+  1. 确定当前 Agent 标识（Step 4 已获取）
+  2. 扫描 ai-dev-guidelines/projects/*/.ai-memory/clients/<agent>/tasks/ 目录
+  3. 按文件名日期+序号排序（YYYYMMDD-NN 自然排序即可）
+  4. 取最新一条文件
+  5. 读取该文件头部，提取状态字段（🔄 进行中 / ✅ 完成）
+
+输出格式:
+  找到记忆: "5. 上次记忆: projects/dev-docs/.ai-memory/clients/zed-copilot/tasks/20260227-01-OPT-spec-full-check.md (✅ 完成)"
+  无记忆:   "5. 上次记忆: ⚠️ 无（首次任务 / 未找到记忆文件）"
+  目录不存在: "5. 上次记忆: ⚠️ 无（.ai-memory 目录不存在）"
+
+💡 设计目的:
+  - 用户立即知道当前对话基于哪条记忆延续
+  - 快速跳转查看上次任务做了什么
+  - 在多 Agent 场景下确认记忆归属
+
+🔴 禁止行为:
+  - 上次记忆字段留空或不扫描就输出
+  - 未实际扫描目录就声称"无记忆"
+```
+
+### Step 6: 项目规范加载（按需）
 
 ```yaml
 条件: 任务涉及代码修改
@@ -158,8 +188,8 @@
     d_用户拒绝: 使用默认规范继续
 
 输出:
-  成功: "5. 项目规范: ✅ 已加载 profile/（模块化 N 个文件）"
-  失败: "5. 项目规范: ⚠️ 未找到 → 是否需要我分析项目并生成？[是/否]"
+  成功: "6. 项目规范: ✅ 已加载 profile/（模块化 N 个文件）"
+  失败: "6. 项目规范: ⚠️ 未找到 → 是否需要我分析项目并生成？[是/否]"
 
 禁止行为:
   - 不实际检查文件就输出 "✅ 已加载"
@@ -178,6 +208,7 @@
 2. 任务类型: 需求开发
 3. 输出位置: projects/user/requirements/20260212-rate-limit/
 4. Agent: zed-copilot
+5. 上次记忆: projects/user/.ai-memory/clients/zed-copilot/tasks/20260226-02-REQ-rate-limit-design.md (✅ 完成)
 ```
 
 ### 扩展格式（涉及代码时）
@@ -189,8 +220,9 @@
 2. 任务类型: 需求开发
 3. 输出位置: projects/user/requirements/20260212-rate-limit/
 4. Agent: webstorm-copilot
-5. 项目规范: ✅ 已加载 profile/（模块化 5 个文件）
-6. 任务记忆: ✅ 已读取（最近 3 条任务，含 2 条 webstorm-copilot + 1 条 zed-copilot）
+5. 上次记忆: projects/user/.ai-memory/clients/webstorm-copilot/tasks/20260226-01-REQ-user-auth.md (✅ 完成)
+6. 项目规范: ✅ 已加载 profile/（模块化 5 个文件）
+7. 任务记忆: ✅ 已读取（最近 3 条任务，含 2 条 webstorm-copilot + 1 条 zed-copilot）
 
 # 未找到项目规范:
 📋 预检查:
@@ -198,9 +230,10 @@
 2. 任务类型: 需求开发
 3. 输出位置: projects/chat/requirements/20260224-xxx/
 4. Agent: zed-copilot
-5. 项目规范: ⚠️ 未找到
+5. 上次记忆: ⚠️ 无（首次任务 / 未找到记忆文件）
+6. 项目规范: ⚠️ 未找到
    → 是否需要我分析 chat 项目并生成项目规范文件？[是/否]
-6. 任务记忆: ⚠️ 无历史记忆（首次任务）
+7. 任务记忆: ⚠️ 无历史记忆（首次任务）
 ```
 
 ---
@@ -252,9 +285,10 @@ Step 5 — 继续执行:
 2. 任务类型: 🔄 继续任务
 3. 输出位置: projects/vext/...
 4. Agent: zed-copilot
+5. 上次记忆: projects/vext/.ai-memory/clients/zed-copilot/tasks/20260226-01-REQ-vext-analysis.md (🔄 进行中)
 
 🔄 找到未完成任务:
-  - 任务: 20260226-zed-copilot-REQ-vext-analysis
+  - 任务: 20260226-01-REQ-vext-analysis
   - 项目: vext
   - Agent: zed-copilot（当前编辑器 ✅）
   - 状态: 🔄 进行中
@@ -304,15 +338,31 @@ Step 5 — 继续执行:
 
 ---
 
-## 📤 任务记忆（先写后干策略）
+## 📤 任务记忆（消息驱动 5 阶段策略 — v1.6）
 
 > **核心问题**：AI 无法感知剩余 token，输出截断时没有机会执行收尾动作。
-> **解决方案**：开始执行前先创建记忆，过程中增量更新，而非只在结束时才写。
+> **解决方案**：以对话消息事件为锚点驱动记忆写入，开始前先创建记忆，每条用户消息、每次 AI 回复、每次执行完毕都增量更新。
+> **详见**: [workflows/common/task-memory.md §触发时机](../common/task-memory.md)
 
-### 任务开始时（预检查完成后立即执行）
+### 5 阶段总览
 
 ```yaml
-触发条件: 预检查完成、开始实际执行前
+阶段 0: 会话初始化（首条消息时 — 预检查 + 创建记忆）
+阶段 1: 用户发消息时（捕获用户输入 — 每条有实质内容的消息）  ← 🆕 v1.6
+阶段 2: AI 回复时（写报告 + 更新记忆）
+阶段 3: AI 执行完毕时（记录变更清单）
+阶段 4: 任务结束时（最终状态更新 ✅）
+
+典型执行顺序:
+  首轮:   0 → 1 → 2+3
+  后续轮: 1 → 2+3 → 1 → 2+3 → ...
+  结束:   4
+```
+
+### 阶段 0：会话初始化（预检查完成后立即执行）
+
+```yaml
+触发条件: AI 收到本次会话的第一条用户消息，预检查完成后
 
 AI 自动执行:
   1. 确定当前 Agent 标识（预检查第 4 项已获取）
@@ -320,43 +370,69 @@ AI 自动执行:
   3. 获取当前真实日期
   4. 扫描 tasks/ 目录，统计当天已有文件数量，确定序号 NN（max+1 或 01）
   5. 创建 .ai-memory/clients/<agent>/tasks/<YYYYMMDD>-<NN>-<TYPE>-<id>.md（状态 🔄）
+     - 写入任务目标（来自用户首条消息）
+     - 📨 对话记录 → 记录首条用户消息摘要（轮次 1, 👤→）
   6. 更新 .ai-memory/clients/<agent>/SUMMARY.md（追加到最近任务，状态 🔄）
 
 输出: "📝 初始记忆已创建 → .ai-memory/clients/<agent>/tasks/<filename>.md"
 
 文件名示例（在各 Agent 目录内）:
-  clients/zed-copilot/tasks/20260226-01-ANALYSIS-v3-deep-review.md
-  clients/zed-copilot/tasks/20260226-02-FIX-arch-verification.md
-  clients/webstorm-copilot/tasks/20260227-01-REQ-user-auth.md
+clients/zed-copilot/tasks/20260226-01-ANALYSIS-v3-deep-review.md
+clients/zed-copilot/tasks/20260226-02-FIX-arch-verification.md
+clients/webstorm-copilot/tasks/20260227-01-REQ-user-auth.md
+
+注意: 下次新会话预检查时，第 5 项"上次记忆"将自动指向此文件
 ```
 
-### 过程中（关键节点增量更新）
+### 阶段 1：用户发消息时（捕获用户输入）🆕
 
 ```yaml
-触发条件（满足任一）:
-  - 完成一个重要阶段（方案确认 / 核心代码完成）
-  - 做出关键决策
-  - 已修改多个文件
+触发条件: 用户发送包含新意图/新需求/方向修正的消息（后续消息，非首条）
+不触发: 纯确认（"好的"/"Y"）、流程控制（"继续"/"接着"）、情绪表达
 
 AI 自动执行:
-  1. 更新 .ai-memory/clients/<agent>/tasks/<当前任务>.md（追加变更和决策）
-  2. 保持简洁，不浪费 token 写冗长记录
+  1. 📨 对话记录 → 追加用户消息摘要（1 行）
+  2. 如用户修正方向 → 更新 🎯 任务摘要
+  3. 如用户补充需求 → 追加到 ⚠️ 待跟进
+
+为什么: 用户消息是最有价值的原始输入，v1.5 缺少此阶段导致追加需求可能丢失
+注意: 极轻量（~100 token），发生在 AI 开始分析之前
+```
+
+### 阶段 2+3：AI 回复 + 执行完毕时
+
+```yaml
+触发条件: AI 准备向用户输出结果 + 工具调用全部完成
+
+AI 自动执行:
+  阶段 2（写报告 + 更新记忆）:
+    1. 写入报告文件到 reports/<子目录>/（完整分析内容）
+    2. 📄 关联报告 → 追加报告链接
+    3. 📨 对话记录 → 追加 AI 回复摘要（轮次 N, 🤖←）
+    4. 对话中只输出结论摘要 + 报告路径
+
+  阶段 3（记录变更清单）:
+    1. 💡 关键决策 → 追加本轮决策
+    2. ⚠️ 待跟进 → 更新已完成/新增项
 
 注意:
+  - 阶段 2+3 通常合并为一次记忆更新操作
+  - 纯文字回复（无工具调用）→ 只触发阶段 2，不触发阶段 3
   - 只更新本 Agent 目录下的记忆文件
   - 不写入其他 Agent 的 clients/ 目录
 ```
 
-### 任务完成时
+### 阶段 4：任务结束时
 
 ```yaml
 触发条件: 任务执行完毕（用户确认完成 / 所有修改已完成）
 
 AI 自动执行:
-  1. 最终更新 .ai-memory/clients/<agent>/tasks/<当前任务>.md（状态改为 ✅ 完成）
-  2. 更新 .ai-memory/clients/<agent>/SUMMARY.md（更新状态 + 补充关键变更）
-  3. 同步关键决策到全局 .ai-memory/SUMMARY.md（追加模式，标注 Agent 来源）
-  4. 如有未完成事项 → 记录到 clients/<agent>/SUMMARY.md 的「待跟进」表
+  1. 执行完成验证（见 task-memory.md §任务完成验证）
+  2. 最终更新 .ai-memory/clients/<agent>/tasks/<当前任务>.md（状态改为 ✅ 完成）
+  3. 更新 .ai-memory/clients/<agent>/SUMMARY.md（更新状态 + 补充关键变更）
+  4. 同步关键决策到全局 .ai-memory/SUMMARY.md（追加模式，标注 Agent 来源）
+  5. 如有未完成事项 → 记录到 clients/<agent>/SUMMARY.md 的「待跟进」表
 
 输出: "📤 任务记忆已保存 → .ai-memory/clients/<agent>/tasks/<filename>.md"
 ```
@@ -371,13 +447,16 @@ AI 自动执行:
   1. 确定当前 Agent 标识
   2. 读取 clients/<agent>/SUMMARY.md → 找到状态为 🔄 的任务
   3. 读取对应 clients/<agent>/tasks/<id>.md → 恢复上下文
-  4. 从断点继续执行
+  4. 读取 📨 对话记录 → 快速回忆对话脉络（🆕 v1.6）
+  5. 读取关联报告文件 → 恢复详细上下文
+  6. 从断点继续执行
 ```
 
 ```yaml
 ❌ 禁止行为:
   - 跳过初始记忆创建直接开始执行（一旦 token 耗尽将丢失全部上下文）
   - 等任务全部完成才写记忆（违反"先写后干"原则）
+  - 用户追加消息后不记录到 📨 对话记录（v1.6 新增要求）
   - 增量更新写过于冗长的内容（浪费 token）
   - 记忆文件名不带日期前缀
   - 写入其他 Agent 的 clients/ 目录
@@ -393,9 +472,9 @@ AI 自动执行:
 ### 文件名日期前缀
 
 ```yaml
-所有输出文件必须以 YYYYMMDD- 开头:
-  ✅ 正确: clients/zed-copilot/tasks/20260226-ANALYSIS-v3-architecture.md
-  ✅ 正确: clients/webstorm-copilot/tasks/20260227-REQ-user-auth.md
+所有输出文件必须以 YYYYMMDD-NN- 开头:
+  ✅ 正确: clients/zed-copilot/tasks/20260226-01-ANALYSIS-v3-architecture.md
+  ✅ 正确: clients/webstorm-copilot/tasks/20260227-01-REQ-user-auth.md
   ❌ 错误: v3-architecture-deep-analysis.md     # 缺少日期前缀
   ❌ 错误: 2026-02-26-analysis-xxx.md           # 日期格式错误（有分隔符）
   ❌ 错误: analysis.md                          # 缺少日期前缀
@@ -460,9 +539,10 @@ AI 自动执行:
 
 ---
 
-**版本**: v2.6.0  
+**版本**: v2.7.0  
 **更新日期**: 2026-02-27  
 **变更记录**:
+- v2.7.0: 预检查从 4 项改为 5 项必做（新增"上次记忆"）；按需检查编号调整为 6/7；输出格式全面更新
 - v2.6.0: 多编辑器策略从"共享目录+Agent前缀"改回"目录隔离+全局摘要"；新增任务完成验证；对齐 copilot-instructions v2.6.0 / task-memory v1.3
 - v2.5.0: 多编辑器策略改为共享目录+Agent前缀（已由 v2.6.0 替代）
 - v2.2.0: 精简为 3 项必做 + 任务记忆加载 + "先写后干"策略
