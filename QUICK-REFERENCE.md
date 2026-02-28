@@ -132,56 +132,20 @@
 
 ## 📂 输出路径
 
-```
-🔴 输出路径锚点（防混淆警告 — 🆕 FIX-007 2026-02-28）:
-  所有路径均以 "ai-dev-guidelines/projects/<project>/" 为根！
-  
-  ❌ 绝对禁止:
-    - 将报告写入项目源码目录（如 E:\Worker\chat\reports\）← chat/reports/ 是业务目录
-    - 将记忆写入工作区根目录（如 E:\Worker\.ai-memory\）
-  
-  ✅ 正确完整路径示例:
-    报告: E:\Worker\ai-dev-guidelines\projects\chat\reports\optimizations\webstorm-copilot\20260228\01-opt-xxx.md
-    记忆: E:\Worker\ai-dev-guidelines\projects\chat\.ai-memory\clients\webstorm-copilot\tasks\20260228.md
-  
-  写入前自检: 路径含 "ai-dev-guidelines/projects/" → ✅；不含 → ❌ 停止重建路径
-```
+> 🔴 所有路径以 `ai-dev-guidelines/projects/<project>/` 为根，**禁止写入项目源码目录**。详见 [00-pre-check Step 3](./workflows/00-pre-check/README.md)
 
 ```
 ai-dev-guidelines/projects/<project-name>/
-├── requirements/    # 需求开发输出
-│   └── <YYYYMMDD-feature>/
-├── bugs/           # Bug 修复输出
-│   └── <BUG-xxx>/
-├── optimizations/  # 性能优化输出
-│   └── <OPT-xxx>/
-├── research/       # 技术调研输出
-│   └── <RES-xxx>/
-├── refactoring/    # 架构重构输出
-│   └── <REF-xxx>/
-├── database/       # 数据库变更输出
-│   └── <DB-xxx>/
-├── security/       # 安全修复输出
-│   └── <SEC-xxx>/
-├── incidents/      # 事故复盘输出
-│   └── <INC-xxx>/
-├── reports/        # 临时报告（gitignore 忽略）
-    ├── diagnostics/    # 诊断报告
-    │   └── <agent>/YYYYMMDD/   # 🆕 v1.6 按 Agent+日期目录隔离
-    ├── bugs/           # Bug 分析报告
-    │   └── <agent>/YYYYMMDD/
-    ├── requirements/   # 需求分析报告
-    │   └── <agent>/YYYYMMDD/
-    ├── optimizations/  # 优化分析报告
-    │   └── <agent>/YYYYMMDD/
-    ├── analysis/       # 深度分析/架构分析报告
-    │   └── <agent>/YYYYMMDD/   # 如 analysis/zed-copilot/20260227/
-    │       ├── 01-analysis-xxx.md
-    │       └── 02-bug-yyy.md
-    └── .temp/          # 临时文件（可随时清理）
+├── optimizations/<中文描述>/    # 任务产物（工作流交付物）
+├── requirements/<中文描述>/
+├── bugs/<中文描述>/
+├── reports/<子目录>/<agent>/YYYYMMDD/  # 报告（会话分析载体）
+└── .ai-memory/clients/<agent>/tasks/   # 记忆（索引）
 ```
 
-> ⚠️ `reports/` 按 `<agent>/YYYYMMDD/NN-<类型>-<简述>.md` 组织，每个 Agent 每天独立编号。详见 [workflows/common/temp-reports.md](./workflows/common/temp-reports.md)
+> **任务产物** = 工作流交付物（文件名用中文，如 `01-性能基线.md`）。详见各 `workflows/` 的 §命名规范  
+> **报告** = 会话分析载体（`NN-<类型>-<中文简述>.md`）。详见 [temp-reports.md](./workflows/common/temp-reports.md)  
+> **产物 vs 报告缺一不可**，预检查 Step 3 必须同时构建两条路径
 
 ---
 

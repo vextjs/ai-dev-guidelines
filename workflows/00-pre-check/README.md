@@ -111,41 +111,38 @@
 ```yaml
 执行: 基于项目名和任务类型构建路径
 
-🔴 路径锚点强制规则（NO EXCEPTIONS — 🆕 FIX-007 2026-02-28）:
-  AI 规范的所有输出（报告 + 记忆）必须位于:
-    ai-dev-guidelines/projects/<project>/
+🔴 路径锚点（NO EXCEPTIONS）:
+  所有输出必须位于 ai-dev-guidelines/projects/<project>/
+  ❌ 禁止写入项目源码目录（如 E:\Worker\chat\）
+  ❌ 禁止写入工作区根目录（如 E:\Worker\.ai-memory\）
   
-  ❌ 绝对禁止写入项目源码目录:
-    E:\Worker\<project>\         ← 业务代码目录，禁止写规范输出
-    E:\Worker\.ai-memory\        ← 工作区根目录，禁止写记忆
-  
-  🔍 构建路径前必须执行 2 步验证:
+  构建路径前:
     Step A: list_dir("ai-dev-guidelines/projects/<project>") 确认锚点存在
-    Step B: 再拼接 reports/<子目录>/<agent>/YYYYMMDD/ 得完整路径
-    ⚠️ 禁止跳过 Step A 直接推断路径
+    Step B: 拼接子路径
   
-  ⚠️ 常见混淆（防误区）:
-    chat 项目源码:  E:\Worker\chat\                             ← 业务代码，chat/reports/ 是业务用途
-    chat 规范输出:  E:\Worker\ai-dev-guidelines\projects\chat\  ← AI报告/记忆
-    两者都含"chat/"，必须以 "ai-dev-guidelines\projects\" 作为锚点区分
-  
-  ✅ 路径自检（写入前必做）:
-    路径包含 "ai-dev-guidelines/projects/" → ✅ 继续
-    路径不含 "ai-dev-guidelines/projects/" → ❌ 停止，重新构建
+  写入前自检: 路径含 "ai-dev-guidelines/projects/" → ✅；不含 → ❌ 停止重建
 
-路径模式（均以 ai-dev-guidelines/projects/<project>/ 为根）:
-  需求报告: reports/requirements/<agent>/YYYYMMDD/
-  Bug报告:  reports/bugs/<agent>/YYYYMMDD/
-  优化报告: reports/optimizations/<agent>/YYYYMMDD/
-  分析报告: reports/analysis/<agent>/YYYYMMDD/
-  任务产物: requirements/<feature>/ | bugs/<bug-id>/ | optimizations/<opt-id>/
-  记忆文件: .ai-memory/clients/<agent>/tasks/YYYYMMDD.md
+🔴 双路径（预检查第 3 项必须同时输出）:
+  1. 报告路径: reports/<子目录>/<agent>/YYYYMMDD/
+  2. 任务产物路径: <任务类型>/<中文描述>/
 
-🔴 输出格式（必须包含完整锚点路径，禁止省略 ai-dev-guidelines/ 前缀）:
-  ✅ 正确: "3. 输出位置: ai-dev-guidelines/projects/chat/reports/optimizations/webstorm-copilot/20260228/"
-  ❌ 错误: "3. 输出位置: projects/chat/reports/"  ← 省略了 ai-dev-guidelines/ 前缀
+  任务产物路径模式（目录名用中文描述，不带 ID 前缀）:
+    需求: requirements/<中文描述>/
+    Bug:  bugs/<中文描述>/
+    优化: optimizations/<中文描述>/
+    调研: research/<中文描述>/
+    重构: refactoring/<中文描述>/
 
-输出: "3. 输出位置: ai-dev-guidelines/projects/user/requirements/20260212-xxx/"
+  详见各 workflows/ 的 §命名规范（如 workflows/03-optimization/README.md §命名规范）
+
+🔴 命名语言:
+  目录名和文件简述使用中文，固定前缀保留英文（如 NN-opt-）
+  详见各工作流 §命名规范 + workflows/common/temp-reports.md §命名规范
+
+输出格式:
+  "3. 输出位置:
+     报告: ai-dev-guidelines/projects/chat/reports/optimizations/webstorm-copilot/20260228/
+     产物: ai-dev-guidelines/projects/chat/optimizations/创建项目AI标题异步化/"
 ```
 
 ### Step 4: Agent 标识（🆕 v2.5.0）

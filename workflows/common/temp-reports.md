@@ -121,7 +121,15 @@ ai-dev-guidelines/projects/<project>/          # 如 projects/chat/
   YYYYMMDD : 8 位日期目录（强制，无分隔符）
   NN       : 2 位当日序号（从 01 开始递增，每个 Agent 每天独立编号）
   类型     : 报告类型前缀（见下方）
-  简述     : 具体描述（小写+连字符）
+  简述     : 具体描述（使用中文 — 🆕 FIX-008 2026-02-28）
+
+🔴 命名语言规则（🆕 FIX-008 2026-02-28）:
+  <简述> 部分使用中文:
+    ✅ 正确: 01-opt-创建项目AI标题异步化.md
+    ✅ 正确: 02-bug-登录超时问题.md
+    ❌ 错误: 01-opt-trip-project-async-title.md  ← 英文
+  固定前缀保留英文: NN-<类型>-（如 01-opt-、02-bug-、01-analysis-）
+  原因: copilot-instructions.md 入口声明"所有输出使用中文"
 
 🔴 目录隔离规则（🆕 v1.6）:
   - 报告按 <agent>/YYYYMMDD/ 两级目录组织
