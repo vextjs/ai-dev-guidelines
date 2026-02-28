@@ -239,7 +239,7 @@
 
 ## 📎 相关文档
 
-- [需求开发流程](../core/workflows/01-requirement-dev/README.md)
+- [需求开发流程](../workflows/01-requirement-dev/README.md)
 - [三轮验证](./validation/README.md)
 
 ---
