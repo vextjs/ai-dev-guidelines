@@ -4,7 +4,7 @@
 > **日期**: YYYY-MM-DD  
 > **优先级**: P0 / P1 / P2
 > 
-> **关联**: 本文档 → [02-technical](./02-technical.md) → [03-implementation/](./03-implementation/README.md)
+> **关联**: 本文档 → [02-技术方案](./02-技术方案.md) → [03-实施方案/](./03-实施方案/README.md)
 
 ---
 
