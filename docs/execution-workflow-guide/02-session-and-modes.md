@@ -73,7 +73,7 @@ Step 4: 输出恢复摘要
 |------|----------------|---------|
 | **适用** | 简单需求、< 5 个文件 | 复杂需求、核心功能 |
 | **流程** | 5 阶段 | 7 阶段（+文档归档 +验证检查） |
-| **模板** | `templates/lite/` | `templates/core/` |
+| **模板** | `core/templates/lite/` | `core/templates/core/` |
 | **预计时间** | 15-30 分钟 | 45-90 分钟 |
 | **触发词** | "快速"、"简单"（或默认） | "完整"、"详细"、"需要文档" |
 | **输出产物** | 代码实现 + 实施方案 | 完整文档套件 + 代码实现 |
@@ -206,8 +206,8 @@ AI 根据以下条件自动选择模式：
 | 公共流程 | [README.md](./README.md) | 预检查 + 记忆 + 确认点 + 报告 |
 | 任务类型流程 | [01-task-workflows.md](./01-task-workflows.md) | 各任务专属流程 |
 | 常见问题 | [03-faq.md](./03-faq.md) | FAQ |
-| 任务记忆机制 | `ai-dev-guidelines/workflows/common/task-memory.md` | 5 阶段消息驱动详解 |
-| 预检查工作流 | `ai-dev-guidelines/workflows/00-pre-check/README.md` | 预检查完整定义（含继续任务恢复流程） |
+| 任务记忆机制 | `ai-dev-guidelines/core/workflows/common/task-memory.md` | 5 阶段消息驱动详解 |
+| 预检查工作流 | `ai-dev-guidelines/core/workflows/00-pre-check/README.md` | 预检查完整定义（含继续任务恢复流程） |
 
 ---
 

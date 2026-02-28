@@ -64,7 +64,7 @@
 
 ## 🔗 相关文档
 
-- **通用开发规范**: `../../../standards/` 目录下的各规范文件
+- **通用开发规范**: `../../../core/standards/` 目录下的各规范文件
 - 项目 README: `chat/README.md`
 - 变更日志: `chat/CHANGELOG.md`
 

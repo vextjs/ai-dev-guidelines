@@ -325,7 +325,7 @@ class CustomMemoryStore extends MemoryManager {
 
 - [Best Practices 导航](./README.md)
 - [完整项目结构](../README.md)
-- [工作流定义](../workflows/)
+- [工作流定义](../core/workflows/)
 - [项目规范](../projects/)
 
 ---

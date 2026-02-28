@@ -27,7 +27,7 @@
 ## 场景 1：需求开发
 
 > **触发关键词：** 实现、开发、添加、新增、集成
-> **工作流：** `workflows/01-requirement-dev/`
+> **工作流：** `core/workflows/01-requirement-dev/`
 
 ### 快速模式（默认，< 5 个文件的简单需求）
 
@@ -122,7 +122,7 @@ ai-dev-guidelines/projects/<项目>/requirements/<中文描述>/
 ## 场景 2：Bug 修复
 
 > **触发关键词：** 修复、解决、Bug、报错、异常
-> **工作流：** `workflows/02-bug-fix/`
+> **工作流：** `core/workflows/02-bug-fix/`
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -208,7 +208,7 @@ ai-dev-guidelines/projects/<项目>/bugs/<中文描述>/
 ## 场景 3：性能优化
 
 > **触发关键词：** 优化、慢、性能、加速
-> **工作流：** `workflows/03-optimization/`
+> **工作流：** `core/workflows/03-optimization/`
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -288,7 +288,7 @@ ai-dev-guidelines/projects/<项目>/optimizations/<中文描述>/
 ## 场景 4：深度分析
 
 > **触发关键词：** 分析、审查、评估、深度分析、全面检查
-> **工作流：** `workflows/10-analysis/`
+> **工作流：** `core/workflows/10-analysis/`
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -355,7 +355,7 @@ ai-dev-guidelines/projects/<项目>/reports/analysis/<agent>/YYYYMMDD/
 ## 场景 5：技术调研
 
 > **触发关键词：** 调研、选型、对比、POC
-> **工作流：** `workflows/04-research/`
+> **工作流：** `core/workflows/04-research/`
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -410,7 +410,7 @@ ai-dev-guidelines/projects/<项目>/research/<中文描述>/
 ## 场景 6：架构重构
 
 > **触发关键词：** 重构、重写、改造、升级
-> **工作流：** `workflows/05-refactoring/`
+> **工作流：** `core/workflows/05-refactoring/`
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -469,7 +469,7 @@ ai-dev-guidelines/projects/<项目>/refactoring/<中文描述>/
 ## 场景 7：数据库变更
 
 > **触发关键词：** 数据库、表结构、迁移、Schema
-> **工作流：** `workflows/06-database/`
+> **工作流：** `core/workflows/06-database/`
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -529,7 +529,7 @@ ai-dev-guidelines/projects/<项目>/database/<中文描述>/
 ## 场景 8：安全修复
 
 > **触发关键词：** 安全、漏洞、加固、渗透
-> **工作流：** `workflows/07-security/`
+> **工作流：** `core/workflows/07-security/`
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -583,7 +583,7 @@ ai-dev-guidelines/projects/<项目>/security/<中文描述>/
 ## 场景 9：事故复盘
 
 > **触发关键词：** 事故、故障、复盘、P0
-> **工作流：** `workflows/08-incident/`
+> **工作流：** `core/workflows/08-incident/`
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -633,7 +633,7 @@ ai-dev-guidelines/projects/<项目>/incidents/<中文描述>/
 ## 场景 10：开源项目初始化
 
 > **触发关键词：** 开源、初始化、脚手架
-> **工作流：** `workflows/09-opensource-init/`
+> **工作流：** `core/workflows/09-opensource-init/`
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -669,7 +669,7 @@ ai-dev-guidelines/projects/<项目>/incidents/<中文描述>/
 ├── CODE_OF_CONDUCT.md
 ├── package.json / pyproject.toml
 ├── .github/
-│   └── workflows/
+│   └── core/workflows/
 │       └── ci.yml
 ├── src/
 └── tests/
@@ -709,16 +709,16 @@ ai-dev-guidelines/projects/<项目>/incidents/<中文描述>/
 
 | 任务类型 | 工作流路径 | 核心流程 |
 |---------|-----------|---------|
-| 需求开发 | `workflows/01-requirement-dev/` | 理解需求 → 技术方案 → 实施方案 → 执行 → 完成报告 |
-| Bug 修复 | `workflows/02-bug-fix/` | 复现 → 分析 → 方案 → 实施 → 修复 → 验证 → 归档 |
-| 性能优化 | `workflows/03-optimization/` | 基线 → 瓶颈 → 方案 → 实施 → 执行 → 验证 → 对比 |
-| 技术调研 | `workflows/04-research/` | 需求 → 调研 → 对比 → POC → 选型建议 |
-| 架构重构 | `workflows/05-refactoring/` | 现状 → 方案 → 迁移计划 → 分阶段执行 → 验证 |
-| 数据库变更 | `workflows/06-database/` | Schema 分析 → 方案 → 脚本 → 迁移 → 验证 |
-| 安全修复 | `workflows/07-security/` | 漏洞分析 → 方案 → 修复 → 验证 → 加固 |
-| 事故复盘 | `workflows/08-incident/` | 时间线 → 根因 → 修复 → 改进 |
-| 开源初始化 | `workflows/09-opensource-init/` | 结构 → 工程化 → 文档 → 初始化 → 发布 |
-| 深度分析 | `workflows/10-analysis/` | 范围 → 采集 → 交叉验证 → 报告 → 记忆 |
+| 需求开发 | `core/workflows/01-requirement-dev/` | 理解需求 → 技术方案 → 实施方案 → 执行 → 完成报告 |
+| Bug 修复 | `core/workflows/02-bug-fix/` | 复现 → 分析 → 方案 → 实施 → 修复 → 验证 → 归档 |
+| 性能优化 | `core/workflows/03-optimization/` | 基线 → 瓶颈 → 方案 → 实施 → 执行 → 验证 → 对比 |
+| 技术调研 | `core/workflows/04-research/` | 需求 → 调研 → 对比 → POC → 选型建议 |
+| 架构重构 | `core/workflows/05-refactoring/` | 现状 → 方案 → 迁移计划 → 分阶段执行 → 验证 |
+| 数据库变更 | `core/workflows/06-database/` | Schema 分析 → 方案 → 脚本 → 迁移 → 验证 |
+| 安全修复 | `core/workflows/07-security/` | 漏洞分析 → 方案 → 修复 → 验证 → 加固 |
+| 事故复盘 | `core/workflows/08-incident/` | 时间线 → 根因 → 修复 → 改进 |
+| 开源初始化 | `core/workflows/09-opensource-init/` | 结构 → 工程化 → 文档 → 初始化 → 发布 |
+| 深度分析 | `core/workflows/10-analysis/` | 范围 → 采集 → 交叉验证 → 报告 → 记忆 |
 
 ---
 
@@ -729,13 +729,13 @@ ai-dev-guidelines/projects/<项目>/incidents/<中文描述>/
 | 公共流程 | [README.md](./README.md) | 预检查 + 记忆 + 确认点 + 报告 |
 | 跨会话恢复 | [02-session-and-modes.md](./02-session-and-modes.md) | 继续指令 + 模式切换 |
 | 常见问题 | [03-faq.md](./03-faq.md) | FAQ |
-| 需求开发工作流详情 | `ai-dev-guidelines/workflows/01-requirement-dev/README.md` | 完整流程定义 |
-| Bug 修复工作流详情 | `ai-dev-guidelines/workflows/02-bug-fix/README.md` | 完整流程定义 |
-| 性能优化工作流详情 | `ai-dev-guidelines/workflows/03-optimization/README.md` | 完整流程定义 |
-| 深度分析工作流详情 | `ai-dev-guidelines/workflows/10-analysis/README.md` | 完整流程定义 |
+| 需求开发工作流详情 | `ai-dev-guidelines/core/workflows/01-requirement-dev/README.md` | 完整流程定义 |
+| Bug 修复工作流详情 | `ai-dev-guidelines/core/workflows/02-bug-fix/README.md` | 完整流程定义 |
+| 性能优化工作流详情 | `ai-dev-guidelines/core/workflows/03-optimization/README.md` | 完整流程定义 |
+| 深度分析工作流详情 | `ai-dev-guidelines/core/workflows/10-analysis/README.md` | 完整流程定义 |
 
 ---
 
 **版本**: v1.1
 **创建日期**: 2026-02-28
-**v1.1 变更**: 从单体文件拆分而来；补全全部 10 个任务类型（原版只有 4+1）；对齐 `workflows/` 下实际的 11 个工作流目录（00-10）
+**v1.1 变更**: 从单体文件拆分而来；补全全部 10 个任务类型（原版只有 4+1）；对齐 `core/workflows/` 下实际的 11 个工作流目录（00-10）

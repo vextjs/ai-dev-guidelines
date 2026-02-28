@@ -7,14 +7,14 @@
 #   - 匹配对象：链接路径、源文件路径、或 "源文件:链接" 组合
 #   - # 开头为注释，空行跳过
 #
-# 最后更新: 2026-02-27
+# 最后更新: 2026-02-28
 # ===========================================
 
 # -------------------------------------------
 # 模板占位符链接（templates/ 中的示例链接）
 # -------------------------------------------
 # 模板文件中的占位路径不指向真实文件
-templates/**
+core/templates/**
 **/YYYYMMDD-*
 **/<YYYYMMDD>*
 **/<project>/**
@@ -48,13 +48,13 @@ projects/_template/**
 # -------------------------------------------
 **/examples/**
 **/<feature>/**
-**/<module>/**
-**/<workflow-name>/**
-**/<change>/**
-**/<vuln>/**
-**/<desc>/**
-**/<date>/**
-**/<level>/**
+**/<module>**
+**/<workflow-name>**
+**/<change>**
+**/<vuln>**
+**/<desc>**
+**/<date>**
+**/<level>**
 
 # -------------------------------------------
 # outputs/ 目录（可选目录，可能不存在）
@@ -83,7 +83,7 @@ changelogs/v1x-*
 # -------------------------------------------
 # spec-self-fix 示例/文档中的占位链接
 # -------------------------------------------
-spec-self-fix/**
+core/self-fix/**
 
 # -------------------------------------------
 # 文档/规范中的示例占位链接（非真实路径）
@@ -104,7 +104,7 @@ spec-self-fix/**
 **/./tasks/xxx.md
 
 # best-practices 中引用的模板项目文件（可能不存在）
-best-practices/**
+core/best-practices/**
 
 # 模板占位路径（templates/ 内引用的相对路径）
 **/./templates/core/xxx.md
@@ -113,7 +113,7 @@ best-practices/**
 **/./templates/core/old-template.md
 
 # standards 文档中的示例链接
-standards/**
+core/standards/**
 
 # -------------------------------------------
 # 尚未创建的可选文件（文档中预留的链接）
@@ -130,9 +130,9 @@ standards/**
 # 工作流文档中的示例占位链接（非真实文件）
 # -------------------------------------------
 # 01-requirement-dev 中的模板示例文件
-workflows/01-requirement-dev/**
+core/workflows/01-requirement-dev/**
 # 09-opensource-init 中引用的尚未生成的项目文件
-workflows/09-opensource-init/**
+core/workflows/09-opensource-init/**
 
 # -------------------------------------------
 # task-memory.md 中的示例路径
@@ -142,14 +142,20 @@ workflows/09-opensource-init/**
 # -------------------------------------------
 # tools/README.md 中的故意断链示例（用于演示 validate-links 功能）
 # -------------------------------------------
-tools/README.md:**missing-file.md
+core/tools/README.md:**missing-file.md
 
 # -------------------------------------------
 # QUICK-REFERENCE.md 中的示例占位链接
 # -------------------------------------------
-QUICK-REFERENCE.md:./path
+core/QUICK-REFERENCE.md:./path
 
 # -------------------------------------------
 # vext 项目代码片段中的误匹配（方括号+圆括号在代码中被误识别为 Markdown 链接）
 # -------------------------------------------
 projects/vext/**
+
+# -------------------------------------------
+# 需求文档中的方案引用（尚未创建的后续文档）
+# -------------------------------------------
+**/requirements/**
+

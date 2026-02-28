@@ -22,7 +22,7 @@
 ### 通用规范 vs 项目规范
 
 ```yaml
-通用规范 (workflows/):
+通用规范 (core/workflows/):
   - 适用于所有项目的标准流程
   - 任务识别、文档模板、验证标准
   - 技术无关的开发方法论
@@ -257,7 +257,7 @@ cp -r projects/_template projects/new-service
   1. 项目规范 (projects/<project>/)
      - 最高优先级，必须遵守
   
-  2. 通用规范 (workflows/)
+  2. 通用规范 (core/workflows/)
      - 项目规范未定义时使用
   
   3. 行业标准
@@ -313,7 +313,7 @@ cp -r projects/_template projects/new-service
   3. AI 根据项目规范调整实现
 
 示例:
-  - 通用: workflows/01-requirement-dev/
+  - 通用: core/workflows/01-requirement-dev/
   - user-service: 使用 MongoDB
   - payment-service: 使用 PostgreSQL
   - AI 根据各项目技术栈选择不同实现
@@ -376,8 +376,8 @@ cp -r projects/_template projects/new-service
 ## 📚 参考资源
 
 - [_template/](./_template/) - 项目规范模板
-- [../workflows/](../workflows/) - 通用开发流程
-- [../templates/](../templates/) - 通用文档模板
+- [../core/workflows/](../core/workflows/) - 通用开发流程
+- [../core/templates/](../core/templates/) - 通用文档模板
 
 ---
 

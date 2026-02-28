@@ -47,7 +47,7 @@
 └─────────────────────────────────────────────────────────┘
 ```
 
-> **与实际流程对照说明**：步骤 ⑤ 对应 `spec-self-fix/triggers/auto-triggers.md` 中的检测点 7（反复问题检查）和检测点 8（汇总问题），在"完成任务"节点注入。这不是全量自修复，而是轻量检测 — 只在发现与历史修复相似的问题时才触发升级分析。
+> **与实际流程对照说明**：步骤 ⑤ 对应 `core/self-fix/triggers/auto-triggers.md` 中的检测点 7（反复问题检查）和检测点 8（汇总问题），在"完成任务"节点注入。这不是全量自修复，而是轻量检测 — 只在发现与历史修复相似的问题时才触发升级分析。
 
 **核心原则：**
 
@@ -90,16 +90,16 @@ AI 通过你消息中的关键词自动匹配：
 
 | 你说的关键词 | AI 识别为 | 对应工作流 |
 |-------------|---------|-----------|
-| 实现、开发、添加、新增、集成 | 需求开发 | `workflows/01-requirement-dev/` |
-| 修复、解决、Bug、报错、异常 | Bug 修复 | `workflows/02-bug-fix/` |
-| 优化、慢、性能、加速 | 性能优化 | `workflows/03-optimization/` |
-| 调研、选型、对比、POC | 技术调研 | `workflows/04-research/` |
-| 重构、重写、改造、升级 | 架构重构 | `workflows/05-refactoring/` |
-| 数据库、表结构、迁移、Schema | 数据库变更 | `workflows/06-database/` |
-| 安全、漏洞、加固、渗透 | 安全修复 | `workflows/07-security/` |
-| 事故、故障、复盘、P0 | 事故复盘 | `workflows/08-incident/` |
-| 开源、初始化、脚手架 | 开源项目初始化 | `workflows/09-opensource-init/` |
-| 分析、审查、评估、深度分析 | 深度分析 | `workflows/10-analysis/` |
+| 实现、开发、添加、新增、集成 | 需求开发 | `core/workflows/01-requirement-dev/` |
+| 修复、解决、Bug、报错、异常 | Bug 修复 | `core/workflows/02-bug-fix/` |
+| 优化、慢、性能、加速 | 性能优化 | `core/workflows/03-optimization/` |
+| 调研、选型、对比、POC | 技术调研 | `core/workflows/04-research/` |
+| 重构、重写、改造、升级 | 架构重构 | `core/workflows/05-refactoring/` |
+| 数据库、表结构、迁移、Schema | 数据库变更 | `core/workflows/06-database/` |
+| 安全、漏洞、加固、渗透 | 安全修复 | `core/workflows/07-security/` |
+| 事故、故障、复盘、P0 | 事故复盘 | `core/workflows/08-incident/` |
+| 开源、初始化、脚手架 | 开源项目初始化 | `core/workflows/09-opensource-init/` |
+| 分析、审查、评估、深度分析 | 深度分析 | `core/workflows/10-analysis/` |
 | 继续、接着、上次、恢复 | 继续任务 | 恢复流程（见 [02-session-and-modes.md](./02-session-and-modes.md)） |
 
 > **完整映射表**：覆盖全部 11 个工作流（00-10），详见 [01-task-workflows.md](./01-task-workflows.md)。
@@ -212,13 +212,13 @@ ai-dev-guidelines/projects/chat/
 
 ### 阶段 E：任务完成后轻量检测
 
-> 对应 `spec-self-fix/triggers/auto-triggers.md` 中的检测点 7 和检测点 8
+> 对应 `core/self-fix/triggers/auto-triggers.md` 中的检测点 7 和检测点 8
 
 任务完成后（阶段 4 之前），AI 会自动执行以下轻量检测：
 
 | 检测点 | 检测内容 | 触发条件 |
 |:------:|---------|---------|
-| **检测点 7** | 反复问题检查 — 对比本次问题与 `spec-self-fix/records/` 中的历史修复，同类 ≥ 2 次触发升级分析 | 每次任务完成 |
+| **检测点 7** | 反复问题检查 — 对比本次问题与 `core/self-fix/records/` 中的历史修复，同类 ≥ 2 次触发升级分析 | 每次任务完成 |
 | **检测点 8** | 汇总问题 — 延迟汇报任务过程中发现的链接失效、格式问题、小优化建议 | 每次任务完成 |
 
 **这不是全量健康检查**，而是轻量级的问题汇总。全量健康检查需要你主动说"运行规范健康检查"。详见 [规范自我修复机制指南](../spec-self-fix-guide/README.md)。
@@ -240,8 +240,8 @@ ai-dev-guidelines/projects/chat/
 |------|------|------|
 | 速查手册 | `ai-dev-guidelines/QUICK-REFERENCE.md` | AI 执行速查 |
 | 约束清单 | `ai-dev-guidelines/CONSTRAINTS.md` | 20 条核心约束 |
-| 任务记忆机制 | `ai-dev-guidelines/workflows/common/task-memory.md` | 5 阶段消息驱动 |
-| 报告规范 | `ai-dev-guidelines/workflows/common/temp-reports.md` | 报告命名与存储 |
+| 任务记忆机制 | `ai-dev-guidelines/core/workflows/common/task-memory.md` | 5 阶段消息驱动 |
+| 报告规范 | `ai-dev-guidelines/core/workflows/common/temp-reports.md` | 报告命名与存储 |
 | 自我修复机制 | `ai-dev-guidelines/docs/spec-self-fix-guide/README.md` | 规范自我修复 |
 | 设计理念 | `ai-dev-guidelines/docs/DESIGN-PHILOSOPHY.md` | 架构设计哲学 |
 

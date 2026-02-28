@@ -1,0 +1,462 @@
+# AI 决策树配置文件 v2.11.0
+# 用于快速场景识别和任务路由
+
+version: "2.11.0"
+last_updated: "2026-02-27"
+description: "ai-dev-guidelines AI 执行规范的结构化决策树"
+
+# ===========================================
+# 任务类型识别
+# ===========================================
+task_identification:
+  # 关键词权重表
+  keywords:
+    requirement_dev:
+      weight: 10
+      patterns:
+        [
+          "实现",
+          "开发",
+          "添加",
+          "新增",
+          "集成",
+          "对接",
+          "接入",
+          "新功能",
+          "新特性",
+        ]
+
+    bug_fix:
+      weight: 10
+      patterns:
+        [
+          "修复",
+          "解决",
+          "Bug",
+          "bug",
+          "问题",
+          "错误",
+          "报错",
+          "异常",
+          "崩溃",
+          "不工作",
+          "失败",
+        ]
+
+    optimization:
+      weight: 10
+      patterns: ["优化", "提升", "加速", "慢", "卡顿", "延迟", "性能", "效率"]
+
+    research:
+      weight: 8
+      patterns: ["调研", "选型", "对比", "评估", "分析"]
+
+    refactoring:
+      weight: 8
+      patterns: ["重构", "重写", "改造", "迁移", "升级"]
+
+    database:
+      weight: 9
+      patterns: ["数据库", "Schema", "索引", "迁移", "表结构"]
+
+    security:
+      weight: 9
+      patterns: ["漏洞", "安全", "注入", "XSS", "CSRF", "加密"]
+
+    incident:
+      weight: 9
+      patterns: ["故障", "复盘", "宕机", "事故", "P0", "紧急"]
+
+    analysis:
+      weight: 7
+      patterns: ["分析", "审查", "评估", "深度分析", "全面检查", "健康检查", "评审"]
+
+    opensource_init:
+      weight: 8
+      patterns: ["新项目", "开源", "npm包", "初始化", "脚手架", "项目模板"]
+
+  # 任务类型到工作流映射
+  workflow_mapping:
+    requirement_dev: "core/workflows/01-requirement-dev/"
+    bug_fix: "core/workflows/02-bug-fix/"
+    optimization: "core/workflows/03-optimization/"
+    research: "core/workflows/04-research/"
+    refactoring: "core/workflows/05-refactoring/"
+    database: "core/workflows/06-database/"
+    security: "core/workflows/07-security/"
+    incident: "core/workflows/08-incident/"
+    opensource_init: "core/workflows/09-opensource-init/"
+    analysis: "core/workflows/10-analysis/"
+
+# ===========================================
+# 强制预检查 (v2.11.0 - 5项必做 + Agent 标识 + 上次记忆)
+# ===========================================
+mandatory_precheck:
+  name: "强制启动协议"
+  priority: "P0"
+  version: "v2.11.0"
+
+  # v2.7 改为 5 项必做检查（新增上次记忆）
+  steps:
+    - step: 1
+      action: "确认工作区"
+      sources:
+        - "当前工作目录"
+        - "用户明确提到"
+
+    - step: 2
+      action: "识别任务类型"
+      method: "关键词权重匹配"
+      ambiguous_handling: "询问用户确认"
+      keywords:
+        深度分析: ["分析", "审查", "评估", "深度分析", "架构分析"]
+
+    - step: 3
+      action: "确定输出位置"
+      pattern: "projects/<project>/<task-type>/<task-id>/"
+
+    - step: 4
+      action: "确定 Agent 标识"
+      method: "自动检测编辑器+AI 组合"
+      agent_table:
+        zed_copilot: "zed-copilot"
+        webstorm_copilot: "webstorm-copilot"
+        vscode_copilot: "vscode-copilot"
+        cursor: "cursor"
+        vscode_cline: "vscode-cline"
+        windsurf: "windsurf"
+        unknown: "unknown-agent"
+      detection_priority:
+        - "工具环境/系统信息推断"
+        - "用户在对话中提及的编辑器名称"
+        - "无法确定时使用 unknown-agent 并提示用户确认"
+
+    - step: 5
+      action: "输出上次记忆"
+      method: "扫描 .ai-memory/clients/<agent>/tasks/ 取最新文件"
+      scan_logic:
+        - "🔴 绝对禁止使用 find_path/glob 扫描 .ai-memory（glob 引擎跳过隐藏目录，已发生事故 BUG-015/BUG-022）"
+        - "🔴 必须使用 list_directory 逐层进入：先 list_directory('projects/<project>/.ai-memory') → 再 list_directory('.../.ai-memory/clients/<agent>/tasks')"
+        - "按文件名日期排序，取最新日期文件（YYYYMMDD.md 格式）"
+        - "读取文件末尾最新会话段落提取状态（🔄 / ✅）"
+        - "目录不存在或无文件时输出 ⚠️ 无"
+
+  # 按需检查（涉及代码修改时）
+  optional_steps:
+    - step: 6
+      action: "加载项目规范"
+      condition: "涉及代码修改"
+      target: "projects/<project>/profile/README.md"
+      fallback: "projects/_template/profile/README.md"
+
+    - step: 7
+      action: "加载任务记忆"
+      target: "projects/<project>/.ai-memory/SUMMARY.md"
+      agent_filter: "优先显示当前 Agent 的记忆，但展示所有 Agent 条目"
+
+  output_format: |
+    📋 预检查:
+    1. 工作区: <路径>
+    2. 任务类型: <类型>
+    3. 输出位置: <projects/...>
+    4. Agent: <agent 标识>
+    5. 上次记忆: <.ai-memory/clients/<agent>/tasks/最新文件 + 状态> 或 <⚠️ 无>
+    6. 项目规范: ✅ 已加载 / ⚠️ 未找到（按需）
+    7. 任务记忆: ✅ 已读取 / ⚠️ 无历史记忆（按需）
+
+  # 日期强制必填（v2.5 新增，v2.7 维持）
+  date_enforcement:
+    rule: "报告文件存放于 reports/<子目录>/<agent>/YYYYMMDD/ 目录下，文件名为 NN-<类型>-<简述>.md（NN 仅扫描该目录计算）；记忆文件名必须为 YYYYMMDD.md（每天一文件，无 NN）；文档头部日期字段禁止留占位符"
+    report_path_format: "reports/<子目录>/<agent>/YYYYMMDD/<NN>-<类型>-<简述>.md  # 日期在目录层级，NN 仅扫描 reports/<子目录>/<agent>/YYYYMMDD/ 目录"
+    memory_filename_format: "<YYYYMMDD>.md  # 记忆文件，在 clients/<agent>/tasks/ 目录下，每天一文件，会话内以 ## 会话 NN 分段"
+    obtain_date: "优先使用 now() 工具获取真实日期"
+
+  failure_handling:
+    condition: "任何步骤失败"
+    action: "HALT"
+    message: "预检查失败，请确认后重试"
+
+# ===========================================
+# 执行模式选择 (v2.0 新增)
+# ===========================================
+mode_selection:
+  description: "根据条件自动选择快速或完整模式"
+
+  quick_mode:
+    name: "快速模式"
+    conditions:
+      - "需求描述 < 100 字"
+      - "涉及文件 < 5 个"
+      - "用户关键词: 快速, 简单, 小改动"
+    template_dir: "core/templates/lite/"
+    stages: 5
+    estimated_time: "15-30 分钟"
+    skip_stages: ["详细文档", "完整测试"]
+
+  full_mode:
+    name: "完整模式"
+    conditions:
+      - "用户关键词: 完整, 详细, 需要文档"
+      - "涉及文件 >= 5 个"
+      - "复杂需求、核心功能"
+      - "正式交付场景"
+    template_dir: "core/templates/core/"
+    stages: 7
+    estimated_time: "45-90 分钟"
+
+  mode_keywords:
+    quick_triggers: ["快速", "简单", "小改动", "快速处理", "简单修复"]
+    full_triggers: ["完整", "详细", "需要文档", "正式", "完整文档"]
+    skip_doc_triggers: ["只要代码", "跳过文档", "不需要文档"]
+
+  default: "quick_mode"
+
+# ===========================================
+# 确认点定义
+# ===========================================
+confirmation_points:
+  CP1:
+    name: "需求理解确认"
+    timing: "需求分析完成后"
+    must_show: ["需求复述", "改造清单", "影响范围"]
+    options: ["确认", "修改", "取消"]
+
+  CP2:
+    name: "方案确认"
+    timing: "技术方案设计后"
+    must_show: ["技术方案摘要", "P0操作清单", "回滚方案"]
+    options: ["确认", "修改", "取消"]
+
+  CP3:
+    name: "实施方案确认"
+    timing: "实施方案生成后，执行代码修改前"
+    must_show: ["实施前检查清单", "变更文件清单", "实施步骤"]
+    options: ["确认", "修改", "取消"]
+
+  CP4:
+    name: "测试确认"
+    timing: "测试执行完成后"
+    must_show: ["测试结果", "覆盖率", "失败用例"]
+    options: ["确认继续", "重新测试", "跳过"]
+
+  CP5:
+    name: "文档确认"
+    timing: "文档生成完成后"
+    must_show: ["文档清单", "内容摘要"]
+    options: ["确认", "修改"]
+
+  CP6:
+    name: "项目文档更新确认"
+    timing: "任务完成前"
+    must_show: ["STATUS.md更新", "CHANGELOG.md更新"]
+    options: ["确认", "修改", "跳过"]
+
+# ===========================================
+# 询问点定义
+# ===========================================
+inquiry_points:
+  IP1:
+    name: "测试产物选择"
+    timing: "CP3之后"
+    options:
+      - "1: 单元测试"
+      - "2: HTTP测试文件"
+      - "3: OpenAPI文档"
+      - "A: 全部生成"
+      - "S: 跳过"
+
+  IP2:
+    name: "文档产物选择"
+    timing: "CP4之后"
+    options:
+      - "1: README.md"
+      - "2: CHANGELOG.md"
+      - "3: 脚本文档"
+      - "4: API文档"
+      - "A: 全部生成"
+      - "S: 跳过"
+
+# ===========================================
+# 禁止项（编号对齐 CONSTRAINTS.md 的 20 条约束）
+# ===========================================
+constraints:
+  # 对应 CONSTRAINTS.md 核心约束
+  core_constraints:
+    - id: 1
+      rule: "删除操作需确认"
+      violation: "删除代码/文件前未获得用户确认"
+
+    - id: 2
+      rule: "Git 操作需确认"
+      violation: "commit/push 前未获得用户确认"
+
+    - id: 3
+      rule: "方案选择需确认"
+      violation: "多方案时没有等待用户决策就继续执行"
+
+    - id: 4
+      rule: "多任务需拆分"
+      violation: "同时收到多个任务不拆分、直接混合执行"
+
+  # 对应 CONSTRAINTS.md 代码输出约束
+  code_constraints:
+    - id: 5
+      rule: "必须包含错误处理"
+      violation: "async 函数无 try-catch、无边界检查"
+
+    - id: 6
+      rule: "禁止硬编码敏感信息"
+      violation: "代码中出现密码、密钥、Token"
+
+    - id: 7
+      rule: "使用结构化输出"
+      violation: "输出大段叙述而非表格/列表/代码块"
+
+  # 对应 CONSTRAINTS.md 报告/修复/行为约束
+  behavior_constraints:
+    - id: 8
+      rule: "报告需验证"
+      violation: "基于推断列出问题而未实际读取文件验证，未按 🔴/🟡/💡/❌ 分类"
+
+    - id: 9
+      rule: "文件名带日期+序号"
+      violation: "报告文件未存放于 reports/<子目录>/<agent>/YYYYMMDD/ 目录下，或文件名未使用 NN-<类型>-<简述>.md 格式，或记忆文件未使用 YYYYMMDD.md 格式"
+
+    - id: 10
+      rule: "多 Agent 目录隔离"
+      violation: "记忆未写入 clients/<agent>/ 目录，或写入了其他 Agent 的目录"
+
+    - id: 11
+      rule: "修复需扫描"
+      violation: "修复完成后未执行全局同类扫描+数据联动检查就声称修复完毕"
+
+    - id: 12
+      rule: "主动合理性分析"
+      violation: "收到用户指令后不评估合理性、不提出更好建议就直接执行"
+
+    - id: 13
+      rule: "自动关联文件检查"
+      violation: "修改文件时未自动扫描关联文件并同步更新"
+
+    - id: 14
+      rule: "规范修改需交叉验证"
+      violation: "修改规范文件后未逐个检查所有引用该规范的文件是否需要同步更新"
+
+    - id: 15
+      rule: "任务完成验证"
+      violation: "声称任务完成前未验证：输出文件存在性 + 内容结构完整性 + 记忆已更新"
+
+    - id: 16
+      rule: "文件修改需确认"
+      violation: "涉及文件修改/删除操作未先输出变更计划、未等待用户确认就直接执行（纯分析/只读/报告/记忆写入除外）"
+
+    - id: 17
+      rule: "报告+记忆自动输出"
+      violation: "询问用户是否写入报告/记忆；对话中堆砌大段分析内容而不写报告文件；会话结束时没有报告文件产出"
+
+    - id: 18
+      rule: "消息驱动记忆触发"
+      violation: "记忆写入不以消息事件为锚点；用户发消息时不记录到📨对话记录；阶段编号与执行顺序不一致；使用主观'关键节点'而非客观'执行完毕'作为触发条件"
+
+    - id: 19
+      rule: "报告/记忆序号独立"
+      violation: "报告 NN 未仅扫描 reports/ 目录；记忆文件未使用 YYYYMMDD.md 无序号格式；报告和记忆共享全局序号池"
+
+    - id: 20
+      rule: "文件过大必须拆分"
+      violation: "AI 新创建的单个 .md 文件超过 500 行而不拆分；向已接近 500 行的文件大量追加内容而不考虑拆分（已有文件豁免）"
+
+  # 附加禁止项（未在 CONSTRAINTS.md 中编号，但在决策树中强制）
+  additional_forbidden:
+    - rule: "禁止跳过预检查"
+      violation: "看到需求就直接写代码"
+
+    - rule: "禁止凭想象设计"
+      violation: "未读代码就设计方案"
+
+    - rule: "禁止删除 STATUS/CHANGELOG"
+      condition: "任何情况"
+
+    - rule: "禁止删除测试文件"
+      condition: "除非用户明确要求"
+
+# ===========================================
+# 三轮验证
+# ===========================================
+three_round_validation:
+  round_1:
+    name: "逻辑验证"
+    items:
+      - "需求覆盖: 所有需求点有对应实现"
+      - "边界处理: null/undefined/空值处理"
+      - "错误处理: async函数有try-catch"
+      - "逻辑完整: if有else，switch有default"
+      - "流程正确: 业务流程符合需求"
+      - "返回值: 类型和结构正确"
+
+  round_2:
+    name: "技术验证"
+    items:
+      - "代码规范: 命名、格式、注释"
+      - "安全检测: 无敏感信息硬编码"
+      - "性能考量: 无N+1查询、有分页、有索引"
+      - "并发安全: 竞态条件处理"
+      - "数据库规则: 按项目规范使用ORM"
+
+  round_3:
+    name: "完整性验证"
+    items:
+      - "文件完整: 所有规划文件已生成"
+      - "测试覆盖: ≥80%"
+      - "README同步: 功能/配置说明更新"
+      - "STATUS同步: 版本/需求状态更新"
+      - "CHANGELOG同步: 变更记录添加"
+      - "依赖声明: 新依赖已添加"
+
+# ===========================================
+# 输出路径规范
+# ===========================================
+output_paths:
+  requirement:
+    pattern: "projects/<project>/requirements/<YYYYMMDD>-<feature>/"
+    files:
+      - "01-requirement.md"
+      - "02-technical.md"
+      - "03-implementation.md"
+      - "scripts/"
+
+  bug:
+    pattern: "projects/<project>/bugs/<BUG-project-id>/"
+    files:
+      - "01-analysis.md"
+      - "02-solution.md"
+
+  optimization:
+    pattern: "projects/<project>/optimizations/<OPT-module-id>/"
+    files:
+      - "01-baseline.md"
+      - "02-optimization.md"
+      - "03-results.md"
+
+# ===========================================
+# 文档编号规范
+# ===========================================
+document_naming:
+  requirement: "YYYYMMDD-<feature>"
+  bug: "BUG-<project>-<id>-<desc>"
+  optimization: "OPT-<module>-<id>"
+  refactoring: "REF-<module>-<date>"
+  database: "DB-<change>-<date>"
+  security: "SEC-<vuln>-<date>"
+  incident: "INC-<date>-<level>-<desc>"
+
+# ===========================================
+# 相关文档引用
+# ===========================================
+references:
+  precheck: "core/workflows/00-pre-check/README.md"
+  task_identification: "core/workflows/00-task-identification/README.md"
+  confirmation_points: "core/workflows/common/confirmation-points.md"
+  validation: "core/best-practices/validation/README.md"
+  constraints: "CONSTRAINTS.md"
+  quick_reference: "QUICK-REFERENCE.md"

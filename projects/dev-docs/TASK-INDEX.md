@@ -1,21 +1,21 @@
 # 任务索引
 
 > **用途**: 追溯 ai-dev-guidelines 项目的所有历史任务  
-> **更新时机**: 版本发布时运行 `node tools/update-task-index.js dev-docs` 自动更新（无需每次会话手动维护）  
+> **更新时机**: 版本发布时运行 `node core/tools/update-task-index.js dev-docs` 自动更新（无需每次会话手动维护）  
 > **最后更新**: 2026-02-27
 
 ---
 
 ## 🔧 自动维护说明
 
-本文件支持 `tools/update-task-index.js` 自动维护：
+本文件支持 `core/tools/update-task-index.js` 自动维护：
 
 | 维护方式 | 说明 |
 |---------|------|
-| **自动更新** | 运行 `node tools/update-task-index.js dev-docs` 扫描 reports/changelogs/.ai-memory 自动生成条目 |
+| **自动更新** | 运行 `node core/tools/update-task-index.js dev-docs` 扫描 reports/changelogs/.ai-memory 自动生成条目 |
 | **手动维护** | 需求开发(REQ)、Bug修复(BUG)、架构重构(REF) 等分类表格仍可手动编辑 |
 | **更新频率** | 🔴 ~~每次会话~~ → ✅ **版本发布时**运行一次即可（降低 AI token 开销） |
-| **预览模式** | `node tools/update-task-index.js dev-docs --dry-run` 预览变更不写入 |
+| **预览模式** | `node core/tools/update-task-index.js dev-docs --dry-run` 预览变更不写入 |
 
 ---
 
@@ -25,7 +25,7 @@
 
 | 关联文件 | 关联关系 |
 |---------|---------|
-| `../../workflows/01-08/` | 各工作流完成后更新本索引 |
+| `../../core/workflows/01-08/` | 各工作流完成后更新本索引 |
 | `../../QUICK-REFERENCE.md` | 定义追溯查询方式 |
 | `../../STATUS.md` | 项目状态同步 |
 | `.ai-memory/clients/zed-copilot/SUMMARY.md` | Agent 记忆摘要 |
@@ -37,14 +37,14 @@
 | ID | 日期 | 标题 | 状态 | 路径 |
 |----|------|------|------|------|
 | REQ-001 | 2026-02-12 | v2.0 双模式设计 | ✅ 完成 | `changelogs/v2.0.0.md` |
-| REQ-002 | 2026-02-12 | 精简模板补充（7个） | ✅ 完成 | `templates/lite/` |
-| REQ-003 | 2026-02-12 | Bug修复示例添加 | ✅ 完成 | `examples/bug-fix-example/` |
-| REQ-004 | 2026-02-12 | 工具脚本补充 | ✅ 完成 | `tools/doc-health-check.js` |
-| REQ-005 | 2026-02-12 | 自我修复机制增强 | ✅ 完成 | `spec-self-fix/repair/` |
-| REQ-006 | 2026-02-12 | 开源项目初始化规范 | ✅ 完成 | `workflows/09-opensource-init/` |
+| REQ-002 | 2026-02-12 | 精简模板补充（7个） | ✅ 完成 | `core/templates/lite/` |
+| REQ-003 | 2026-02-12 | Bug修复示例添加 | ✅ 完成 | `core/examples/bug-fix-example/` |
+| REQ-004 | 2026-02-12 | 工具脚本补充 | ✅ 完成 | `core/tools/doc-health-check.js` |
+| REQ-005 | 2026-02-12 | 自我修复机制增强 | ✅ 完成 | `core/self-fix/repair/` |
+| REQ-006 | 2026-02-12 | 开源项目初始化规范 | ✅ 完成 | `core/workflows/09-opensource-init/` |
 | REQ-007 | 2026-02-24 | 项目规范模块化重构 | ✅ 完成 | `changelogs/v2.2.0.md` |
-| REQ-008 | 2026-02-24 | 任务记忆机制 | ✅ 完成 | `workflows/common/task-memory.md` |
-| REQ-009 | 2026-02-24 | 临时报告规范 | ✅ 完成 | `workflows/common/temp-reports.md` |
+| REQ-008 | 2026-02-24 | 任务记忆机制 | ✅ 完成 | `core/workflows/common/task-memory.md` |
+| REQ-009 | 2026-02-24 | 临时报告规范 | ✅ 完成 | `core/workflows/common/temp-reports.md` |
 | REQ-010 | 2026-02-27 | 消息驱动 5 阶段记忆 | ✅ 完成 | `changelogs/v2.9.0.md` |
 
 ---
@@ -53,16 +53,16 @@
 
 | ID | 日期 | 标题 | 严重程度 | 状态 | 路径 |
 |----|------|------|---------|------|------|
-| BUG-001 | 2026-02-12 | 模板清单不完整 | P1 | ✅ 修复 | `templates/README.md` |
-| BUG-002 | 2026-02-12 | decision-tree缺少mode_selection | P1 | ✅ 修复 | `workflows/decision-tree.yaml` |
+| BUG-001 | 2026-02-12 | 模板清单不完整 | P1 | ✅ 修复 | `core/templates/README.md` |
+| BUG-002 | 2026-02-12 | decision-tree缺少mode_selection | P1 | ✅ 修复 | `core/workflows/decision-tree.yaml` |
 | BUG-003 | 2026-02-12 | README-v2.md引用不存在 | P1 | ✅ 修复 | `STATUS.md`, `CHANGELOG.md` |
 | BUG-004 | 2026-02-12 | 模板文件名不一致 | P1 | ✅ 修复 | `STATUS.md` |
-| BUG-005 | 2026-02-12 | git-standards未被索引 | P1 | ✅ 修复 | `standards/README.md` |
-| BUG-006 | 2026-02-12 | decision-tree版本号不一致 | P1 | ✅ 修复 | `workflows/decision-tree.yaml` |
-| BUG-007 | 2026-02-12 | 预检查输出格式错误 | P1 | ✅ 修复 | `workflows/decision-tree.yaml` |
+| BUG-005 | 2026-02-12 | git-standards未被索引 | P1 | ✅ 修复 | `core/standards/README.md` |
+| BUG-006 | 2026-02-12 | decision-tree版本号不一致 | P1 | ✅ 修复 | `core/workflows/decision-tree.yaml` |
+| BUG-007 | 2026-02-12 | 预检查输出格式错误 | P1 | ✅ 修复 | `core/workflows/decision-tree.yaml` |
 | BUG-008 | 2026-02-27 | 多文件版本号不一致（v2.5→v2.6统一） | P0 | ✅ 修复 | 多文件（见 20260227-01 记忆） |
 | BUG-009 | 2026-02-27 | README.md lite 模板数量标注错误（7→8） | P1 | ✅ 修复 | `README.md` |
-| BUG-010 | 2026-02-27 | 00-pre-check 日期示例缺序号 NN | P1 | ✅ 修复 | `workflows/00-pre-check/README.md` |
+| BUG-010 | 2026-02-27 | 00-pre-check 日期示例缺序号 NN | P1 | ✅ 修复 | `core/workflows/00-pre-check/README.md` |
 | BUG-011 | 2026-02-27 | changelogs/v2.3.0 日期示例缺序号 NN | P1 | ✅ 修复 | `changelogs/v2.3.0.md` |
 | BUG-012 | 2026-02-27 | profile/README.md 版本落后 v2.1→v2.7 | P1 | ✅ 修复 | `projects/dev-docs/profile/README.md` |
 | BUG-013 | 2026-02-27 | projects/README.md 中 vext 标注"待补充"但已有 profile/ | P1 | ✅ 修复 | `projects/README.md` |
@@ -70,28 +70,28 @@
 | BUG-015 | 2026-02-27 | glob 扫描隐藏目录失败致记忆序号冲突（01→07） | P0 | ✅ 修复 | `00-pre-check/README.md`, `task-memory.md` |
 | BUG-016 | 2026-02-27 | 顶层 reports/ 空目录冗余（应仅在 projects/ 下） | P1 | ✅ 修复 | 已删除 `ai-dev-guidelines/reports/` |
 | BUG-017 | 2026-02-27 | STATUS.md 版本路线图标注 v2.8.0 为当前版本（应为 v2.9.0） | P0 | ✅ 修复 | `STATUS.md` |
-| BUG-018 | 2026-02-27 | decision-tree.yaml 第1行注释版本 v2.8.0（应为 v2.9.0） | P1 | ✅ 修复 | `workflows/decision-tree.yaml` |
+| BUG-018 | 2026-02-27 | decision-tree.yaml 第1行注释版本 v2.8.0（应为 v2.9.0） | P1 | ✅ 修复 | `core/workflows/decision-tree.yaml` |
 | BUG-019 | 2026-02-27 | dev-docs/profile/ 缺少 P0 必需文件（01/02/03） | P1 | ✅ 修复 | `projects/dev-docs/profile/` |
 | BUG-020 | 2026-02-27 | TASK-INDEX.md 严重过时（最后更新 2026-02-12） | P1 | ✅ 修复 | 本文件 |
 | BUG-021 | 2026-02-27 | TASK-INDEX.md 中 VAL-001 报告路径失效 | P2 | ✅ 修复 | 本文件（见 VAL-001 备注） |
-| BUG-022 | 2026-02-27 | copilot-instructions.md 入口文件"上次记忆检测方法"缺少 glob 禁令，AI 在预检查早期阶段仍用 find_path/glob 扫描 .ai-memory 导致误判"无记忆"（BUG-015 修复不彻底） | P0 | ✅ 修复 | `.github/copilot-instructions.md`, `workflows/decision-tree.yaml` |
+| BUG-022 | 2026-02-27 | copilot-instructions.md 入口文件"上次记忆检测方法"缺少 glob 禁令，AI 在预检查早期阶段仍用 find_path/glob 扫描 .ai-memory 导致误判"无记忆"（BUG-015 修复不彻底） | P0 | ✅ 修复 | `.github/copilot-instructions.md`, `core/workflows/decision-tree.yaml` |
 | BUG-023 | 2026-02-27 | README.md 版本号 v2.9.0（应为 v2.10.0），约束条数 18（应为 19） | P0 | ✅ 修复 | `README.md` |
 | BUG-024 | 2026-02-27 | QUICK-REFERENCE.md 记忆文件示例仍为旧格式 YYYYMMDD-NN-TYPE.md | P0 | ✅ 修复 | `QUICK-REFERENCE.md` |
 | BUG-025 | 2026-02-27 | copilot-instructions.md 入口表约束条数 18（应为 19） | P0 | ✅ 修复 | `.github/copilot-instructions.md` |
 | BUG-026 | 2026-02-27 | STATUS.md 版本号、约束条数、路线图未对齐 v2.10.0 | P1 | ✅ 修复 | `STATUS.md` |
-| BUG-027 | 2026-02-27 | decision-tree.yaml 版本号、memory_filename_format、约束 #19 缺失 | P1 | ✅ 修复 | `workflows/decision-tree.yaml` |
+| BUG-027 | 2026-02-27 | decision-tree.yaml 版本号、memory_filename_format、约束 #19 缺失 | P1 | ✅ 修复 | `core/workflows/decision-tree.yaml` |
 | BUG-028~031 | 2026-02-27 | 版本号跨文件不一致（多处滞后于 v2.11.0） | P0 | ✅ 修复 | 多文件（见 changelogs/v2.11.0.md） |
 | BUG-032 | 2026-02-27 | README.md 目录树注释约束条数 19（应为 20） | P0 | ✅ 修复 | `README.md` |
 | BUG-033 | 2026-02-27 | STATUS.md 核心改进表约束条数 19（应为 20） | P0 | ✅ 修复 | `STATUS.md` |
-| BUG-034 | 2026-02-27 | decision-tree.yaml 注释 19 条 + 缺少约束 #20 条目 | P0 | ✅ 修复 | `workflows/decision-tree.yaml` |
+| BUG-034 | 2026-02-27 | decision-tree.yaml 注释 19 条 + 缺少约束 #20 条目 | P0 | ✅ 修复 | `core/workflows/decision-tree.yaml` |
 | BUG-035 | 2026-02-27 | profile/README.md 两处约束条数 19（应为 20） | P1 | ✅ 修复 | `projects/dev-docs/profile/README.md` |
 | BUG-036 | 2026-02-27 | profile/01-项目信息.md 两处约束条数 19（应为 20） | P1 | ✅ 修复 | `projects/dev-docs/profile/01-项目信息.md` |
 | BUG-037 | 2026-02-27 | profile/02-架构约束.md 链接描述约束条数 19（应为 20） | P1 | ✅ 修复 | `projects/dev-docs/profile/02-架构约束.md` |
 | BUG-038 | 2026-02-27 | changelogs/v2.11.0.md 相关链接约束条数 19（应为 20） | P1 | ✅ 修复 | `changelogs/v2.11.0.md` |
 | BUG-039 | 2026-02-27 | TASK-INDEX.md 约束扩展 15→19（应为 15→20） | P1 | ✅ 修复 | 本文件 |
 | BUG-040 | 2026-02-27 | CONSTRAINTS.md 约束 #20 标注 v2.12.0（幽灵版本号，应为 v2.11.0） | P1 | ✅ 修复 | `CONSTRAINTS.md` |
-| BUG-041 | 2026-02-27 | user-intent-detection.md 文件头版本号 v2.0（应为 v2.1） | P1 | ✅ 修复 | `spec-self-fix/triggers/user-intent-detection.md` |
-| BUG-042 | 2026-02-27 | conflict-detection.md 约束条数检测基准仍为 19（应为 20） | P1 | ✅ 修复 | `spec-self-fix/detection/conflict-detection.md` |
+| BUG-041 | 2026-02-27 | user-intent-detection.md 文件头版本号 v2.0（应为 v2.1） | P1 | ✅ 修复 | `core/self-fix/triggers/user-intent-detection.md` |
+| BUG-042 | 2026-02-27 | conflict-detection.md 约束条数检测基准仍为 19（应为 20） | P1 | ✅ 修复 | `core/self-fix/detection/conflict-detection.md` |
 | BUG-043 | 2026-02-27 | QUICK-REFERENCE.md 约束 #20 标注 v2.12.0 残留（BUG-040 修复不彻底） | P0 | ✅ 修复 | `QUICK-REFERENCE.md` |
 | BUG-044 | 2026-02-27 | TASK-INDEX.md 记忆表 20260227.md 会话数过时（2→9） | P1 | ✅ 修复 | 本文件 |
 | BUG-045 | 2026-02-27 | CHANGELOG.md 版本概览 v2.11.0 摘要不完整（遗漏约束#20+BUG-032~042） | P1 | ✅ 修复 | `CHANGELOG.md` |
@@ -103,7 +103,7 @@
 
 | ID | 日期 | 标题 | 提升效果 | 状态 | 路径 |
 |----|------|------|---------|------|------|
-| OPT-001 | 2026-02-12 | 预检查精简 | 5项→3项 | ✅ 完成 | `workflows/00-pre-check/` |
+| OPT-001 | 2026-02-12 | 预检查精简 | 5项→3项 | ✅ 完成 | `core/workflows/00-pre-check/` |
 | OPT-002 | 2026-02-27 | 规范全面检查+流程优化 | 预检查3→5项、新增约束#16 | ✅ 完成 | `.ai-memory/clients/zed-copilot/tasks/20260226.md` §会话01 |
 | OPT-003 | 2026-02-27 | 后续任务跟进（changelogs/vext规范化） | changelogs 补全、vext profile 创建 | ✅ 完成 | `.ai-memory/clients/zed-copilot/tasks/20260226.md` §会话02 |
 | OPT-004 | 2026-02-27 | 验证修复+规范全面自检 | 修复2处日期示例缺序号NN | ✅ 完成 | `.ai-memory/clients/zed-copilot/tasks/20260226.md` §会话03 |

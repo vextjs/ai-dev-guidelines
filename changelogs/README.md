@@ -62,7 +62,7 @@ git commit -m "docs: 发布 v{版本号}"
 ## 📎 相关文档
 
 - [主 CHANGELOG](../CHANGELOG.md) - 版本概览
-- [变更文档模板](../templates/common/changelogs/TEMPLATE.md) - 模板
+- [变更文档模板](../core/templates/common/changelogs/TEMPLATE.md) - 模板
 
 ---
 

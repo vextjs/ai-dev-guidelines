@@ -40,7 +40,7 @@
 - 响应格式统一为 `ctx.success(data)`
 - 错误码配置唯一位置 `config/dsl/`
 - 新增 8 条架构约束
-- 参考 ai-dev-guidelines 通用规范体系（`standards/` 目录）
+- 参考 ai-dev-guidelines 通用规范体系（`core/standards/` 目录）
 
 ---
 

@@ -58,7 +58,7 @@
 
 ## 🔗 相关文档
 
-- **通用开发规范**: `../../../standards/` 目录下的各规范文件
+- **通用开发规范**: `../../../core/standards/` 目录下的各规范文件
 - **项目规范参考**: `../../chat/profile/` (完整实例)
 - 项目 README: `../../../../monSQLize/README.md`
 - 项目 CHANGELOG: `../../../../monSQLize/CHANGELOG.md`

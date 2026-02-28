@@ -349,17 +349,17 @@
 
 | 文件 | 说明 |
 |------|------|
-| `spec-self-fix/README.md` | 模块总览（入口） |
-| `spec-self-fix/detection/conflict-detection.md` | 冲突检测（6 条规则） |
-| `spec-self-fix/detection/obsolete-detection.md` | 过时检测（6 条规则） |
-| `spec-self-fix/detection/redundancy-detection.md` | 冗余检测（4 条规则） |
-| `spec-self-fix/detection/completeness-detection.md` | 完整性检测（5 条规则） |
-| `spec-self-fix/triggers/user-intent-detection.md` | 用户意图检测（6 种模式） |
-| `spec-self-fix/triggers/auto-triggers.md` | 自动触发规则（9 个场景） |
-| `spec-self-fix/repair/auto-repair.md` | 自动修复实现 |
-| `spec-self-fix/repair/repair-patterns.md` | 修复模式库（模式 1~10） |
-| `spec-self-fix/repair/repair-validation.md` | 修复验证（7 步） |
-| `spec-self-fix/records/summary.md` | 修复记录汇总 |
+| `core/self-fix/README.md` | 模块总览（入口） |
+| `core/self-fix/detection/conflict-detection.md` | 冲突检测（6 条规则） |
+| `core/self-fix/detection/obsolete-detection.md` | 过时检测（6 条规则） |
+| `core/self-fix/detection/redundancy-detection.md` | 冗余检测（4 条规则） |
+| `core/self-fix/detection/completeness-detection.md` | 完整性检测（5 条规则） |
+| `core/self-fix/triggers/user-intent-detection.md` | 用户意图检测（6 种模式） |
+| `core/self-fix/triggers/auto-triggers.md` | 自动触发规则（9 个场景） |
+| `core/self-fix/repair/auto-repair.md` | 自动修复实现 |
+| `core/self-fix/repair/repair-patterns.md` | 修复模式库（模式 1~10） |
+| `core/self-fix/repair/repair-validation.md` | 修复验证（7 步） |
+| `core/self-fix/records/summary.md` | 修复记录汇总 |
 
 ### 关联规范文件
 
@@ -368,11 +368,11 @@
 | `QUICK-REFERENCE.md` §交叉验证清单 | 版本号 8 文件清单 + 约束条数 11 文件清单 + docs/ 同步检查 |
 | `CONSTRAINTS.md` 约束 #12 | 主动合理性分析（模式 6 评估阶段使用） |
 | `CONSTRAINTS.md` 约束 #14 | 规范修改需交叉验证（所有修复后必须执行，含 docs/ 同步） |
-| `workflows/common/task-memory.md` §阶段 0 | 时序强制规则（场景 6/9 检测对象） |
-| `workflows/00-pre-check/README.md` | 预检查第 6 行（场景 9 检测对象） |
+| `core/workflows/common/task-memory.md` §阶段 0 | 时序强制规则（场景 6/9 检测对象） |
+| `core/workflows/00-pre-check/README.md` | 预检查第 6 行（场景 9 检测对象） |
 | `META.yaml` | 版本号和约束条数的单一真相源 |
-| `tools/bump-version.js` | 版本号自动同步工具 |
-| `tools/add-constraint.js` | 约束添加自动化工具 |
+| `core/tools/bump-version.js` | 版本号自动同步工具 |
+| `core/tools/add-constraint.js` | 约束添加自动化工具 |
 
 ### 其他用户指南
 

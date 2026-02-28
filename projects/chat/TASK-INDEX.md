@@ -12,14 +12,14 @@
 
 | 关联文件 | 关联关系 |
 |---------|---------|
-| `workflows/01-requirement-dev/README.md` | 需求完成后更新本索引 |
-| `workflows/02-bug-fix/README.md` | Bug修复后更新本索引 |
-| `workflows/03-optimization/README.md` | 优化完成后更新本索引 |
-| `workflows/04-research/README.md` | 调研完成后更新本索引 |
-| `workflows/05-refactoring/README.md` | 重构完成后更新本索引 |
-| `workflows/06-database/README.md` | 数据库变更后更新本索引 |
-| `workflows/07-security/README.md` | 安全修复后更新本索引 |
-| `workflows/08-incident/README.md` | 事故复盘后更新本索引 |
+| `core/workflows/01-requirement-dev/README.md` | 需求完成后更新本索引 |
+| `core/workflows/02-bug-fix/README.md` | Bug修复后更新本索引 |
+| `core/workflows/03-optimization/README.md` | 优化完成后更新本索引 |
+| `core/workflows/04-research/README.md` | 调研完成后更新本索引 |
+| `core/workflows/05-refactoring/README.md` | 重构完成后更新本索引 |
+| `core/workflows/06-database/README.md` | 数据库变更后更新本索引 |
+| `core/workflows/07-security/README.md` | 安全修复后更新本索引 |
+| `core/workflows/08-incident/README.md` | 事故复盘后更新本索引 |
 | `QUICK-REFERENCE.md` | 定义追溯查询方式 |
 
 ---

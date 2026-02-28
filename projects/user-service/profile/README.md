@@ -194,6 +194,6 @@ user-service/
 > 实际项目应按 `projects/_template/profile/` 模板创建模块化规范文件。
 
 - 项目规范模板: `../../_template/profile/README.md`
-- 通用代码规范: `../../../standards/code-standards.md`
-- 通用测试规范: `../../../standards/test-standards.md`
+- 通用代码规范: `../../../core/standards/code-standards.md`
+- 通用测试规范: `../../../core/standards/test-standards.md`
 

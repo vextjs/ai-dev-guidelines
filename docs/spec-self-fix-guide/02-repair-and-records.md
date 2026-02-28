@@ -5,7 +5,7 @@
 **版本**: v1.1
 **创建日期**: 2026-02-28
 **最后更新**: 2026-02-28
-**源模块**: `spec-self-fix/repair/` + `spec-self-fix/records/`
+**源模块**: `core/self-fix/repair/` + `core/self-fix/records/`
 
 ---
 
@@ -34,7 +34,7 @@
 
 ## 一、修复策略分类
 
-> 源文件: `spec-self-fix/repair/auto-repair.md`
+> 源文件: `core/self-fix/repair/auto-repair.md`
 
 | 策略 | 安全等级 | 适用场景 | 是否需要你确认 |
 |------|:-------:|---------|:-------------:|
@@ -63,7 +63,7 @@
 
 ## 二、修复模式库（11 个模式）
 
-> 源文件: `spec-self-fix/repair/repair-patterns.md`（模式 1~10）+ `spec-self-fix/repair/auto-repair.md`（模式 11）
+> 源文件: `core/self-fix/repair/repair-patterns.md`（模式 1~10）+ `core/self-fix/repair/auto-repair.md`（模式 11）
 
 ### 总览
 
@@ -71,7 +71,7 @@
 |:----:|------|---------|:-------:|:-----:|:----:|
 | 1 | **补充缺失章节** | 完整性检测发现缺少必要章节 | ✅ | 自动 | v1.0 |
 | 2 | **修复死链接** | 发现链接指向不存在的文件 | ✅ | 自动 | v1.0 |
-| 3 | **添加可覆盖标记** | standards/ 标注可覆盖但规范文件无标记 | ✅ | 自动 | v1.0 |
+| 3 | **添加可覆盖标记** | core/standards/ 标注可覆盖但规范文件无标记 | ✅ | 自动 | v1.0 |
 | 4 | **内容合并** | 检测到高度重复内容（> 70% 相似度） | ⚠️ | 半自动 | v1.0 |
 | 5 | **版本号批量更新** | 版本号变更需全量同步 8 个文件 | ✅ | 自动 | v2.0 |
 | 6 | **依赖链修复** | A 引用 B，B 引用 C，C 不存在 | ⚠️ | 半自动 | v1.0 |
@@ -88,7 +88,7 @@
 #### 模式 1 — 补充缺失章节
 
 ```yaml
-触发: 完整性检测发现 standards/ 下的文件缺少必要章节（标题/规则/示例/检查清单）
+触发: 完整性检测发现 core/standards/ 下的文件缺少必要章节（标题/规则/示例/检查清单）
 执行:
   1. 识别缺失的章节类型
   2. 使用对应模板生成章节骨架
@@ -115,7 +115,7 @@
 #### 模式 3 — 添加可覆盖标记
 
 ```yaml
-触发: standards/ 下的通用规范未标注"项目规范可覆盖"
+触发: core/standards/ 下的通用规范未标注"项目规范可覆盖"
 执行:
   1. 在规范文件头部添加可覆盖标记
   2. 标注哪些规则可以被项目规范覆盖
@@ -164,8 +164,8 @@ v2.0 vs v1.0 的核心变化:
 | 4 | `CONSTRAINTS.md` | L6 `**版本**: vX.Y.Z` |
 | 5 | `STATUS.md` | L5 `**当前版本**: vX.Y.Z` |
 | 6 | `CHANGELOG.md` | 版本概览表新增行 |
-| 7 | `workflows/decision-tree.yaml` | L1 注释 + L4 `version` 字段 + L82 注释 + L87 `mandatory_precheck.version` |
-| 8 | `workflows/00-pre-check/README.md` | L3 + 文件末尾（两处） |
+| 7 | `core/workflows/decision-tree.yaml` | L1 注释 + L4 `version` 字段 + L82 注释 + L87 `mandatory_precheck.version` |
+| 8 | `core/workflows/00-pre-check/README.md` | L3 + 文件末尾（两处） |
 
 安全等级: ✅ 自动
 
@@ -237,10 +237,10 @@ v2.0 vs v1.0 的核心变化:
 ```yaml
 断层检测清单（6 项）:
   □ 修复是否写入了执行流程入口文件？
-  □ 修复是否写入了 spec-self-fix/detection/ 相关检测规则？
-  □ 修复是否写入了 spec-self-fix/triggers/ 相关触发规则？
-  □ 修复是否写入了 spec-self-fix/repair/ 相关修复模式？
-  □ 修复是否在 spec-self-fix/records/ 有记录？
+  □ 修复是否写入了 core/self-fix/detection/ 相关检测规则？
+  □ 修复是否写入了 core/self-fix/triggers/ 相关触发规则？
+  □ 修复是否写入了 core/self-fix/repair/ 相关修复模式？
+  □ 修复是否在 core/self-fix/records/ 有记录？
   □ records/summary.md 是否更新？
 
 任一项为"否" → 触发断层修复
@@ -271,9 +271,9 @@ v2.0 vs v1.0 的核心变化:
      ← 🔴 阶段0 硬性阻塞
 
 必须存在于:
-  1. workflows/00-pre-check/README.md — §检查清单 + §输出格式
+  1. core/workflows/00-pre-check/README.md — §检查清单 + §输出格式
   2. QUICK-REFERENCE.md — §预检查模板
-  3. workflows/00-pre-check/memory-and-rules.md — §阶段 0 输出
+  3. core/workflows/00-pre-check/memory-and-rules.md — §阶段 0 输出
   4. copilot-instructions.md — 预检查描述
 
 缺失任何一处 → 自动补齐
@@ -285,7 +285,7 @@ v2.0 vs v1.0 的核心变化:
 
 ## 三、修复验证（7 步）
 
-> 源文件: `spec-self-fix/repair/repair-validation.md`
+> 源文件: `core/self-fix/repair/repair-validation.md`
 
 每次修复完成后，执行 **7 步验证**确保修复质量：
 
@@ -316,9 +316,9 @@ v2.0 vs v1.0 的核心变化:
 
 ## 四、修复记录与追溯
 
-> 源文件: `spec-self-fix/records/summary.md` + `records/*.md`
+> 源文件: `core/self-fix/records/summary.md` + `records/*.md`
 
-所有修复都有完整记录，存放在 `spec-self-fix/records/` 目录下。
+所有修复都有完整记录，存放在 `core/self-fix/records/` 目录下。
 
 ### 记录文件格式
 
@@ -502,10 +502,10 @@ Why 5: 根因
 | 机制总览 | [README.md](./README.md) | 自修复机制全局架构 |
 | 检测与触发 | [01-detection-and-triggers.md](./01-detection-and-triggers.md) | 检测规则 + 触发场景 |
 | 使用与 FAQ | [03-usage-and-faq.md](./03-usage-and-faq.md) | 执行流程图 + 操作指南 + 常见问题 |
-| 自动修复源文件 | `spec-self-fix/repair/auto-repair.md` | 自动修复实现详情 |
-| 修复模式库源文件 | `spec-self-fix/repair/repair-patterns.md` | 模式 1~10 详情 |
-| 修复验证源文件 | `spec-self-fix/repair/repair-validation.md` | 7 步验证详情 |
-| 修复记录汇总 | `spec-self-fix/records/summary.md` | 修复记录统计 |
+| 自动修复源文件 | `core/self-fix/repair/auto-repair.md` | 自动修复实现详情 |
+| 修复模式库源文件 | `core/self-fix/repair/repair-patterns.md` | 模式 1~10 详情 |
+| 修复验证源文件 | `core/self-fix/repair/repair-validation.md` | 7 步验证详情 |
+| 修复记录汇总 | `core/self-fix/records/summary.md` | 修复记录统计 |
 | QUICK-REFERENCE §版本号清单 | `ai-dev-guidelines/QUICK-REFERENCE.md` | 版本号 8 文件权威清单 |
 | QUICK-REFERENCE §约束条数清单 | `ai-dev-guidelines/QUICK-REFERENCE.md` | 约束条数 11 文件权威清单 |
 | 约束 #14 | `ai-dev-guidelines/CONSTRAINTS.md` | 规范修改需交叉验证 |

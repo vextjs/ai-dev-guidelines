@@ -48,7 +48,7 @@ ai-dev-guidelines/
 ├── STATUS.md                 # 项目状态
 ├── CHANGELOG.md              # 变更日志索引
 │
-├── workflows/                # 🤖 工作流定义
+├── core/workflows/                # 🤖 工作流定义
 │   ├── 00-pre-check/         # 预检查（5 项必做）
 │   ├── 00-task-identification/  # 任务识别
 │   ├── 01-requirement-dev/   # 需求开发
@@ -63,7 +63,7 @@ ai-dev-guidelines/
 │   ├── common/               # 通用组件（确认点、断点续传等）
 │   └── decision-tree.yaml    # 决策树配置
 │
-├── templates/                # 📝 文档模板
+├── core/templates/                # 📝 文档模板
 │   ├── lite/                 # 精简模板（快速模式，8 个）
 │   ├── core/                 # 核心模板（完整模式，8 个）
 │   ├── extended/             # 扩展模板（Tier 2，5 个）
@@ -77,11 +77,11 @@ ai-dev-guidelines/
 │   ├── user-service/         # 用户服务（示例项目）
 │   └── vext/                 # vext 项目
 │
-├── best-practices/           # 💡 最佳实践
-├── standards/                # 📏 规范标准（9 个文件）
-├── examples/                 # 📚 示例
-├── tools/                    # 🔧 工具脚本
-├── spec-self-fix/            # 🔧 规范自我修复机制
+├── core/best-practices/           # 💡 最佳实践
+├── core/standards/                # 📏 规范标准（9 个文件）
+├── core/examples/                 # 📚 示例
+├── core/tools/                    # 🔧 工具脚本
+├── core/self-fix/            # 🔧 规范自我修复机制
 └── changelogs/               # 📜 版本变更详情
 ```
 
@@ -93,7 +93,7 @@ ai-dev-guidelines/
 
 | 类型 | 规范 | 示例 |
 |-----|------|------|
-| 目录名 | kebab-case | `best-practices/` |
+| 目录名 | kebab-case | `core/best-practices/` |
 | 文件名（入口） | UPPER_CASE.md | `README.md`, `STATUS.md` |
 | 文件名（内容） | kebab-case.md | `error-handling.md` |
 | 模板文件 | xxx-template.md | `requirement-template.md` |
@@ -169,8 +169,8 @@ ai-dev-guidelines/
 
 | 模式 | 条件 | 模板目录 |
 |-----|------|---------|
-| 快速模式 | 简单需求、< 5 个文件 | `templates/lite/` |
-| 完整模式 | 复杂需求、正式交付 | `templates/core/` |
+| 快速模式 | 简单需求、< 5 个文件 | `core/templates/lite/` |
+| 完整模式 | 复杂需求、正式交付 | `core/templates/core/` |
 
 ### 确认点
 
@@ -190,8 +190,8 @@ ai-dev-guidelines/
 
 | 工具 | 路径 | 用途 |
 |-----|------|------|
-| validate-links.js | `tools/validate-links.js` | 检查链接有效性 |
-| validate-structure.js | `tools/validate-structure.js` | 检查目录结构 |
+| validate-links.js | `core/tools/validate-links.js` | 检查链接有效性 |
+| validate-structure.js | `core/tools/validate-structure.js` | 检查目录结构 |
 
 ### 验证检查清单
 
@@ -210,7 +210,7 @@ ai-dev-guidelines/
 | 快速参考 | `QUICK-REFERENCE.md` | 执行时速查 |
 | 约束清单 | `CONSTRAINTS.md` | 核心约束（20 条） |
 | 项目状态 | `STATUS.md` | 完成度追踪 |
-| 决策树 | `workflows/decision-tree.yaml` | 任务路由 |
+| 决策树 | `core/workflows/decision-tree.yaml` | 任务路由 |
 
 ---
 
@@ -218,9 +218,9 @@ ai-dev-guidelines/
 
 ### 添加新工作流
 
-1. 在 `workflows/` 下创建目录 `XX-workflow-name/`
+1. 在 `core/workflows/` 下创建目录 `XX-workflow-name/`
 2. 创建 `README.md` 定义流程
-3. 更新 `workflows/README.md` 索引
+3. 更新 `core/workflows/README.md` 索引
 4. 更新 `decision-tree.yaml` 添加关键词映射
 5. 更新 `QUICK-REFERENCE.md` 任务映射表
 
@@ -228,7 +228,7 @@ ai-dev-guidelines/
 
 1. 确定模板层级（lite/core/extended）
 2. 基于现有模板创建新文件
-3. 更新 `templates/README.md` 模板清单
+3. 更新 `core/templates/README.md` 模板清单
 4. 更新 `QUICK-REFERENCE.md` 模板选择表
 
 ### 发布新版本
