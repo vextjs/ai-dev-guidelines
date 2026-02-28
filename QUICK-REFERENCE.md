@@ -396,6 +396,11 @@ projects/<project>/
 | **新增/删除约束** | **先修改 `META.yaml`，再运行 `bump-version.js --apply`** | **约束条数数值（11 文件自动同步）+ 标题/注释/描述一致** |
 | `workflows/common/task-memory.md` 版本号变更 | `META.yaml` `independent_versions`、`memory-and-rules.md` 标题、`QUICK-REFERENCE.md` 引用处、`CONSTRAINTS.md` #9 引用处 | 🔴 独立版本号必须同步到 META.yaml + 全文搜索旧版本号引用 |
 | `workflows/common/temp-reports.md` 版本号变更 | `META.yaml` `independent_versions`、`QUICK-REFERENCE.md` 引用处、`CONSTRAINTS.md` #9 引用处 | 🔴 独立版本号必须同步到 META.yaml + 全文搜索旧版本号引用 |
+| 🔴 **`workflows/` 流程变更** | **`docs/execution-workflow-guide/` 对应章节** | **预检查/确认点/记忆机制/工作流步骤是否在用户指南中同步更新** |
+| 🔴 **`spec-self-fix/` 机制变更** | **`docs/spec-self-fix-guide/` 对应章节** | **检测规则/触发场景/修复模式/防复现机制是否在用户指南中同步更新** |
+| **新增/删除工作流** | `docs/execution-workflow-guide/01-task-workflows.md`、`docs/execution-workflow-guide/README.md` §关键词映射表 | 新工作流是否已添加到用户指南的任务类型列表和关键词映射 |
+| **新增/删除约束** | `docs/execution-workflow-guide/03-faq.md` | FAQ 中约束相关描述是否已更新 |
+| 🔴 **预检查项数/工作流数量/约束条数/行数引用变更** | **`docs/DESIGN-PHILOSOPHY.md`** | **§架构全景图中的数据（预检查项数、工作流数量、约束条数、QUICK-REFERENCE 行数等）是否已同步更新** |
 
 ### 🔴 版本号文件清单（发布新版本时必须全部同步）
 
@@ -447,6 +452,8 @@ projects/<project>/
 □ 🔴 CHANGELOG ↔ changelogs/ 同步: CHANGELOG.md 概览表是否包含当前版本？changelogs/v<当前版本>.md 是否存在？（bump-version.js 已含此检查）
 □ 禁止行为: copilot-instructions.md 和 00-pre-check 的禁止清单对齐？
 □ 交叉引用路径: 所有 [链接](./path) 指向的文件确实存在？
+□ 🔴 docs/ 用户指南同步: 本次修改涉及的流程/机制是否在 `docs/` 下有对应用户指南？如有，是否已同步更新？（execution-workflow-guide/ 和 spec-self-fix-guide/）
+□ 🔴 docs/DESIGN-PHILOSOPHY.md 同步: 架构全景图中的数据（预检查项数/工作流数量/约束条数/行数引用等）是否与实际一致？
 ```
 
 ---

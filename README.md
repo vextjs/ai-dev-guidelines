@@ -219,6 +219,8 @@ ai-dev-guidelines/
 | 预检查格式、任务映射、确认点、输出路径 | [QUICK-REFERENCE.md](./QUICK-REFERENCE.md) | ⭐ 执行任务时首先阅读 |
 | 新 Agent 快速上手 | [ONBOARDING.md](./ONBOARDING.md) | 🆕 首次接入规范体系的 AI Agent 指引 |
 | 设计理念与演进路线 | [docs/DESIGN-PHILOSOPHY.md](./docs/DESIGN-PHILOSOPHY.md) | 🆕 架构哲学 + Agent 化路线图 |
+| 用户快速入门（首次使用必读） | [docs/getting-started.md](./docs/getting-started.md) | 🆕 5 分钟了解全貌 + 新项目接入 + 工具速览 |
+| 用户指南（执行流程 + 自修复机制） | [docs/README.md](./docs/README.md) | 🆕 面向用户视角的完整指南入口 |
 | 工作流清单、Tier 分级 | [workflows/README.md](./workflows/README.md) | 各类任务的执行流程 |
 | 模板选择指南 | [templates/README.md](./templates/README.md) | 快速/完整模式模板 |
 | 完整输出示例 | [examples/README.md](./examples/README.md) | 需求/Bug 修复等示例 |

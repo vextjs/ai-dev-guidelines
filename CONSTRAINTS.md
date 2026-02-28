@@ -338,6 +338,18 @@ Step 3 - 声明前复核:
                               copilot-instructions.md、README.md、QUICK-REFERENCE.md、
                               CONSTRAINTS.md、STATUS.md、CHANGELOG.md、
                               decision-tree.yaml、00-pre-check/README.md
+  🔴 docs/ 用户指南同步    → 修改规范流程/机制后，必须同步更新 docs/ 下对应的用户指南:
+                              workflows/ 变更 → docs/execution-workflow-guide/ 对应章节
+                              spec-self-fix/ 变更 → docs/spec-self-fix-guide/ 对应章节
+                              预检查/确认点/记忆机制变更 → docs/execution-workflow-guide/README.md
+                              新增/删除工作流 → docs/execution-workflow-guide/01-task-workflows.md
+                              新增/删除约束 → docs/execution-workflow-guide/03-faq.md
+  🔴 docs/DESIGN-PHILOSOPHY.md 同步 → 修改以下内容时必须同步更新 DESIGN-PHILOSOPHY.md 架构全景图:
+                              预检查项数变更 → §架构全景图 执行层 预检查描述
+                              工作流数量变更 → §架构全景图 执行层 工作流描述
+                              约束条数变更 → §架构全景图 约束层描述
+                              记忆机制/报告机制变更 → §架构全景图 持久化层描述
+                              自修复模块变更 → §架构全景图 自维护层描述
 
 检查清单:
   □ 预检查项数各处一致？
@@ -347,6 +359,8 @@ Step 3 - 声明前复核:
   □ 版本号（被动）: 修改的文件已更新版本号和最后更新日期？
   □ 🔴 版本号（主动全量）: 8 个版本号文件是否全部一致？（逐个 read_file 确认，禁止推断）
   □ 所有引用链接指向的文件确实存在？
+  □ 🔴 docs/ 用户指南同步: 本次修改涉及的流程/机制是否在 docs/ 下有对应用户指南？如有，是否已同步更新？
+  □ 🔴 docs/DESIGN-PHILOSOPHY.md 同步: 架构数据（预检查项数/工作流数量/约束条数/行数引用等）是否与实际一致？
 
 详见: QUICK-REFERENCE.md §规范修改交叉验证清单
 ```
