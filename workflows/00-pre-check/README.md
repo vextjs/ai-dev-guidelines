@@ -35,6 +35,7 @@
 3. 输出位置: [projects/<project>/...]
 4. Agent: [zed-copilot / webstorm-copilot / cursor / vscode-copilot / ...]
 5. 上次记忆: [.ai-memory/clients/<agent>/tasks/最新文件路径 + 状态] 或 [⚠️ 无]
+6. 📝 记忆已创建: [.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN (🔄)] ← 🔴 阶段0 硬性阻塞
 ```
 
 ### 检查项说明
@@ -237,7 +238,12 @@
 3. 输出位置: projects/user/requirements/20260212-rate-limit/
 4. Agent: zed-copilot
 5. 上次记忆: projects/user/.ai-memory/clients/zed-copilot/tasks/20260226.md §会话02 (✅ 完成)
+6. 📝 记忆已创建: .ai-memory/clients/zed-copilot/tasks/20260227.md §会话01 (🔄)
 ```
+
+> 🔴 **第 6 行是阶段 0 硬性阻塞输出**：AI 必须在输出预检查结果时同步完成记忆文件的创建/追加，第 6 行未输出 = 预检查未完成，禁止开始分析用户问题。
+> 这不是新增的"第 6 项必做检查"，而是将阶段 0 的记忆写入动作嵌入预检查输出格式，消除预检查完成与记忆写入之间的空隙（soft gate → hard gate 升级）。
+> **根因**：已发生 2 次阶段 0 时序违规事故（§会话05 + vscode-copilot §会话01），AI 在预检查 5 项输出后认为"预检查完成"直接进入分析模式，跳过记忆写入。
 
 ### 扩展格式（涉及代码时）
 
@@ -249,8 +255,9 @@
 3. 输出位置: projects/user/requirements/20260212-rate-limit/
 4. Agent: webstorm-copilot
 5. 上次记忆: projects/user/.ai-memory/clients/webstorm-copilot/tasks/20260226.md §会话01 (✅ 完成)
-6. 项目规范: ✅ 已加载 profile/（模块化 5 个文件）
-7. 任务记忆: ✅ 已读取（最近 3 条任务，含 2 条 webstorm-copilot + 1 条 zed-copilot）
+6. 📝 记忆已创建: .ai-memory/clients/webstorm-copilot/tasks/20260227.md §会话01 (🔄)
+7. 项目规范: ✅ 已加载 profile/（模块化 5 个文件）
+8. 任务记忆: ✅ 已读取（最近 3 条任务，含 2 条 webstorm-copilot + 1 条 zed-copilot）
 
 # 未找到项目规范:
 📋 预检查:
@@ -259,9 +266,10 @@
 3. 输出位置: projects/chat/requirements/20260224-xxx/
 4. Agent: zed-copilot
 5. 上次记忆: ⚠️ 无（首次任务 / 未找到记忆文件）
-6. 项目规范: ⚠️ 未找到
+6. 📝 记忆已创建: .ai-memory/clients/zed-copilot/tasks/20260224.md §会话01 (🔄)
+7. 项目规范: ⚠️ 未找到
    → 是否需要我分析 chat 项目并生成项目规范文件？[是/否]
-7. 任务记忆: ⚠️ 无历史记忆（首次任务）
+8. 任务记忆: ⚠️ 无历史记忆（首次任务）
 ```
 
 ---
@@ -381,9 +389,9 @@ Step 5 — 继续执行:
 ---
 
 **版本**: v2.11.0  
-**更新日期**: 2026-02-27  
+**更新日期**: 2026-02-28  
 **变更记录**:
-- v2.11.0: 版本号对齐 v2.11.0；任务记忆/日期规则/多Agent 策略拆分到 `memory-and-rules.md`（约束 #20 合规，597→~370 行）；阶段 0 新增 🔴 时序强制规则
+- v2.11.0: 版本号对齐 v2.11.0；任务记忆/日期规则/多Agent 策略拆分到 `memory-and-rules.md`（约束 #20 合规，597→~370 行）；阶段 0 新增 🔴 时序强制规则；预检查输出格式追加第 6 行（📝 记忆已创建 — 阶段 0 硬性阻塞，soft gate → hard gate 升级）；按需检查编号调整为 7/8
 - v2.10.0: Step 5 上次记忆扫描改为 YYYYMMDD.md 格式；阶段 0 改为创建/追加每日记忆文件；日期规则拆分报告/记忆；task-memory v1.6→v1.7
 - v2.7.0: 预检查从 4 项改为 5 项必做（新增"上次记忆"）；按需检查编号调整为 6/7；输出格式全面更新
 - v2.6.0: 多编辑器策略从"共享目录+Agent前缀"改回"目录隔离+全局摘要"；新增任务完成验证

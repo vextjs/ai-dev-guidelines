@@ -16,6 +16,7 @@
 3. 输出位置: [projects/<project>/...]
 4. Agent: [zed-copilot / webstorm-copilot / cursor / vscode-copilot / ...]
 5. 上次记忆: [.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN + 状态] 或 [⚠️ 无]
+6. 📝 记忆已创建: [.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN (🔄)] ← 🔴 阶段0 硬性阻塞
 ```
 
 ### 🏷️ Agent 标识速查
@@ -202,7 +203,7 @@ projects/<project-name>/
   - ❌ 禁止报告和记忆共享全局序号（v1.6 及之前的设计缺陷，已废弃）
 
 🔴 消息驱动 5 阶段触发时机（task-memory v1.8）:
-  阶段 0: 会话初始化（首条消息时 — 预检查 + 创建/追加记忆 YYYYMMDD.md）
+  阶段 0: 会话初始化（首条消息时 — 预检查 + 🔴 第 6 行记忆写入硬性阻塞 — 创建/追加记忆 YYYYMMDD.md）
   阶段 1: 用户发消息时（捕获用户输入 — 新意图/需求/修正）
   阶段 2: AI 回复时（写报告 + 更新记忆 + 追加对话记录含关联引用）
   阶段 3: AI 执行完毕时（记录变更清单 + 🔴 实时更新报告中已完成问题项状态 — 与阶段 2 通常合并写入）

@@ -8,7 +8,7 @@
 
 ---
 
-## 📋 模式概览
+## 📋 模式概览（11 个模式）
 
 | 模式 | 触发条件 | 安全等级 | 自动化 |
 |-----|---------|---------|--------|
@@ -454,6 +454,95 @@ v2.0 示例:
 
 ---
 
+### 模式 11: 预检查-记忆原子操作修复（🆕 v2.1）
+
+```yaml
+触发条件:
+  - detection/conflict-detection.md §规则 5 检测到预检查第 6 行缺失
+  - triggers/auto-triggers.md §场景 9 检测到预检查缺少记忆写入确认行
+  - 用户指出阶段 0 记忆写入被跳过（反复问题）
+
+安全等级: ✅ 安全（只修改输出格式定义和规则描述，不影响业务逻辑）
+
+修复目标:
+  确保预检查第 6 行（📝 记忆已创建 — 阶段 0 硬性阻塞）在以下 4 处文件中一致存在:
+  - workflows/00-pre-check/README.md §检查清单 + §输出格式（标准/扩展）（权威来源）
+  - QUICK-REFERENCE.md §预检查模板
+  - workflows/00-pre-check/memory-and-rules.md §阶段 0 输出
+  - .github/copilot-instructions.md 预检查描述
+
+第 6 行标准格式（必须在上述 4 处都存在或引用）:
+  "6. 📝 记忆已创建: .ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN (🔄)"
+  标注: "← 🔴 阶段0 硬性阻塞"
+
+关联的自检清单更新（task-memory.md §阶段 0）:
+  自检清单首项必须为:
+  "🔴 预检查第 6 行是否已输出？（'6. 📝 记忆已创建: ...'）— 未输出 = 预检查未完成"
+
+执行步骤:
+  1. 逐个 read_file 检查 4 处文件，确认第 6 行是否存在
+  2. 对于每个缺失的位置:
+     a. 确定插入点（预检查第 5 行之后）
+     b. 插入第 6 行标准格式
+     c. 如有按需检查编号（原 6/7），调整为 7/8
+     d. 确保标注 "🔴 阶段0 硬性阻塞"（防止被误认为可选项）
+  3. 检查 task-memory.md §阶段 0:
+     a. 自检清单首项是否为第 6 行输出检查
+     b. 阶段 0 步骤中是否包含 "输出预检查第 6 行" 步骤
+     c. 硬性阻塞机制说明是否存在
+  4. 检查 copilot-instructions.md:
+     a. 预检查描述是否包含 "第 6 行阶段0 记忆写入硬性阻塞"
+  5. 修复后验证:
+     a. 4 处文件均包含第 6 行 ✅
+     b. 第 6 行格式一致 ✅
+     c. 硬性阻塞标注存在 ✅
+     d. 自检清单首项正确 ✅
+     e. 按需检查编号已调整（7/8）✅
+
+修复内容映射:
+  | 缺失位置 | 修复动作 | 关键检查 |
+  |---------|---------|---------|
+  | 00-pre-check/README.md §检查清单 | 第 5 行后插入第 6 行 | 标注 "🔴 阶段0 硬性阻塞" |
+  | 00-pre-check/README.md §输出格式（标准） | 第 5 行后插入第 6 行 | 标准格式示例中包含 |
+  | 00-pre-check/README.md §输出格式（扩展） | 第 5 行后插入第 6 行 + 原 6/7→7/8 | 编号调整 |
+  | QUICK-REFERENCE.md §预检查 | 第 5 行后插入第 6 行 | 与 README.md 格式一致 |
+  | memory-and-rules.md §阶段 0 | 输出行更新为第 6 行格式 | 与 README.md 格式一致 |
+  | copilot-instructions.md | 预检查描述追加硬性阻塞说明 | 包含 "第 6 行" 关键词 |
+  | task-memory.md §阶段 0 | 自检清单首项 + 步骤 10 + 硬性阻塞说明 | 首项为第 6 行检查 |
+
+示例:
+  检测: QUICK-REFERENCE.md §预检查模板只有 5 行（无第 6 行）
+  修复:
+    在第 5 行 "上次记忆: ..." 之后插入:
+    "6. 📝 记忆已创建: [.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN (🔄)] ← 🔴 阶段0 硬性阻塞"
+  验证:
+    - 00-pre-check/README.md 第 6 行 ✅
+    - QUICK-REFERENCE.md 第 6 行 ✅（已修复）
+    - memory-and-rules.md 第 6 行 ✅
+    - copilot-instructions.md 描述 ✅
+    - task-memory.md 自检清单首项 ✅
+
+根因背景:
+  此模式源于 2 次阶段 0 时序违规事故（§会话05 + vscode-copilot §会话01）。
+  AI 在预检查 5 项输出后认为"预检查完成了"，直接切换到任务执行模式，
+  跳过记忆写入。根本原因是预检查完成与记忆写入之间缺少显式阻塞操作（soft gate）。
+  修复方案为将记忆写入嵌入预检查输出的第 6 行（hard gate 升级），
+  使不写第 6 行 = 预检查本身不完整，从而消除跳过记忆写入的可能性。
+  本修复模式确保:
+  1) 当第 6 行在某处被意外删除或遗漏时，有标准化的修复流程
+  2) 修复后全量验证 4 处文件一致性
+  3) 自检清单的首项固定为第 6 行输出检查
+
+关联:
+  - detection/conflict-detection.md §规则 5（预检查第 6 行存在性检测）
+  - triggers/auto-triggers.md §场景 9（预检查缺少记忆写入确认行检测）
+  - 模式 9（时序违规修复 — 互补关系：模式 9 修复时序规则定义，模式 11 修复硬性阻塞机制）
+  - workflows/common/task-memory.md §阶段 0 硬性阻塞机制
+  - workflows/00-pre-check/README.md §输出格式 第 6 行
+```
+
+---
+
 ## 📊 修复统计模板
 
 ```yaml
@@ -493,9 +582,24 @@ v2.0 示例:
 
 ---
 
-## 📋 v2.0 变更日志
+## 📋 变更日志
 
 ```yaml
+v2.1 (2026-02-28):
+  新增:
+    - 模式 11: 预检查-记忆原子操作修复
+      - 确保预检查第 6 行（📝 记忆已创建 — 阶段 0 硬性阻塞）在 4 处文件中一致存在
+      - 修复内容映射表（缺失位置 → 修复动作 → 关键检查）
+      - 修复后全量验证 4 处文件一致性 + 自检清单首项检查
+  根因:
+    - 阶段 0 时序违规已发生 2 次（§会话05 + vscode-copilot §会话01），
+      根因是预检查完成与记忆写入之间缺少硬性阻塞（soft gate）
+    - 修复方案为将记忆写入嵌入预检查第 6 行（hard gate 升级）
+    - 需要修复模式确保第 6 行在后续修改中不被意外删除或遗漏
+  关联:
+    - detection/conflict-detection.md §规则 5（v2.1 — 预检查第 6 行存在性检测）
+    - triggers/auto-triggers.md §场景 9（v2.2 — 预检查缺少记忆写入确认行检测）
+
 v2.0 (2026-02-27):
   升级:
     - 模式 5: 版本号批量更新
@@ -533,15 +637,17 @@ v1.0 (2026-02-12):
 - [auto-repair.md](./auto-repair.md) - 自动修复实现
 - [repair-validation.md](./repair-validation.md) - 修复验证
 - [../detection/conflict-detection.md](../detection/conflict-detection.md) §规则 1 - 版本号 8 文件清单检测
-- [../detection/conflict-detection.md](../detection/conflict-detection.md) §规则 5 - 流程时序合规检测
+- [../detection/conflict-detection.md](../detection/conflict-detection.md) §规则 5 - 流程时序合规 + 预检查第 6 行存在性检测
 - [../detection/obsolete-detection.md](../detection/obsolete-detection.md) §规则 5 - 流程时序过时检测
 - [../triggers/auto-triggers.md](../triggers/auto-triggers.md) §场景 5/6/7 - 自动触发场景
+- [../triggers/auto-triggers.md](../triggers/auto-triggers.md) §场景 9 - 预检查第 6 行存在性触发（🆕 v2.1）
 - [../triggers/user-intent-detection.md](../triggers/user-intent-detection.md) §模式 5 - 反复问题升级触发
 - [QUICK-REFERENCE.md](../../QUICK-REFERENCE.md) §版本号文件清单 - 权威清单来源
 - [CONSTRAINTS.md](../../CONSTRAINTS.md) 约束 #14 - 交叉验证要求
 
 ---
 
-**版本**: v2.0
-**最后更新**: 2026-02-27
+**版本**: v2.1
+**最后更新**: 2026-02-28
+**v2.1 核心改进**: 新增模式 11（预检查-记忆原子操作修复 — 确保第 6 行在 4 处文件一致存在）
 **v2.0 核心改进**: 模式 5 升级（主动全量 8 文件）；新增模式 9（时序违规修复）；新增模式 10（知识库断层修复）
