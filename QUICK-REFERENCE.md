@@ -87,6 +87,8 @@
 | 新项目、开源、npm包、初始化 | 开源项目初始化 | `workflows/09-opensource-init/` 🆕 |
 | 分析、审查、评估、深度分析 | 深度分析 | `workflows/10-analysis/` 🆕 |
 
+> 🔴 **混合意图规则**（FIX-010）：请求同时含"分析"和变更意图（调整/重构/修改/移动/拆分）时 → **需求开发**，不是深度分析。详见 `workflows/00-task-identification/rules.md §混合意图优先级规则`
+
 ---
 
 ## 📝 执行模式
