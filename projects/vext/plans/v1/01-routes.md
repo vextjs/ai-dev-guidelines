@@ -279,6 +279,15 @@ interface RouteOptions {
     | { name: string; options?: unknown }
   >
 
+  /**
+   * OpenAPI 文档配置（可选）
+   * 用于 OpenAPI 自动生成，详见 14-openapi.md §1
+   *
+   * 不声明 docs 时，路由仍会出现在 OpenAPI 文档中（从 validate 自动推断参数），
+   * 但缺少 summary/description/responses 等增强信息。
+   * 设置 docs.hidden = true 可将路由从文档中隐藏。
+   */
+  docs?: RouteDocsConfig
 
   /**
    * 路由级覆盖（覆盖 config/default.ts 中对应的全局配置）
@@ -322,17 +331,11 @@ interface RouteOptions {
 }
 ```
 
-> 第一期**框架只处理** `validate` + `middlewares`，`override` 字段类型定稳但暂不实现。
+> 第一期**框架只处理** `validate` + `middlewares` + `docs`，`override` 字段类型定稳但暂不实现。
 
-> **文档生成**：vextjs 不在 RouteOptions 里放 `docs` 配置对象，而是通过**注释驱动**方式生成文档——插件扫描路由文件的 JSDoc 注释 + `validate` schema（已含完整参数类型）自动生成 OpenAPI 文档，零侵入业务代码：
->
-> ```typescript
-> /**
->  * @summary 获取用户列表
->  * @tags 用户
->  */
-> app.get('/list', { validate: { query: { page: 'number:1-', limit: 'number:1-100' } } }, handler)
-> ```
+> **文档生成**：RouteOptions 支持可选 `docs` 字段（`RouteDocsConfig`），用于 OpenAPI 自动生成。
+> 框架从 `validate` schema 自动推断参数类型，`docs` 提供 summary / description / responses 等增强元信息。
+> 详见 [`14-openapi.md` §1](./14-openapi.md)。
 
 ---
 

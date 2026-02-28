@@ -297,6 +297,9 @@ export async function bootstrap(rootDir: string) {
   await loadServices(app, path.join(rootDir, 'src/services'))
 
   // ── ⑤ 加载路由 ────────────────────────────────────────
+  // ⚠️ OpenAPI 集成：当 config.openapi.enabled 时，创建 RouteMetadataCollector
+  //    并传入 loadRoutes，详见 14-openapi.md §9.1
+  // ⚠️ Build 模式：srcDir 可能为 dist/（VEXT_BUILT 环境变量），详见 09a-build.md §5.3
   await loadRoutes(app, path.join(rootDir, 'src/routes'), {
     middlewareDefs,
     globalMiddlewares: internals.getGlobalMiddlewares(),
@@ -304,6 +307,10 @@ export async function bootstrap(rootDir: string) {
 
   // ── ⑤+ 锁定 app.use() ─────────────────────────────────
   internals.lockUse()   // ← 关键：路由注册后立即锁定
+
+  // ── ⑤++ OpenAPI 文档生成（路由加载完成后）──────────────
+  // 当 config.openapi.enabled 时，使用 collector 收集的元信息生成 OpenAPI spec，
+  // 注册 /openapi.json 和 /docs 端点。详见 14-openapi.md §9.1
 
   // ── ⑥ 注册出口包装 / 错误处理 / 404 ───────────────────
   app.adapter.registerMiddleware(responseWrapperMiddleware)

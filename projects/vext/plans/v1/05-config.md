@@ -847,28 +847,129 @@ function deepFreeze<T>(obj: T): T {
  * 配置校验（启动时 Fail Fast）。
  */
 function validateConfig(config: Record<string, unknown>): void {
+  // ── port ──────────────────────────────────────────────
   const port = config.port as number | undefined
   if (port !== undefined && (typeof port !== 'number' || port < 1 || port > 65535)) {
     throw new Error(`[vextjs] config.port must be a number between 1 and 65535, got: ${port}`)
   }
 
-  const adapter = config.adapter as string | undefined
-  const knownAdapters = ['hono']
-  if (adapter && !knownAdapters.includes(adapter)) {
-    throw new Error(
-      `[vextjs] config.adapter "${adapter}" is not a built-in adapter.\n` +
-      `         Available: ${knownAdapters.join(', ')}`
-    )
+  // ── adapter（字符串标识 | 工厂函数，见 08-adapter.md §5）──
+  const adapter = config.adapter
+  if (adapter !== undefined) {
+    const knownAdapters = ['hono', 'fastify']
+    if (typeof adapter === 'string') {
+      if (!knownAdapters.includes(adapter)) {
+        throw new Error(
+          `[vextjs] config.adapter "${adapter}" is not a built-in adapter.\n` +
+          `         Available: ${knownAdapters.join(', ')}`
+        )
+      }
+    } else if (typeof adapter !== 'function') {
+      throw new Error(
+        `[vextjs] config.adapter must be a string (built-in name) or a factory function,` +
+        ` got: ${typeof adapter}`
+      )
+    }
   }
 
+  // ── middlewares ────────────────────────────────────────
   const middlewares = config.middlewares as unknown[]
   if (middlewares) {
+    if (!Array.isArray(middlewares)) {
+      throw new Error('[vextjs] config.middlewares must be an array.')
+    }
     for (let i = 0; i < middlewares.length; i++) {
       const m = middlewares[i]
       if (typeof m !== 'string' && (typeof m !== 'object' || m === null || !('name' in m))) {
         throw new Error(
           `[vextjs] config.middlewares[${i}] must be a string or { name, options?, enabled? } object.`
         )
+      }
+    }
+  }
+
+  // ── cluster（见 12-cluster.md）─────────────────────────
+  const cluster = config.cluster as Record<string, unknown> | undefined
+  if (cluster !== undefined) {
+    if (typeof cluster !== 'object' || cluster === null) {
+      throw new Error('[vextjs] config.cluster must be an object.')
+    }
+    const workers = cluster.workers
+    if (workers !== undefined) {
+      const validWorkerStrings = ['auto', 'auto-1']
+      if (typeof workers === 'string' && !validWorkerStrings.includes(workers)) {
+        throw new Error(
+          `[vextjs] config.cluster.workers must be a positive integer, "auto", or "auto-1",` +
+          ` got: "${workers}"`
+        )
+      } else if (typeof workers === 'number' && (!Number.isInteger(workers) || workers < 1)) {
+        throw new Error(
+          `[vextjs] config.cluster.workers must be a positive integer, got: ${workers}`
+        )
+      } else if (typeof workers !== 'string' && typeof workers !== 'number') {
+        throw new Error(
+          `[vextjs] config.cluster.workers must be a positive integer, "auto", or "auto-1",` +
+          ` got: ${typeof workers}`
+        )
+      }
+    }
+    if (cluster.enabled !== undefined && typeof cluster.enabled !== 'boolean') {
+      throw new Error(`[vextjs] config.cluster.enabled must be a boolean.`)
+    }
+  }
+
+  // ── locale（见 §3.14）─────────────────────────────────
+  const locale = config.locale as Record<string, unknown> | undefined
+  if (locale !== undefined) {
+    if (typeof locale !== 'object' || locale === null) {
+      throw new Error('[vextjs] config.locale must be an object.')
+    }
+    if (locale.default !== undefined && typeof locale.default !== 'string') {
+      throw new Error(`[vextjs] config.locale.default must be a string (e.g. "zh-CN"), got: ${typeof locale.default}`)
+    }
+    if (locale.supported !== undefined) {
+      if (!Array.isArray(locale.supported)) {
+        throw new Error('[vextjs] config.locale.supported must be an array of locale strings.')
+      }
+      for (const s of locale.supported) {
+        if (typeof s !== 'string') {
+          throw new Error(`[vextjs] config.locale.supported[] items must be strings, got: ${typeof s}`)
+        }
+      }
+    }
+  }
+
+  // ── openapi（见 14-openapi.md §8）─────────────────────
+  const openapi = config.openapi as Record<string, unknown> | undefined
+  if (openapi !== undefined) {
+    if (typeof openapi !== 'object' || openapi === null) {
+      throw new Error('[vextjs] config.openapi must be an object.')
+    }
+    if (openapi.enabled !== undefined && typeof openapi.enabled !== 'boolean') {
+      throw new Error('[vextjs] config.openapi.enabled must be a boolean.')
+    }
+    const info = openapi.info as Record<string, unknown> | undefined
+    if (info !== undefined) {
+      if (typeof info !== 'object' || info === null) {
+        throw new Error('[vextjs] config.openapi.info must be an object.')
+      }
+      if (info.title !== undefined && typeof info.title !== 'string') {
+        throw new Error('[vextjs] config.openapi.info.title must be a string.')
+      }
+      if (info.version !== undefined && typeof info.version !== 'string') {
+        throw new Error('[vextjs] config.openapi.info.version must be a string.')
+      }
+    }
+    const endpoint = openapi.endpoint as Record<string, unknown> | undefined
+    if (endpoint !== undefined) {
+      if (typeof endpoint !== 'object' || endpoint === null) {
+        throw new Error('[vextjs] config.openapi.endpoint must be an object.')
+      }
+      if (endpoint.docsPath !== undefined && typeof endpoint.docsPath !== 'string') {
+        throw new Error('[vextjs] config.openapi.endpoint.docsPath must be a string.')
+      }
+      if (endpoint.specPath !== undefined && typeof endpoint.specPath !== 'string') {
+        throw new Error('[vextjs] config.openapi.endpoint.specPath must be a string.')
       }
     }
   }

@@ -53,6 +53,8 @@ interface LoadRoutesOptions {
   middlewareDefs?: MiddlewareRegistry
   /** 全局中间件列表（来自 internals.getGlobalMiddlewares()） */
   globalMiddlewares?: VextMiddleware[]
+  /** OpenAPI 元信息收集器（可选，未配置 openapi 时为 null/undefined）。详见 14-openapi.md §3 */
+  collector?: RouteMetadataCollector | null
 }
 
 export async function loadRoutes(
@@ -121,6 +123,13 @@ export async function loadRoutes(
         )
       }
       registeredRoutes.set(key, file)
+    }
+
+    // 🆕 收集元信息（用于 OpenAPI 生成）
+    if (options.collector) {
+      for (const route of routeDef.getRoutes(prefix)) {
+        options.collector.addRoute(route.method, route.path, route.options, file)
+      }
     }
 
     routeDef.register(app.adapter, prefix, { middlewareDefs, globalMiddlewares })

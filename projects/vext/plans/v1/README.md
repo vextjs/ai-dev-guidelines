@@ -1,9 +1,9 @@
 # vext 框架方案 v3 — 总览
 
 > **项目**: vext (vextjs)
-> **日期**: 2026-02-26（最后更新: 2026-02-26 P1-6/P2-7 修复）
+> **日期**: 2026-02-26（最后更新: 2026-02-28 P0/P1 设计文档追加）
 > **状态**: ✅ 核心方案已确认（详见 `confirmed.md`）
-> **变更说明**: 无编译阶段（纯后端）；`vext build` 暂不实现
+> **变更说明**: 新增 `vext build`（P0）、Fastify Adapter（P0）、monSQLize 集成（P1）、OpenAPI 自动生成（P1）设计文档
 
 ---
 
@@ -171,6 +171,7 @@ export default definePlugin({
 {
   "scripts": {
     "dev":   "vext dev",
+    "build": "vext build",
     "start": "vext start"
   }
 }
@@ -251,6 +252,16 @@ vextjs/src/
 │   ├── logger.ts             # VextLogger 内置实现（pino，插件可替换）
 │   ├── http-error.ts         # HttpError + VextValidationError
 │   ├── fetch.ts              # app.fetch 内置 HTTP 客户端
+│   ├── build/                # vext build 编译（详见 09a-build.md）
+│   │   ├── compiler.ts       # BuildCompiler（esbuild 编译 TS→CJS）
+│   │   └── shared-esbuild-config.ts  # DevCompiler 和 BuildCompiler 共享的 esbuild 基础配置
+│   ├── openapi/              # OpenAPI 自动生成（详见 14-openapi.md）
+│   │   ├── index.ts          # 导出入口
+│   │   ├── collector.ts      # RouteMetadataCollector — 路由元信息收集
+│   │   ├── converter.ts      # SchemaConverter — schema-dsl → JSON Schema
+│   │   ├── generator.ts      # OpenAPIGenerator — 文档生成器
+│   │   ├── swagger-ui.ts     # Swagger UI HTML 生成
+│   │   └── routes.ts         # /openapi.json 和 /docs 端点注册
 │   └── dev/                  # 开发热重载（三层 Soft Reload）
 │       ├── compiler.ts       # DevCompiler（esbuild 预编译 CJS → .vext/dev/）
 │       ├── file-watcher.ts   # fs.watch 文件监听（零依赖，Docker polling 降级）
@@ -266,9 +277,10 @@ vextjs/src/
 │       ├── request.ts        # HonoContext → VextRequest 转换
 │       └── response.ts       # HonoContext → VextResponse 转换（内建包装 + 延迟绑定）
 ├── cli/
-│   ├── index.ts              # bin 入口（vext dev / start / stop / reload / status / create）
+│   ├── index.ts              # bin 入口（vext dev / start / build / stop / reload / status / create）
 │   ├── dev.ts                # ColdRestarter + FileWatcher（详见 11-hot-reload.md）
-│   ├── start.ts              # 生产模式（tsx 运行，含 cluster 分支）
+│   ├── build.ts              # vext build CLI 入口（详见 09a-build.md）
+│   ├── start.ts              # 生产模式（tsx 运行，含 cluster 分支 + dist/ 检测）
 │   └── create.ts             # vext create 脚手架（P0-3）
 └── index.ts                  # 公共导出入口（re-export types/ 下的所有公共类型）
 ```
@@ -295,8 +307,12 @@ vextjs/src/
 | [06c-lifecycle.md](./06c-lifecycle.md) | `app.extend` / `onClose` / `use` / `onReady` 详解 | ✅ 已确认 |
 | `07-models.md` | 数据层 | ⏳ 后续开发 |
 | [08-adapter.md](./08-adapter.md) | Adapter 层（VextAdapter 接口） | ✅ 已确认 |
-| [09-cli.md](./09-cli.md) | CLI（vext dev / start） | ✅ 已确认 |
+| [08a-fastify-adapter.md](./08a-fastify-adapter.md) | Fastify Adapter 原型（P0 — 接口完备性验证） | 📝 设计稿 |
+| [09-cli.md](./09-cli.md) | CLI（vext dev / build / start） | ✅ 已确认 |
+| [09a-build.md](./09a-build.md) | `vext build` 命令（P0 — esbuild 编译 TS→JS） | 📝 设计稿 |
 | [10-testing.md](./10-testing.md) | 测试策略（createTestApp / 分层测试） | ✅ 已确认 |
+| [13-monsqlize-plugin.md](./13-monsqlize-plugin.md) | monSQLize 集成（P1 — 连接池共享 + Model 复用 + 事务） | 📝 设计稿 |
+| [14-openapi.md](./14-openapi.md) | OpenAPI 自动生成（P1 — schema-dsl→JSON Schema + Swagger UI） | 📝 设计稿 |
 | [confirmed.md](./confirmed.md) | 已确认决策清单 | 🔄 持续更新 |
 
 ---
@@ -310,7 +326,7 @@ vextjs/src/
 5. **多语言错误码按目录加载**：`src/locales/` 下按语言代码命名（`zh-CN.ts`、`en-US.ts`），框架启动时自动扫描加载，详见 `06b-error.md` §1.7
 6. **热重载**：`vext dev` 使用三层 Soft Reload（Tier 1: esbuild 单文件编译 + cache 清除 + handler 原子替换 ~23ms / Tier 2: 全量增量编译 ~100ms / Tier 3: 冷重启）。使用 Node.js 内置 `fs.watch`（零依赖），Server socket、DB 连接池、Plugin 实例在 Soft Reload 后保持不变。生产无热重载。详见 `11-hot-reload.md`
 7. **双语言**：`.ts` / `.js` / `.mjs` / `.cjs` 均可，扫描器自动识别
-8. **无 build 命令**：前期纯后端，`vext dev` 使用 esbuild 预编译 CJS 到 `.vext/dev/`（解决 ESM require.cache 不可清除问题），`vext start` 生产模式中 TS 项目用 `tsx`、JS 项目用 `node`
+8. **`vext build` 可选编译**：`vext build` 使用 esbuild 将 TS 编译为 JS 输出到 `dist/`，`vext start` 检测到 `dist/` 时用 `node` 直接运行（无需 tsx）；未执行 `build` 时降级为 tsx 运行。`vext dev` 仍使用 esbuild 预编译 CJS 到 `.vext/dev/`（热重载专用）。详见 `09a-build.md`
 
 ---
 

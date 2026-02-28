@@ -176,6 +176,15 @@ interface VextRequest {
    * - 未配置对应位置时返回 undefined
    * - schema-dsl 会自动做类型转换（如 query 中的数字字符串 → number）
    *
+   * location 与数据源映射：
+   *   'query'  → req.query   （URL 查询参数）
+   *   'body'   → req.body    （请求体）
+   *   'param'  → req.params  （路径动态参数，如 /:id）
+   *   'header' → req.headers （请求头）
+   *
+   * 注意：location 使用单数 `'param'`（与 validate 配置的 key 一致），
+   * 但底层数据源是复数 `req.params`。框架内部已正确映射，用户无需关心。
+   *
    * 默认返回 Record<string, any>，用户可直接访问属性：
    *   req.valid('body').name    // ✅ 直接可用，无需泛型
    *   req.valid('body').email   // ✅ 直接可用

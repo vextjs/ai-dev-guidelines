@@ -294,22 +294,21 @@ export function createErrorHandler(config: VextConfig): VextErrorMiddleware {
 
 ```typescript
 // vextjs/lib/middlewares/response-wrapper.ts（框架内部）
+// P0-2 修复：仅开启包装标志，不再 monkey-patch res.json
+// 包装逻辑内建于 createVextResponse 的 json() 方法中（见 08-adapter.md §4.4）
 export const responseWrapper: VextMiddleware = async (req, res, next) => {
-  const originalJson = res.json.bind(res)
-
-  res.json = (data: unknown, status = 200) => {
-    if (status === 204) {
-      return originalJson(null, 204)   // No Content，无响应体
-    }
-    return originalJson(
-      { code: 0, data, requestId: req.requestId },
-      status
-    )
-  }
-
+  // 开启内建包装标志 — json() 调用时会自动包装为 { code: 0, data, requestId }
+  // _enableWrap 是 VextResponse 的内部方法，用户不可见（通过 Omit 排除）
+  ;(res as any)._enableWrap()
   next()
 }
 ```
+
+> **P0-2 修复记录**（2026-02-28）：
+> 原代码使用 monkey-patch（覆盖 `res.json`）实现出口包装，与 `01c-response.md` §5 的 `_enableWrap()` 标志模式矛盾。
+> monkey-patch 方式存在已知 Bug：`res.status(201).json(data)` 链式调用中，patched `json` 使用 `status = 200` 默认值，
+> 忽略了内部 `_status`，导致 HTTP 状态码始终为 200。
+> 现已统一为 `_enableWrap()` 标志模式，包装逻辑在 `createVextResponse` 内部处理（见 `08-adapter.md` §4.4）。
 
 ---
 

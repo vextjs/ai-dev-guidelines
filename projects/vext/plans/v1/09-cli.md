@@ -1,7 +1,7 @@
-# 09 - CLI（vext dev / start / create）
+# 09 - CLI（vext dev / start / build / create）
 
 > **项目**: vext (vextjs)
-> **日期**: 2026-02-26（最后更新: 2026-02-26 P0-3 vext create 设计）
+> **日期**: 2026-02-26（最后更新: 2026-02-28 P0 vext build 设计）
 > **状态**: ✅ 已确认
 > **依赖**: 目录结构（`00-directory-structure.md` ✅）、配置层（`05-config.md` ✅）、内置模块（`06-built-ins.md` ✅）
 
@@ -14,14 +14,16 @@ vextjs 通过 CLI 命令驱动项目启动，用户**无需编写 `app.ts` / `se
 | 命令 | 用途 | 热重载 | 运行时 |
 |------|------|--------|--------|
 | `vext dev` | 开发模式 | ✅ 三层热重载（Soft Reload + Cold Restart） | esbuild 预编译 CJS |
-| `vext start` | 生产模式 | ❌ 无监听 | TS → `tsx`；JS → `node` |
+| `vext build` | 编译 TS→JS | ❌ 一次性编译 | esbuild 全量编译到 `dist/` |
+| `vext start` | 生产模式 | ❌ 无监听 | 有 `dist/` → `node`；无 `dist/` → TS 用 `tsx`、JS 用 `node` |
 
-> **暂无 `vext build`**：前期纯后端框架，无编译阶段。前端渲染支持后续版本再引入。
+> **`vext build`**：通过 esbuild 将 TypeScript 编译为 JavaScript 输出到 `dist/`，移除生产模式对 tsx 的依赖。详见 [`09a-build.md`](./09a-build.md)。
 
 ```json
 {
   "scripts": {
     "dev":   "vext dev",
+    "build": "vext build",
     "start": "vext start"
   }
 }
@@ -59,6 +61,9 @@ switch (command) {
   case 'dev':
     await import('./dev.js').then(m => m.run())
     break
+  case 'build':
+    await import('./build.js').then(m => m.run())
+    break
   case 'start':
     await import('./start.js').then(m => m.run())
     break
@@ -74,7 +79,7 @@ switch (command) {
   default:
     console.error(
       `[vextjs] Unknown command: "${command}"\n` +
-      `         Available commands: dev, start, stop, reload, status`
+      `         Available commands: dev, build, start, stop, reload, status, create`
     )
     process.exit(1)
 }
@@ -237,18 +242,34 @@ import { detectProject } from './utils/detect-project.js'
 export async function run() {
   const project = detectProject(process.cwd())
 
-  console.log(`[vextjs] start mode — ${project.language === 'ts' ? 'TypeScript (tsx)' : 'JavaScript (node)'}`)
+  // ⚠️ vext build 产物检测：当 dist/ 目录存在时，使用 node 直接运行编译后的 JS，
+  //    无需 tsx。设置 VEXT_BUILT=1 环境变量，bootstrap 据此切换 srcDir。
+  //    详见 09a-build.md §5.2
+  const distDir = path.join(project.rootDir, 'dist')
+  const hasBuilt = existsSync(distDir)
+  const entryFile = hasBuilt
+    ? path.join(distDir, project.entryFile.replace(/^src\//, '').replace(/\.ts$/, '.js'))
+    : project.entryFile
 
-  const child = fork(project.entryFile, [], {
+  console.log(
+    hasBuilt
+      ? `[vextjs] start mode — built (node, from dist/)`
+      : `[vextjs] start mode — ${project.language === 'ts' ? 'TypeScript (tsx)' : 'JavaScript (node)'}`,
+  )
+
+  const child = fork(entryFile, [], {
     cwd:      project.rootDir,
-    execArgv: project.language === 'ts'
-      ? ['--import', 'tsx/esm']
-      : [],
+    execArgv: hasBuilt
+      ? []   // dist/ 已编译为 JS，无需 tsx
+      : project.language === 'ts'
+        ? ['--import', 'tsx/esm']
+        : [],
     stdio: 'inherit',
     env: {
       ...process.env,
       NODE_ENV: process.env.NODE_ENV || 'production',
       VEXT_MODE: 'start',
+      ...(hasBuilt && { VEXT_BUILT: '1' }),
     },
   })
 
@@ -643,12 +664,14 @@ CLI (vext dev)
 
 ```
 vextjs/src/cli/
-├── index.ts                  # bin 入口：命令解析（dev / start / stop / reload / status）
+├── index.ts                  # bin 入口：命令解析（dev / build / start / stop / reload / status / create）
 ├── dev.ts                    # vext dev：ColdRestarter + FileWatcher（详见 11-hot-reload.md）
-├── start.ts                  # vext start：子进程管理（含 cluster 分支）
+├── build.ts                  # vext build：esbuild 全量编译 TS→JS 到 dist/（详见 09a-build.md）
+├── start.ts                  # vext start：子进程管理（含 dist/ 检测 + cluster 分支）
 ├── stop.ts                   # vext stop：读取 PID → SIGTERM
 ├── reload.ts                 # vext reload：读取 PID → SIGHUP（零停机重启）
 ├── status.ts                 # vext status：读取 PID + /health 探测
+├── create.ts                 # vext create：项目脚手架（P0-3）
 └── utils/
     └── detect-project.ts     # 项目检测（rootDir / srcDir / language / entryFile）
 ```
@@ -947,7 +970,7 @@ case 'create': {
 
 | 命令 | 说明 | 优先级 |
 |------|------|--------|
-| `vext build` | 编译 TypeScript → JavaScript（前端渲染支持后引入） | ⏳ 后续版本 |
+| `vext build` | esbuild 编译 TS→JS 到 `dist/`，移除生产对 tsx 依赖 | ✅ 已设计（[`09a-build.md`](./09a-build.md)） |
 | `vext generate` | 脚手架：生成 route / service / plugin 模板文件 | ⏳ 后续版本 |
 | `vext generate:types` | 自动生成 `types/services.d.ts`（P1-1） | ⏳ Phase 1 |
 | `vext typecheck` | 运行 `tsc --noEmit`，检查项目类型 | ⏳ 后续版本 |

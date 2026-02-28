@@ -31,6 +31,9 @@ my-app/
 │   │   └── local.ts         # 本地覆盖（最高优先级，不提交 git）
 │   └── models/              # 数据层（后续开发）
 │
+├── dist/                    # vext build 编译产物（可选，加入 .gitignore，详见 09a-build.md）
+│   └── ...                  # 与 src/ 结构一一对应（CJS .js + source map）
+│
 ├── .vext/                   # 框架运行时目录（自动生成，加入 .gitignore）
 │   └── dev/                 # esbuild 编译产物（vext dev 模式，CJS .js + source map）
 │       ├── routes/          # 编译后的路由文件
@@ -210,6 +213,16 @@ vext/src/
 │   ├── logger.ts             # VextLogger 内置实现（pino，插件可替换）
 │   ├── http-error.ts         # HttpError 类（app.throw 内置实现）+ VextValidationError
 │   ├── fetch.ts              # app.fetch 内置 HTTP 客户端
+│   ├── build/                # vext build 编译（详见 09a-build.md）
+│   │   ├── compiler.ts       # BuildCompiler（esbuild 编译 TS→CJS）
+│   │   └── shared-esbuild-config.ts  # DevCompiler 和 BuildCompiler 共享的 esbuild 基础配置
+│   ├── openapi/              # OpenAPI 自动生成（详见 14-openapi.md）
+│   │   ├── index.ts          # 导出入口
+│   │   ├── collector.ts      # RouteMetadataCollector — 路由元信息收集
+│   │   ├── converter.ts      # SchemaConverter — schema-dsl → JSON Schema
+│   │   ├── generator.ts      # OpenAPIGenerator — 文档生成器
+│   │   ├── swagger-ui.ts     # Swagger UI HTML 生成
+│   │   └── routes.ts         # /openapi.json 和 /docs 端点注册
 │   └── dev/                  # 开发模式热重载（esbuild 预编译 + Soft Reload，详见 11-hot-reload.md）
 │       ├── compiler.ts       # DevCompiler（esbuild 预编译器）
 │       ├── cold-restart.ts   # ColdRestarter（Tier 3 进程替换）
@@ -225,9 +238,10 @@ vext/src/
 │       ├── request.ts        # HonoContext → VextRequest 转换
 │       └── response.ts       # HonoContext → VextResponse 转换（内建包装 + 延迟绑定）
 ├── cli/
-│   ├── index.ts              # bin 入口（vext dev / start / stop / reload / status / create）
+│   ├── index.ts              # bin 入口（vext dev / start / build / stop / reload / status / create）
 │   ├── dev.ts                # ColdRestarter + FileWatcher（详见 11-hot-reload.md）
-│   ├── start.ts              # 生产模式（tsx 运行，含 cluster 分支）
+│   ├── build.ts              # vext build CLI 入口（详见 09a-build.md）
+│   ├── start.ts              # 生产模式（tsx 运行，含 cluster 分支 + dist/ 检测）
 │   └── create.ts             # vext create 脚手架（P0-3）
 └── index.ts                  # 公共导出入口（re-export types/ 下的所有公共类型）
 ```
