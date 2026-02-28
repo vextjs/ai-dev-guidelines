@@ -111,13 +111,41 @@
 ```yaml
 执行: 基于项目名和任务类型构建路径
 
-路径模式:
-  需求: projects/<project>/requirements/<feature>/
-  Bug: projects/<project>/bugs/<bug-id>/
-  优化: projects/<project>/optimizations/<opt-id>/
-  分析: projects/<project>/reports/analysis/
+🔴 路径锚点强制规则（NO EXCEPTIONS — 🆕 FIX-007 2026-02-28）:
+  AI 规范的所有输出（报告 + 记忆）必须位于:
+    ai-dev-guidelines/projects/<project>/
   
-输出: "3. 输出位置: projects/user/requirements/20260212-xxx/"
+  ❌ 绝对禁止写入项目源码目录:
+    E:\Worker\<project>\         ← 业务代码目录，禁止写规范输出
+    E:\Worker\.ai-memory\        ← 工作区根目录，禁止写记忆
+  
+  🔍 构建路径前必须执行 2 步验证:
+    Step A: list_dir("ai-dev-guidelines/projects/<project>") 确认锚点存在
+    Step B: 再拼接 reports/<子目录>/<agent>/YYYYMMDD/ 得完整路径
+    ⚠️ 禁止跳过 Step A 直接推断路径
+  
+  ⚠️ 常见混淆（防误区）:
+    chat 项目源码:  E:\Worker\chat\                             ← 业务代码，chat/reports/ 是业务用途
+    chat 规范输出:  E:\Worker\ai-dev-guidelines\projects\chat\  ← AI报告/记忆
+    两者都含"chat/"，必须以 "ai-dev-guidelines\projects\" 作为锚点区分
+  
+  ✅ 路径自检（写入前必做）:
+    路径包含 "ai-dev-guidelines/projects/" → ✅ 继续
+    路径不含 "ai-dev-guidelines/projects/" → ❌ 停止，重新构建
+
+路径模式（均以 ai-dev-guidelines/projects/<project>/ 为根）:
+  需求报告: reports/requirements/<agent>/YYYYMMDD/
+  Bug报告:  reports/bugs/<agent>/YYYYMMDD/
+  优化报告: reports/optimizations/<agent>/YYYYMMDD/
+  分析报告: reports/analysis/<agent>/YYYYMMDD/
+  任务产物: requirements/<feature>/ | bugs/<bug-id>/ | optimizations/<opt-id>/
+  记忆文件: .ai-memory/clients/<agent>/tasks/YYYYMMDD.md
+
+🔴 输出格式（必须包含完整锚点路径，禁止省略 ai-dev-guidelines/ 前缀）:
+  ✅ 正确: "3. 输出位置: ai-dev-guidelines/projects/chat/reports/optimizations/webstorm-copilot/20260228/"
+  ❌ 错误: "3. 输出位置: projects/chat/reports/"  ← 省略了 ai-dev-guidelines/ 前缀
+
+输出: "3. 输出位置: ai-dev-guidelines/projects/user/requirements/20260212-xxx/"
 ```
 
 ### Step 4: Agent 标识（🆕 v2.5.0）

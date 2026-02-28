@@ -133,7 +133,22 @@
 ## 📂 输出路径
 
 ```
-projects/<project-name>/
+🔴 输出路径锚点（防混淆警告 — 🆕 FIX-007 2026-02-28）:
+  所有路径均以 "ai-dev-guidelines/projects/<project>/" 为根！
+  
+  ❌ 绝对禁止:
+    - 将报告写入项目源码目录（如 E:\Worker\chat\reports\）← chat/reports/ 是业务目录
+    - 将记忆写入工作区根目录（如 E:\Worker\.ai-memory\）
+  
+  ✅ 正确完整路径示例:
+    报告: E:\Worker\ai-dev-guidelines\projects\chat\reports\optimizations\webstorm-copilot\20260228\01-opt-xxx.md
+    记忆: E:\Worker\ai-dev-guidelines\projects\chat\.ai-memory\clients\webstorm-copilot\tasks\20260228.md
+  
+  写入前自检: 路径含 "ai-dev-guidelines/projects/" → ✅；不含 → ❌ 停止重建路径
+```
+
+```
+ai-dev-guidelines/projects/<project-name>/
 ├── requirements/    # 需求开发输出
 │   └── <YYYYMMDD-feature>/
 ├── bugs/           # Bug 修复输出
