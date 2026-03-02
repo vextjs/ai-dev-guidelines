@@ -456,6 +456,7 @@ projects/<project>/
 □ 🔴 版本号（主动全量）: 上方 8 个文件的版本号是否全部一致？（逐个 read_file 确认，禁止推断）或运行 `node core/tools/bump-version.js` 自动检查
 □ 🔴 独立版本号（主动）: META.yaml `independent_versions` 中的版本号与各文件头部实际版本号一致？（task-memory.md / temp-reports.md / core/self-fix/README.md）全文搜索旧版本号确认无残留引用？
 □ 🔴 CHANGELOG ↔ changelogs/ 同步: CHANGELOG.md 概览表是否包含当前版本？changelogs/v<当前版本>.md 是否存在？（bump-version.js 已含此检查）
+□ 🔴 CHANGELOG 补丁记录: 本次修改了规范文件（core/workflows/、core/templates/、core/standards/ 等）但未升版本号？→ 必须在 `changelogs/v<当前版本>.md` 追加"后续补丁"段落（格式: `### 后续补丁 (YYYY-MM-DD)` + 变更条目）+ 更新 CHANGELOG.md 概览表中该版本的变更摘要（一行描述）。⚠️ CHANGELOG.md 只做索引，详细内容只写 changelogs/ 文件
 □ 禁止行为: copilot-instructions.md 和 00-pre-check 的禁止清单对齐？
 □ 交叉引用路径: 所有 [链接](./path) 指向的文件确实存在？
 □ 🔴 docs/ 用户指南同步: 本次修改涉及的流程/机制是否在 `docs/` 下有对应用户指南？如有，是否已同步更新？（execution-workflow-guide/ 和 spec-self-fix-guide/）

@@ -334,6 +334,12 @@ Step 3 - 声明前复核:
   task-memory.md           → copilot-instructions.md、00-pre-check/README.md
   QUICK-REFERENCE.md       → copilot-instructions.md
   CONSTRAINTS.md           → QUICK-REFERENCE.md、decision-tree.yaml
+  🔴 规范内容变更时        → changelogs/vX.Y.Z.md 对应版本文件追加"后续补丁"段落（即使不升版本号）:
+                              格式: `### 后续补丁 (YYYY-MM-DD)` + `- ✅ <变更摘要>`
+                              触发: 修改 core/workflows/、core/templates/、core/standards/ 等规范文件后
+                              说明: 确保所有规范变更都有变更记录可追溯，不因"未升版本号"而遗漏
+                              ⚠️ CHANGELOG.md 仅作为索引（版本概览表），不存储详细变更内容
+                              如需更新摘要: 修改 CHANGELOG.md 版本概览表中该版本的"变更摘要"列即可
   🔴 版本号变更时          → 8 个文件全量同步（见 QUICK-REFERENCE.md §版本号文件清单）:
                               copilot-instructions.md、README.md、QUICK-REFERENCE.md、
                               CONSTRAINTS.md、STATUS.md、CHANGELOG.md、
@@ -359,6 +365,7 @@ Step 3 - 声明前复核:
   □ 版本号（被动）: 修改的文件已更新版本号和最后更新日期？
   □ 🔴 版本号（主动全量）: 8 个版本号文件是否全部一致？（逐个 read_file 确认，禁止推断）
   □ 所有引用链接指向的文件确实存在？
+  □ 🔴 CHANGELOG 补丁记录: 本次修改了规范文件但未升版本号？→ 必须在 changelogs/vX.Y.Z.md 对应版本文件追加"后续补丁"段落（CHANGELOG.md 仅索引，不存储详情）
   □ 🔴 docs/ 用户指南同步: 本次修改涉及的流程/机制是否在 docs/ 下有对应用户指南？如有，是否已同步更新？
   □ 🔴 docs/DESIGN-PHILOSOPHY.md 同步: 架构数据（预检查项数/工作流数量/约束条数/行数引用等）是否与实际一致？
 

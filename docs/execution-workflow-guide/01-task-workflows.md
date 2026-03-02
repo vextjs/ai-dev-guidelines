@@ -68,7 +68,9 @@
   → 01-requirement.md（做什么、为什么做）
   → 02-technical.md（怎么做、架构设计）
   → 03-implementation/（具体改什么、完整代码）
-  → 04-integration.md（第三方对接，可选）
+  → 04-接口文档.md（涉及 API 接口新增/变更时，可选）
+     或 04-对接文档.md（涉及第三方系统对接时，可选）
+  → api.http（跟随 04-接口文档自动生成，可选）
 阶段 7: 验证检查
   → 代码规范 + 注释完整 + 错误处理 + 文档完整
 ```
@@ -95,6 +97,9 @@ ai-dev-guidelines/projects/<项目>/requirements/<中文描述>/
 │   ├── README.md          # 实施总索引
 │   ├── XxxService.md      # 服务层变更
 │   └── XxxController.md   # 控制层变更
+├── 04-接口文档.md          # 接口文档（涉及 API 新增/变更时，可选）
+│   # 或 04-对接文档.md    # 对接文档（涉及第三方系统对接时，可选）
+├── api.http               # 接口调试文件（跟随 04-接口文档自动生成，可选）
 └── scripts/               # 自动化脚本（如需要）
 ```
 
@@ -163,6 +168,8 @@ ai-dev-guidelines/projects/<项目>/bugs/<中文描述>/
 ├── 01-analysis.md              # 问题分析
 ├── 02-solution.md              # 解决方案
 ├── 03-implementation.md        # 实施方案（单文件）
+├── 04-接口变更.md              # 接口变更说明（修复涉及接口契约变化时，可选）
+├── api.http                    # 接口调试文件（跟随 04-接口变更自动生成，可选）
 └── scripts/
     ├── fix-data.sql            # 数据修复脚本（如需要）
     └── rollback.sql            # 回滚脚本
@@ -175,6 +182,8 @@ ai-dev-guidelines/projects/<项目>/bugs/<中文描述>/
 │   ├── README.md               # 实施总索引
 │   ├── OrderService.md
 │   └── PaymentService.md
+├── 04-接口变更.md              # 接口变更说明（如修复涉及接口契约变化，可选）
+├── api.http                    # 接口调试文件（跟随 04-接口变更自动生成，可选）
 └── scripts/
 ```
 

@@ -236,6 +236,16 @@
     - 纯内部逻辑修复（接口契约无变化）
     - 纯数据修复（不影响接口响应格式）
     - 纯配置修复（不影响接口行为）
+
+🔗 .http 文件（自动跟随接口变更文档生成）:
+  触发条件: 与 04-接口变更.md 同步——生成接口变更文档时自动生成
+  文件名: api.http（固定命名，不使用中文）
+  存储路径: projects/<project>/bugs/<中文描述>/api.http
+  内容结构:
+    - 顶部: 环境变量定义（@baseUrl / @token 占位符）
+    - 仅包含变更的接口: ### 分隔的请求块（方法 + URL + Headers + Body）
+    - 可选: 预期响应注释（关键字段说明）
+  说明: .http 文件仅包含本次修复涉及变更的接口，便于验证修复效果
 ```
 
 ---
@@ -260,6 +270,7 @@ projects/user-service/bugs/用户注册接口参数校验错误/
 ├── 02-solution.md             # 解决方案
 ├── 03-implementation.md       # 实施方案（单文件）
 ├── 04-接口变更.md             # 接口变更说明（修复涉及接口契约变化）
+├── api.http                   # 接口调试文件（跟随 04-接口变更自动生成）
 └── scripts/
     └── rollback.sql           # 回滚脚本（如需要）
 ```
@@ -275,6 +286,7 @@ projects/payment-service/bugs/BUG-pay-003-order-duplicate/
 │   ├── PaymentService.md      # 支付服务变更
 │   └── OrderModel.md          # 订单模型变更
 ├── 04-接口变更.md             # 接口变更说明（如修复涉及接口契约变化，可选）
+├── api.http                   # 接口调试文件（跟随 04-接口变更自动生成，可选）
 └── scripts/
     ├── fix-duplicate-orders.sql
     └── rollback.sql
