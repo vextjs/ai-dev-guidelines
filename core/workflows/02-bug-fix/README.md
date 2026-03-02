@@ -215,6 +215,27 @@
       小 Bug: 单文件 03-implementation.md
       大 Bug: 目录 03-implementation/README.md + 各模块.md
     时机: 在执行修复之前生成，用户确认后才执行
+
+  04-接口变更.md（接口层 - 可选）:
+    职责: 记录因 Bug 修复导致的接口契约变更（入参/出参/错误码/行为变化）
+    上游: 引用 02-solution.md 的修复方案
+    模板: core/templates/core/api-doc-template.md（精简使用，仅记录变更部分）
+    触发条件: 修复涉及接口契约变更时生成（详见下方触发规则）
+    不触发: 纯内部逻辑修复（不影响接口契约）
+
+🔴 04-接口变更.md 触发规则:
+  必须生成:
+    - 修复导致接口入参/出参格式变化
+    - 修复导致错误码新增/变更/删除
+    - 修复导致接口行为变化（如超时策略、重试逻辑、限流规则）
+    - 修复涉及接口鉴权/权限变更
+  建议生成（AI 主动建议，用户确认）:
+    - 修复导致响应数据结构新增可选字段
+    - 修复导致接口性能特征显著变化（如响应时间量级变化）
+  不需要生成:
+    - 纯内部逻辑修复（接口契约无变化）
+    - 纯数据修复（不影响接口响应格式）
+    - 纯配置修复（不影响接口行为）
 ```
 
 ---
@@ -232,6 +253,17 @@ projects/chat-service/bugs/BUG-chat-001-message-loss/
     └── rollback.sql           # 回滚脚本（如需要）
 ```
 
+### 小 Bug + 接口变更
+```
+projects/user-service/bugs/用户注册接口参数校验错误/
+├── 01-analysis.md             # 问题分析
+├── 02-solution.md             # 解决方案
+├── 03-implementation.md       # 实施方案（单文件）
+├── 04-接口变更.md             # 接口变更说明（修复涉及接口契约变化）
+└── scripts/
+    └── rollback.sql           # 回滚脚本（如需要）
+```
+
 ### 大 Bug（>= 5 个文件）
 ```
 projects/payment-service/bugs/BUG-pay-003-order-duplicate/
@@ -242,6 +274,7 @@ projects/payment-service/bugs/BUG-pay-003-order-duplicate/
 │   ├── OrderService.md        # 订单服务变更
 │   ├── PaymentService.md      # 支付服务变更
 │   └── OrderModel.md          # 订单模型变更
+├── 04-接口变更.md             # 接口变更说明（如修复涉及接口契约变化，可选）
 └── scripts/
     ├── fix-duplicate-orders.sql
     └── rollback.sql
@@ -292,6 +325,7 @@ projects/payment-service/bugs/BUG-pay-003-order-duplicate/
 - [ ] 测试已通过
 - [ ] 脚本文件已生成（如需要）
 - [ ] 回滚方案已制定
+- [ ] 接口变更文档已生成（如修复涉及接口契约变化）
 
 ---
 

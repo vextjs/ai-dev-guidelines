@@ -143,7 +143,9 @@ core/templates/
 | `implementation-template.md` | 实施方案 | 代码实现 |
 | `bug-analysis-template.md` | Bug 分析 | 问题定位 |
 | `optimization-template.md` | 优化方案 | 性能优化 |
-| `integration-template.md` | 对接文档 | 系统集成 |
+| `integration-template.md` | 对接文档 | 第三方系统对接（含 API + 认证 + 流程） |
+| `api-doc-template.md` | API 接口文档 | 接口新增/变更时记录接口契约（请求/响应/错误码）；Bug 修复涉及接口契约变更时记录变更差异 |
+| `frontend-integration-template.md` | 前端对接文档 | 面向前端开发者的接口调用指南（含 TypeScript 类型、状态管理、UI 要点） |
 
 ### Extended Templates（扩展模板）
 用于 Tier 2 任务，使用频率 20%：

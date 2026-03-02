@@ -134,7 +134,7 @@ constraint_files:
 # 这些文件使用独立的版本号，不随主版本号变更
 independent_versions:
   - path: "core/workflows/common/task-memory.md"
-    version: "1.8"
+    version: "1.9"
     description: "任务记忆规范"
 
   - path: "core/workflows/common/temp-reports.md"

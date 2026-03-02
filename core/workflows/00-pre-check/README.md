@@ -405,7 +405,7 @@ Step 5 — 继续执行:
 
 | 章节 | 详见 |
 |------|------|
-| 📤 任务记忆（消息驱动 5 阶段策略 v1.8） | [memory-and-rules.md §任务记忆](./memory-and-rules.md#-任务记忆消息驱动-5-阶段策略--v18) |
+| 📤 任务记忆（消息驱动 5+1 阶段策略 v1.9） | [memory-and-rules.md §任务记忆](./memory-and-rules.md#-任务记忆消息驱动-51-阶段策略--v19) |
 | 🔴 日期强制必填（v2.5.0 / v2.10.0） | [memory-and-rules.md §日期规则](./memory-and-rules.md#-日期强制必填v250-新增--v2100-更新) |
 | 🤖 多 Agent / 多编辑器策略 | [memory-and-rules.md §多 Agent](./memory-and-rules.md#-多-agent--多编辑器策略) |
 
