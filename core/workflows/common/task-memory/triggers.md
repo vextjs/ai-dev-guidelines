@@ -79,6 +79,13 @@ v1.5 → v1.7 的核心变化
   修复原理: 将记忆写入作为预检查输出的第 6 行，不写第 6 行 = 预检查本身不完整
   等价于: "soft gate（文字规则）" 升级为 "hard gate（输出格式强制）"
 
+🔴 tool call 顺序约束（NO EXCEPTIONS）:
+  会话的前三个 tool call 必须是以下顺序，完成前禁止执行任何分析性文件读取:
+    1. now()             — 获取真实日期
+    2. list_directory()  — 扫描 .ai-memory/clients/<agent>/tasks/
+    3. edit_file()       — 创建/追加今日记忆文件
+  为什么: 防止"先读目标文件分析问题、再补写记忆"的绕过模式（已发生 3 次事故）
+
 AI 执行:
   1. 执行预检查 5 项必做（见 00-pre-check/README.md）
   2. 确定当前 Agent 标识（预检查第 4 项）

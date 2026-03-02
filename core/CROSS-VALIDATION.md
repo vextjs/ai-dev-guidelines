@@ -81,7 +81,7 @@
 
 ## 🔴 最后更新日期同步清单（修改规范文件后必须全部同步）
 
-> **为什么单独列出？** 日期遗漏已反复发生 5+ 次（copilot-instructions 停留在 2026-02-28、README/decision-tree/STATUS 尾部/ONBOARDING 停留在 2026-02-27 等），根因是**只有版本号和约束条数有自动同步工具，日期完全靠手动**。以下 8 个文件包含 `最后更新` 日期字段，修改规范文件后**必须全部同步到当天日期**：
+> **为什么单独列出？** 日期遗漏已反复发生 5+ 次（copilot-instructions 停留在 2026-02-28、README/decision-tree/STATUS 尾部停留在 2026-02-27 等），根因是**只有版本号和约束条数有自动同步工具，日期完全靠手动**。以下 7 个文件包含 `最后更新` 日期字段，修改规范文件后**必须全部同步到当天日期**：
 
 | # | 文件路径 | 日期位置 | 说明 |
 |:-:|---------|---------|------|
@@ -92,7 +92,6 @@
 | 5 | `STATUS.md` | L6 头部 + 尾部 `**最后更新**:`（两处） | 项目状态 |
 | 6 | `core/workflows/decision-tree.yaml` | L5 `last_updated:` | 决策树配置 |
 | 7 | `core/workflows/00-pre-check/README.md` | 尾部 `**最后更新**:` | 预检查工作流 |
-| 8 | `core/ONBOARDING.md` | L5 `**最后更新**:` | 新 Agent 上手指南 |
 
 > ⚠️ 此清单与 `META.yaml` §`date_sync_files` 保持一致。`bump-version.js --apply` 应同时同步日期（待实现）。
 > ⚠️ `docs/DESIGN-PHILOSOPHY.md` 等非核心文件仅在内容实际变更时更新日期，不在自动同步范围。
@@ -106,7 +105,7 @@
 □ 文件命名: 报告在 `<agent>/YYYYMMDD/` 目录下使用 `NN-<类型>-<简述>.md` 格式（NN 独立）？记忆使用 YYYYMMDD.md 格式（无 NN）？
 □ 多 Agent 方案: 目录隔离 clients/<agent>/（非共享目录+文件名前缀）？
 □ 🔴 约束条数（主动全量）: 上方约束条数引用清单 11 个文件是否全部一致？（逐个 read_file 确认，禁止推断）（当前 20 条）
-□ 🔴 最后更新日期（主动全量）: 上方日期同步清单 8 个文件的 `最后更新` 日期是否全部一致？（逐个 read_file 确认，禁止推断）
+□ 🔴 最后更新日期（主动全量）: 上方日期同步清单 7 个文件的 `最后更新` 日期是否全部一致？（逐个 read_file 确认，禁止推断）
 □ 🔴 版本号（主动全量）: 上方 8 个文件的主版本号是否全部一致？（逐个 read_file 确认，禁止推断）或运行 `node core/tools/bump-version.js` 自动检查
 □ 🔴 CHANGELOG ↔ changelogs/ 同步: CHANGELOG.md 概览表是否包含当前版本？changelogs/v<当前版本>.md 是否存在？（bump-version.js 已含此检查）
 □ 🔴 CHANGELOG 补丁记录: 本次修改了规范文件（core/workflows/、core/templates/、core/standards/ 等）但未升版本号？→ 必须在 `changelogs/v<当前版本>.md` 追加"后续补丁"段落（格式: `### 后续补丁 (YYYY-MM-DD)` + 变更条目）+ 更新 CHANGELOG.md 概览表中该版本的变更摘要（一行描述）。⚠️ CHANGELOG.md 只做索引，详细内容只写 changelogs/ 文件

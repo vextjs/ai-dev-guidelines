@@ -19,6 +19,8 @@
 6. 📝 记忆已创建: [.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN (🔄)] ← 🔴 阶段0 硬性阻塞
 ```
 
+> 💡 **tool call 顺序约束**: 会话的前三个 tool call 必须是 `now()` → `list_directory(.ai-memory/...)` → `edit_file(记忆文件)`，完成前禁止执行任何分析性文件读取
+
 ### 🏷️ Agent 标识速查
 
 | 编辑器 + AI | 标识值 |

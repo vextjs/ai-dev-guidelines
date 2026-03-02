@@ -26,13 +26,13 @@ constraint_count: 20
 last_updated: "2026-03-02"
 
 # ============================================
-# 最后更新日期同步文件清单 (8 个文件)
+# 最后更新日期同步文件清单 (7 个文件)
 # ============================================
 # 🔴 每次修改规范文件后，bump-version.js --apply 会自动将
 #    last_updated 日期同步到以下所有文件。
 # 根因: 日期遗漏已反复发生 5+ 次（copilot-instructions 2026-02-28、
 #        README 2026-02-27、decision-tree 2026-02-27、STATUS 尾部、
-#        ONBOARDING、DESIGN-PHILOSOPHY 等），手动逐文件更新不可靠。
+#        DESIGN-PHILOSOPHY 等），手动逐文件更新不可靠。
 # 解法: 与版本号同清单，bump-version.js 同时同步日期。
 date_sync_files:
   - path: ".github/copilot-instructions.md"
@@ -62,10 +62,6 @@ date_sync_files:
   - path: "core/workflows/00-pre-check/README.md"
     pattern: "\\*\\*最后更新\\*\\*: {date}"
     description: "预检查工作流（尾部）"
-
-  - path: "core/ONBOARDING.md"
-    pattern: "\\*\\*最后更新\\*\\*: {date}"
-    description: "新 Agent 上手指南"
 
 # ============================================
 # 版本号同步文件清单 (8 个文件)

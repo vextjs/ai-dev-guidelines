@@ -41,7 +41,6 @@ const EXPECTED_STRUCTURE = {
       "README.md",
       "QUICK-REFERENCE.md",
       "CONSTRAINTS.md",
-      "ONBOARDING.md",
       "STATUS.md",
       "META.yaml",
     ],

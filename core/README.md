@@ -101,7 +101,6 @@ ai-dev-guidelines/
 │   ├── QUICK-REFERENCE.md            # 📖 速查手册（推荐首先阅读）
 │   ├── CONSTRAINTS.md                # ⛔ 约束清单（20 条）
 │   ├── STATUS.md                     # 📊 项目状态追踪
-│   ├── ONBOARDING.md                 # 🆕 新 Agent 快速上手
 │   ├── META.yaml                     # 元数据（版本、约束条数）
 │   ├── workflows/                    # 🤖 AI 执行流程（通用）
 │   │   ├── 00-pre-check/            # 预检查（5 项必做）
@@ -192,7 +191,6 @@ ai-dev-guidelines/
 | 内容 | 位置 | 说明 |
 |------|------|------|
 | 预检查格式、任务映射、确认点、输出路径 | [QUICK-REFERENCE.md](./QUICK-REFERENCE.md) | ⭐ 执行任务时首先阅读 |
-| 新 Agent 快速上手 | [ONBOARDING.md](./ONBOARDING.md) | 🆕 首次接入规范体系的 AI Agent 指引 |
 | 设计理念与演进路线 | [docs/DESIGN-PHILOSOPHY.md](../docs/DESIGN-PHILOSOPHY.md) | 🆕 架构哲学 + Agent 化路线图 |
 | 用户快速入门（首次使用必读） | [docs/getting-started.md](../docs/getting-started.md) | 🆕 5 分钟了解全貌 + 新项目接入 + 工具速览 |
 | 用户指南（执行流程 + 自修复机制） | [docs/README.md](../docs/README.md) | 🆕 面向用户视角的完整指南入口 |

@@ -159,6 +159,10 @@
   4. AI 实际执行顺序是否符合时序规则:
      ✅ 正确: 预检查 → 写入记忆(§会话NN) → 输出"📝 记忆已更新" → 开始分析
      ❌ 错误: 预检查 → 分析问题 → 输出结论 → 补写记忆
+  5. 会话前三个 tool call 是否符合顺序约束:
+     ✅ 正确: now() → list_directory(.ai-memory/...) → edit_file(记忆文件)
+     ❌ 错误: read_file(目标文件) → now() → list_directory(...)（先读了分析目标）
+     ❌ 错误: list_directory(.ai-memory/...) → edit_file(...) → ...（跳过了 now()）
 
 执行方式: 🔴 自动执行，发现违规立即纠正
 

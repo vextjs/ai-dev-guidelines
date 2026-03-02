@@ -8,7 +8,7 @@
  * 同步范围:
  *   - 版本号:   8 个文件（META.yaml §version_files）
  *   - 约束条数: 11 个文件（META.yaml §constraint_files）
- *   - 日期:     8 个文件（META.yaml §date_sync_files）
+ *   - 日期:     7 个文件（META.yaml §date_sync_files）
  *
  * 用法:
  *   node tools/bump-version.js                # 检查模式（只报告差异，不修改）
@@ -349,7 +349,7 @@ function getConstraintRules(count) {
 }
 
 // ============================================
-// last_updated 日期同步规则 (8 个文件)
+// last_updated 日期同步规则 (7 个文件)
 // ============================================
 // 与 META.yaml §date_sync_files 和 CROSS-VALIDATION.md §日期同步清单 保持一致
 // 根因: 日期遗漏已反复发生 5+ 次，版本号/约束条数有自动同步但日期靠手动 → 反复漏改
@@ -392,8 +392,6 @@ function getDateRules(dateStr) {
     "core/workflows/decision-tree.yaml",
     // 7. core/workflows/00-pre-check/README.md — 预检查工作流（尾部）
     "core/workflows/00-pre-check/README.md",
-    // 8. core/ONBOARDING.md — 新 Agent 上手指南（L5）
-    "core/ONBOARDING.md",
   ].map((file) => ({
     file,
     patterns: commonPatterns,
