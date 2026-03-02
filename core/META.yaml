@@ -13,7 +13,7 @@
 #   - 禁止手动逐文件修改版本号或约束条数
 #   - 禁止在其他文件中硬编码版本号而不在此注册
 #
-# 最后更新: 2026-02-27
+# 最后更新: 2026-03-02
 # ============================================
 
 # 当前版本号
@@ -23,7 +23,49 @@ version: "2.11.0"
 constraint_count: 20
 
 # 最后更新日期
-last_updated: "2026-02-27"
+last_updated: "2026-03-02"
+
+# ============================================
+# 最后更新日期同步文件清单 (8 个文件)
+# ============================================
+# 🔴 每次修改规范文件后，bump-version.js --apply 会自动将
+#    last_updated 日期同步到以下所有文件。
+# 根因: 日期遗漏已反复发生 5+ 次（copilot-instructions 2026-02-28、
+#        README 2026-02-27、decision-tree 2026-02-27、STATUS 尾部、
+#        ONBOARDING、DESIGN-PHILOSOPHY 等），手动逐文件更新不可靠。
+# 解法: 与版本号同清单，bump-version.js 同时同步日期。
+date_sync_files:
+  - path: ".github/copilot-instructions.md"
+    pattern: "\\*\\*最后更新\\*\\*: {date}"
+    description: "入口文件"
+
+  - path: "README.md"
+    pattern: "\\*\\*最后更新\\*\\*: {date}"
+    description: "项目主入口（头部 + 尾部两处）"
+
+  - path: "QUICK-REFERENCE.md"
+    pattern: "\\*\\*最后更新\\*\\*: {date}"
+    description: "速查手册（头部 + 尾部两处）"
+
+  - path: "CONSTRAINTS.md"
+    pattern: "\\*\\*最后更新\\*\\*: {date}"
+    description: "约束清单（头部 + 尾部两处）"
+
+  - path: "STATUS.md"
+    pattern: "\\*\\*最后更新\\*\\*: {date}"
+    description: "项目状态（头部 + 尾部两处）"
+
+  - path: "core/workflows/decision-tree.yaml"
+    pattern: 'last_updated: "{date}"'
+    description: "决策树配置"
+
+  - path: "core/workflows/00-pre-check/README.md"
+    pattern: "\\*\\*最后更新\\*\\*: {date}"
+    description: "预检查工作流（尾部）"
+
+  - path: "core/ONBOARDING.md"
+    pattern: "\\*\\*最后更新\\*\\*: {date}"
+    description: "新 Agent 上手指南"
 
 # ============================================
 # 版本号同步文件清单 (8 个文件)
@@ -129,18 +171,8 @@ constraint_files:
     description: "冲突检测模块"
 
 # ============================================
-# 独立版本号文件 (不在主版本号同步范围内)
+# 独立版本号已取消 (2026-03-02)
 # ============================================
-# 这些文件使用独立的版本号，不随主版本号变更
-independent_versions:
-  - path: "core/workflows/common/task-memory.md"
-    version: "1.9"
-    description: "任务记忆规范"
-
-  - path: "core/workflows/common/temp-reports.md"
-    version: "1.7"
-    description: "临时报告规范"
-
-  - path: "core/self-fix/README.md"
-    version: "2.5"
-    description: "自修复机制"
+# 所有子文件不再维护独立版本号，仅保留 **最后更新** 日期。
+# 版本历史统一由 Git + changelogs/ 管理。
+# 主版本号（8 个文件）仍由 bump-version.js 同步。

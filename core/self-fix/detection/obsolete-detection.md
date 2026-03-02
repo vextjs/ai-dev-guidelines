@@ -2,8 +2,6 @@
 
 > 检测规范文件中的过时内容和废弃引用
 
-**版本**: v2.0
-**创建日期**: 2026-02-12
 **最后更新**: 2026-02-27
 
 ---
@@ -88,7 +86,7 @@
 
 ```yaml
 检测逻辑:
-  1. 读取 core/workflows/common/task-memory.md §阶段 0 的时序强制规则和自检清单
+  1. 读取 core/workflows/common/task-memory/triggers.md §阶段 0 的时序强制规则和自检清单
   2. 读取 core/workflows/00-pre-check/README.md §阶段 0 的时序强制规则
   3. 对比两处的时序规则，确认一致性
   4. 如果一处已更新而另一处仍为旧版 → 标记为 🔴 时序过时
@@ -125,24 +123,24 @@
 
 ```yaml
 检测逻辑:
-  1. 读取 QUICK-REFERENCE.md §版本号文件清单 中列出的 8 个文件
+  1. 读取 CROSS-VALIDATION.md §版本号文件清单 中列出的 8 个文件
   2. 读取 conflict-detection.md §规则 1 中列出的 8 个文件
   3. 读取 CONSTRAINTS.md 约束 #14 中引用的版本号清单
   4. 确认三处引用的文件清单内容一致
   5. 如果某处清单已增减文件而其他处未同步 → 标记为 ⚠️ 清单过时
 
 检测示例:
-  QUICK-REFERENCE.md: 8 个文件
+  CROSS-VALIDATION.md: 8 个文件
   conflict-detection.md: 8 个文件 ✅ 一致
   CONSTRAINTS.md 约束 #14: 引用 "8 个文件全量同步" ✅ 一致
 
   ❌ 过时情况:
-    QUICK-REFERENCE.md 新增第 9 个文件
+    CROSS-VALIDATION.md 新增第 9 个文件
     conflict-detection.md 仍只有 8 个
     结果: ⚠️ conflict-detection.md 版本号清单过时
 
 修复建议:
-  以 QUICK-REFERENCE.md 为权威来源，同步更新其他引用处
+  以 CROSS-VALIDATION.md 为权威来源，同步更新其他引用处
 ```
 
 ---
@@ -220,7 +218,7 @@ function detectTimingObsolete() {
   if (checklistMatch && !checklistMatch[1].includes('记忆写入是否在分析用户问题之前完成')) {
     issues.push({
       type: '自检清单过时',
-      location: 'task-memory.md §阶段 0 自检清单',
+      location: 'task-memory/triggers.md §阶段 0 自检清单',
       detail: '首项不是时序检查',
       suggestion: '将时序检查调整为自检清单首项'
     });
@@ -233,20 +231,20 @@ function detectTimingObsolete() {
 function detectVersionListObsolete() {
   const issues = [];
   
-  const quickRef = readFile('QUICK-REFERENCE.md');
+  const crossValidation = readFile('CROSS-VALIDATION.md');
   const conflictDetection = readFile('core/self-fix/detection/conflict-detection.md');
   const constraints = readFile('CONSTRAINTS.md');
   
   // 提取各处版本号文件清单中的文件数
-  const qrCount = (quickRef.match(/版本号文件清单[\s\S]*?\|.*?\|/g) || []).length;
+  const cvCount = (crossValidation.match(/版本号文件清单[\s\S]*?\|.*?\|/g) || []).length;
   const cdCount = (conflictDetection.match(/版本号文件清单[\s\S]*?\|.*?\|/g) || []).length;
   
-  if (qrCount !== cdCount) {
+  if (cvCount !== cdCount) {
     issues.push({
       type: '版本号清单不同步',
-      location: 'QUICK-REFERENCE.md vs conflict-detection.md',
-      detail: `QUICK-REFERENCE 列出 ${qrCount} 个文件，conflict-detection 列出 ${cdCount} 个`,
-      suggestion: '以 QUICK-REFERENCE.md 为准，同步更新 conflict-detection.md'
+      location: 'CROSS-VALIDATION.md vs conflict-detection.md',
+      detail: `CROSS-VALIDATION 列出 ${cvCount} 个文件，conflict-detection 列出 ${cdCount} 个`,
+      suggestion: '以 CROSS-VALIDATION.md 为准，同步更新 conflict-detection.md'
     });
   }
   
@@ -292,9 +290,9 @@ function detectVersionListObsolete() {
 
     - 问题5（🆕 v2.0）:
         类型: 版本号清单不同步
-        位置: conflict-detection.md vs QUICK-REFERENCE.md
+        位置: conflict-detection.md vs CROSS-VALIDATION.md
         详情: 版本号文件清单数量不一致
-        建议: 以 QUICK-REFERENCE.md 为准同步
+        建议: 以 CROSS-VALIDATION.md 为准同步
 ```
 
 ---
@@ -305,12 +303,12 @@ function detectVersionListObsolete() {
 v2.0 (2026-02-27):
   新增:
     - 规则 5: 流程时序过时检测（阶段 0 时序强制规则跨文件同步检测）
-    - 规则 6: 版本号文件清单同步检测（QUICK-REFERENCE/conflict-detection/CONSTRAINTS 三处一致性）
+    - 规则 6: 版本号文件清单同步检测（CROSS-VALIDATION/conflict-detection/CONSTRAINTS 三处一致性）
     - 检测脚本: detectTimingObsolete()、detectVersionListObsolete() 新增
     - 检测目标新增第 5 类: 流程时序过时
   根因:
     - 阶段 0 时序违规（§会话05）暴露了跨文件规则定义可能不同步的风险
-    - 版本号清单如果只在 QUICK-REFERENCE 维护而不同步到 spec-self-fix 检测模块，
+    - 版本号清单如果只在 CROSS-VALIDATION 维护而不同步到 spec-self-fix 检测模块，
       后续健康检查不会使用最新清单
   关联修复记录:
     - core/self-fix/records/2026-02-27-version-sync-gap-and-stage0-timing.md
@@ -328,10 +326,8 @@ v1.0 (2026-02-12):
 - `redundancy-detection.md` - 冗余检测
 - `../repair/repair-patterns.md` §模式 9 - 时序违规修复
 - `../triggers/auto-triggers.md` §场景 5/6 - 版本号/时序自动触发
-- `QUICK-REFERENCE.md` §版本号文件清单 - 权威清单来源
+- `CROSS-VALIDATION.md` §版本号文件清单 - 权威清单来源
 
 ---
 
-**版本**: v2.0
-**最后更新**: 2026-02-27
-**v2.0 核心改进**: 新增流程时序过时检测；新增版本号清单同步检测；检测目标扩展到 5 类
+**最后更新**: 2026-03-02

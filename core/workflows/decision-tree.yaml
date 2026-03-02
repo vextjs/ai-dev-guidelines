@@ -2,7 +2,7 @@
 # 用于快速场景识别和任务路由
 
 version: "2.11.0"
-last_updated: "2026-02-27"
+last_updated: "2026-03-02"
 description: "ai-dev-guidelines AI 执行规范的结构化决策树"
 
 # ===========================================
@@ -69,7 +69,8 @@ task_identification:
 
     analysis:
       weight: 7
-      patterns: ["分析", "审查", "评估", "深度分析", "全面检查", "健康检查", "评审"]
+      patterns:
+        ["分析", "审查", "评估", "深度分析", "全面检查", "健康检查", "评审"]
 
     opensource_init:
       weight: 8
@@ -260,8 +261,8 @@ inquiry_points:
     timing: "CP3之后"
     options:
       - "1: 单元测试"
-      - "2: HTTP测试文件"
-      - "3: OpenAPI文档"
+      - "2: HTTP测试文件（.http — 跟随接口文档自动生成）"
+      - "3: OpenAPI文档（按需，仅用户明确要求时生成 openapi.yaml）"
       - "A: 全部生成"
       - "S: 跳过"
 
@@ -315,8 +316,8 @@ constraints:
   # 对应 CONSTRAINTS.md 报告/修复/行为约束
   behavior_constraints:
     - id: 8
-      rule: "报告需验证"
-      violation: "基于推断列出问题而未实际读取文件验证，未按 🔴/🟡/💡/❌ 分类"
+      rule: "输出需验证"
+      violation: "AI 输出的问题、建议、方案未附带合理性、可实施性、必要性/收益验证；基于推断列出问题而未实际读取文件验证；未按 🔴/🟡/💡/❌ 分类"
 
     - id: 9
       rule: "文件名带日期+序号"

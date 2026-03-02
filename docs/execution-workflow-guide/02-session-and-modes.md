@@ -2,8 +2,6 @@
 
 > 本文档描述跨会话恢复流程（"继续"指令）、快速/完整模式的区别与切换，以及你在对话中会看到的各种输出格式示例。
 
-**版本**: v1.1
-**创建日期**: 2026-02-28
 **最后更新**: 2026-02-28
 
 ---
@@ -206,11 +204,9 @@ AI 根据以下条件自动选择模式：
 | 公共流程 | [README.md](./README.md) | 预检查 + 记忆 + 确认点 + 报告 |
 | 任务类型流程 | [01-task-workflows.md](./01-task-workflows.md) | 各任务专属流程 |
 | 常见问题 | [03-faq.md](./03-faq.md) | FAQ |
-| 任务记忆机制 | `ai-dev-guidelines/core/workflows/common/task-memory.md` | 5 阶段消息驱动详解 |
+| 任务记忆机制 | `ai-dev-guidelines/core/workflows/common/task-memory.md` | 5+1 阶段消息驱动详解 |
 | 预检查工作流 | `ai-dev-guidelines/core/workflows/00-pre-check/README.md` | 预检查完整定义（含继续任务恢复流程） |
 
 ---
 
-**版本**: v1.1
-**创建日期**: 2026-02-28
-**v1.1 变更**: 从单体文件拆分而来；补充继续任务的预检查输出格式和合理性评估输出示例
+**最后更新**: 2026-02-28

@@ -2,8 +2,6 @@
 
 > 本文档描述自我修复机制的实际使用方式：你能做什么、完整的执行流程图示例，以及常见问题解答。
 
-**版本**: v1.1
-**创建日期**: 2026-02-28
 **最后更新**: 2026-02-28
 
 ---
@@ -331,7 +329,7 @@
 | 新增/删除约束 | `docs/execution-workflow-guide/03-faq.md` 相关 FAQ |
 | 新增工作流 | `docs/execution-workflow-guide/01-task-workflows.md` |
 
-> 此规则已写入 `CONSTRAINTS.md` 约束 #14 交叉验证清单和 `QUICK-REFERENCE.md` §规范修改交叉验证清单。详见 [四、相关文档](#四相关文档) 中的约束 #14 链接。
+> 此规则已写入 `CONSTRAINTS.md` 约束 #14 交叉验证清单和 `CROSS-VALIDATION.md`。详见 [四、相关文档](#四相关文档) 中的约束 #14 链接。
 
 ---
 
@@ -355,7 +353,7 @@
 | `core/self-fix/detection/redundancy-detection.md` | 冗余检测（4 条规则） |
 | `core/self-fix/detection/completeness-detection.md` | 完整性检测（5 条规则） |
 | `core/self-fix/triggers/user-intent-detection.md` | 用户意图检测（6 种模式） |
-| `core/self-fix/triggers/auto-triggers.md` | 自动触发规则（9 个场景） |
+| `core/self-fix/triggers/auto-triggers.md` | 自动触发规则（10 个场景） |
 | `core/self-fix/repair/auto-repair.md` | 自动修复实现 |
 | `core/self-fix/repair/repair-patterns.md` | 修复模式库（模式 1~10） |
 | `core/self-fix/repair/repair-validation.md` | 修复验证（7 步） |
@@ -365,10 +363,10 @@
 
 | 文件 | 关联点 |
 |------|--------|
-| `QUICK-REFERENCE.md` §交叉验证清单 | 版本号 8 文件清单 + 约束条数 11 文件清单 + docs/ 同步检查 |
+| `CROSS-VALIDATION.md` §交叉验证清单 | 版本号 8 文件 + 约束条数 11 文件 + 日期 8 文件清单 + docs/ 同步检查 |
 | `CONSTRAINTS.md` 约束 #12 | 主动合理性分析（模式 6 评估阶段使用） |
 | `CONSTRAINTS.md` 约束 #14 | 规范修改需交叉验证（所有修复后必须执行，含 docs/ 同步） |
-| `core/workflows/common/task-memory.md` §阶段 0 | 时序强制规则（场景 6/9 检测对象） |
+| `core/workflows/common/task-memory/triggers.md` §阶段 0 | 时序强制规则（场景 6/9 检测对象） |
 | `core/workflows/00-pre-check/README.md` | 预检查第 6 行（场景 9 检测对象） |
 | `META.yaml` | 版本号和约束条数的单一真相源 |
 | `core/tools/bump-version.js` | 版本号自动同步工具 |
@@ -383,6 +381,4 @@
 
 ---
 
-**版本**: v1.1
-**创建日期**: 2026-02-28
-**v1.1 变更**: 从单体文件拆分而来；新增"与日常任务的关系"流程图（澄清任务完成后不会全量自修复）；新增"反复问题升级"流程图；新增 Q9（自修复触发频率）和 Q10（docs/ 同步更新规则）；补充反馈改进的具体建议
+**最后更新**: 2026-02-28

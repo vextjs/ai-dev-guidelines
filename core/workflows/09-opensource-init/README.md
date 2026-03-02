@@ -553,7 +553,5 @@ npm publish
 
 ---
 
-**版本**: v1.0  
-**最后更新**: 2026-02-12  
-**参考项目**: monSQLize, rate-limit, schema-dsl
+**最后更新**: 2026-02-12
 

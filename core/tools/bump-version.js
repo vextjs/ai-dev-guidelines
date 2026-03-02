@@ -1,14 +1,19 @@
 #!/usr/bin/env node
 /**
- * bump-version.js — 版本号 & 约束条数自动同步工具
+ * bump-version.js — 版本号 & 约束条数 & 日期自动同步工具
  *
- * 从 META.yaml（单一真相源）读取 version 和 constraint_count，
+ * 从 META.yaml（单一真相源）读取 version、constraint_count、last_updated，
  * 自动扫描并同步到所有引用文件。
+ *
+ * 同步范围:
+ *   - 版本号:   8 个文件（META.yaml §version_files）
+ *   - 约束条数: 11 个文件（META.yaml §constraint_files）
+ *   - 日期:     8 个文件（META.yaml §date_sync_files）
  *
  * 用法:
  *   node tools/bump-version.js                # 检查模式（只报告差异，不修改）
  *   node tools/bump-version.js --apply        # 应用模式（实际写入修改）
- *   node tools/bump-version.js --apply --date 2026-03-01  # 同时更新日期
+ *   node tools/bump-version.js --apply --date 2026-03-01  # 同时覆盖日期
  *
  * 选项:
  *   --apply       实际执行写入（默认为 dry-run 检查模式）
@@ -17,8 +22,8 @@
  *
  * 依赖: 无外部依赖，仅使用 Node.js 内置模块
  *
- * 版本: 1.0.0
- * 最后更新: 2026-02-27
+ * 版本: 1.1.0
+ * 最后更新: 2026-03-02
  */
 
 const fs = require("fs");
@@ -344,30 +349,54 @@ function getConstraintRules(count) {
 }
 
 // ============================================
-// last_updated 日期同步规则
+// last_updated 日期同步规则 (8 个文件)
 // ============================================
+// 与 META.yaml §date_sync_files 和 CROSS-VALIDATION.md §日期同步清单 保持一致
+// 根因: 日期遗漏已反复发生 5+ 次，版本号/约束条数有自动同步但日期靠手动 → 反复漏改
 
 function getDateRules(dateStr) {
+  // 通用 patterns：匹配多种日期格式
+  //   - **最后更新**: 2026-03-02   （markdown 加粗，大部分核心文件）
+  //   - > **最后更新**: 2026-03-02  （blockquote 中的加粗）
+  //   - 最后更新: 2026-03-02        （纯文本，如 README 尾部 `- 最后更新: YYYY-MM-DD`）
+  //   - last_updated: "2026-03-02"  （YAML 格式，decision-tree.yaml）
+  //
+  // 🔴 regex 要点: `**最后更新**:` 中 `最后更新` 后面紧跟 `**:`，
+  //    所以字符类必须包含 `*` — 即 `[*：:]` 而非 `[：:]`
+  const commonPatterns = [
+    {
+      // 匹配: **最后更新**: / 最后更新: / 最后更新：
+      // [*：:] 覆盖 markdown 加粗闭合的 * 和直接的冒号
+      regex: /(最后更新\**[：:]\s*)\d{4}-\d{2}-\d{2}/g,
+      replacement: `$1${dateStr}`,
+    },
+    {
+      // 匹配: last_updated: "YYYY-MM-DD" (YAML)
+      regex: /(last_updated:\s*")\d{4}-\d{2}-\d{2}(")/g,
+      replacement: `$1${dateStr}$2`,
+    },
+  ];
+
   return [
-    "core/README.md",
-    "core/QUICK-REFERENCE.md",
-    "core/CONSTRAINTS.md",
-    "core/STATUS.md",
-    "core/workflows/decision-tree.yaml",
-    "core/workflows/00-pre-check/README.md",
+    // 1. .github/copilot-instructions.md — 入口文件（L2）
     "../.github/copilot-instructions.md",
+    // 2. core/README.md — 项目主入口（头部 L4 + 尾部 L226）
+    "core/README.md",
+    // 3. core/QUICK-REFERENCE.md — 速查手册（头部 + 尾部两处）
+    "core/QUICK-REFERENCE.md",
+    // 4. core/CONSTRAINTS.md — 约束清单（头部 + 尾部两处）
+    "core/CONSTRAINTS.md",
+    // 5. core/STATUS.md — 项目状态（头部 + 尾部两处）
+    "core/STATUS.md",
+    // 6. core/workflows/decision-tree.yaml — 决策树配置（L5）
+    "core/workflows/decision-tree.yaml",
+    // 7. core/workflows/00-pre-check/README.md — 预检查工作流（尾部）
+    "core/workflows/00-pre-check/README.md",
+    // 8. core/ONBOARDING.md — 新 Agent 上手指南（L5）
+    "core/ONBOARDING.md",
   ].map((file) => ({
     file,
-    patterns: [
-      {
-        regex: /(最后更新[：:]\s*)\d{4}-\d{2}-\d{2}/g,
-        replacement: `$1${dateStr}`,
-      },
-      {
-        regex: /(last_updated:\s*")\d{4}-\d{2}-\d{2}(")/g,
-        replacement: `$1${dateStr}$2`,
-      },
-    ],
+    patterns: commonPatterns,
   }));
 }
 
@@ -499,7 +528,7 @@ function checkChangelogSync(version) {
 
 function main() {
   console.log("═".repeat(60));
-  console.log("🔧 bump-version.js — 版本号 & 约束条数自动同步");
+  console.log("🔧 bump-version.js — 版本号 & 约束条数 & 日期自动同步");
   console.log("═".repeat(60));
   console.log(`   模式: ${APPLY ? "🟢 应用 (--apply)" : "🔵 检查 (dry-run)"}`);
   console.log();
@@ -674,15 +703,23 @@ function main() {
         for (const d of dirs) {
           const fullPath = path.join(ROOT_DIR, d.dir);
           if (!fs.existsSync(fullPath)) continue;
-          const files = fs.readdirSync(fullPath).filter(
-            (f) => f.endsWith(".md") && !d.exclude.includes(f) && !fs.statSync(path.join(fullPath, f)).isDirectory()
-          );
+          const files = fs
+            .readdirSync(fullPath)
+            .filter(
+              (f) =>
+                f.endsWith(".md") &&
+                !d.exclude.includes(f) &&
+                !fs.statSync(path.join(fullPath, f)).isDirectory(),
+            );
           total += files.length;
         }
         return total;
       },
       refs: [
-        { file: "core/STATUS.md", regex: /模板可用性\s*\|\s*100%\s*\((\d+)\/\d+\)/ },
+        {
+          file: "core/STATUS.md",
+          regex: /模板可用性\s*\|\s*100%\s*\((\d+)\/\d+\)/,
+        },
       ],
     },
   ];
@@ -709,8 +746,12 @@ function main() {
         if (stated === actual) {
           console.log(`   ✅ ${ref.file} — ${check.label}: ${actual} (一致)`);
         } else {
-          console.log(`   ❌ ${ref.file} — ${check.label}: 标注 ${stated}，实际 ${actual}`);
-          summary.errors.push(`${ref.file}: ${check.label} 标注 ${stated} ≠ 实际 ${actual}`);
+          console.log(
+            `   ❌ ${ref.file} — ${check.label}: 标注 ${stated}，实际 ${actual}`,
+          );
+          summary.errors.push(
+            `${ref.file}: ${check.label} 标注 ${stated} ≠ 实际 ${actual}`,
+          );
         }
       } else {
         console.log(`   ⚠️  ${ref.file} — 未匹配到 ${check.label} 的数量标注`);

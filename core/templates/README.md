@@ -29,25 +29,31 @@
 | VS Code + Cline | `vscode-cline` |
 | 其他 | `<editor>-<ai-provider>` |
 
-### 文件名日期前缀
+### 文件名命名规则
 
-所有输出文件（报告、分析、记忆等）的文件名**必须**以 `YYYYMMDD-` 开头：
+输出文件按类型使用不同的命名规则：
 
 ```yaml
-✅ 正确: 20260226-01-analysis-v3-architecture-deep-review.md
-❌ 错误: v3-architecture-deep-analysis.md  # 缺少日期前缀
-❌ 错误: 2026-02-26-analysis-xxx.md        # 日期格式错误（有分隔符）
-❌ 错误: 20260226-analysis-xxx.md          # 缺少序号 NN
+# 报告文件（reports/<子目录>/<agent>/YYYYMMDD/ 下）— NN-<类型>-<简述>.md（🆕 v1.6）:
+✅ 正确: reports/analysis/zed-copilot/20260226/01-analysis-deep-review.md
+✅ 正确: reports/bugs/webstorm-copilot/20260227/02-bug-login-timeout.md
+❌ 错误: v3-architecture-deep-analysis.md       # 缺少结构
+❌ 错误: 20260226-01-analysis-xxx.md            # 旧格式（日期应在目录层级）
+
+# 记忆文件（.ai-memory/clients/<agent>/tasks/ 下）— YYYYMMDD.md（🆕 v1.7 每天一文件，无 NN）:
+✅ 正确: 20260226.md
+✅ 正确: 20260227.md
+❌ 错误: 20260227-01-REQ-user-auth.md           # 记忆文件不应有 NN（旧格式）
 ```
 
 ### AI 自检清单（生成文档前必须确认）
 
 ```yaml
 🔴 每次生成文档前，AI 必须逐项确认:
-  - [ ] 日期字段不包含 "YYYY" 占位符？
+  - [ ] 日期字段不包含 "YYYY" 占位符？（已替换为真实日期）
   - [ ] 日期是通过 now() 工具获取的真实日期？
   - [ ] Agent 字段已填写当前编辑器/AI 标识？
-  - [ ] 文件名以 YYYYMMDD- 开头？
+  - [ ] 文件名符合命名规范？（报告: `NN-<类型>-<简述>.md` 在日期目录下；记忆: `YYYYMMDD.md`）
   - [ ] 项目名称为真实项目名？
 ```
 
@@ -176,10 +182,10 @@ core/templates/
 ```
 ❌ 错误: 创建日期: YYYY-MM-DD    ← 留了占位符
 ❌ 错误: Agent: [编辑器]         ← 留了占位符
-❌ 错误: 文件名 analysis.md      ← 没有日期前缀
+❌ 错误: 文件名 analysis.md      ← 没有命名结构
 ✅ 正确: 创建日期: 2026-02-26    ← 替换为真实日期
 ✅ 正确: Agent: zed-copilot      ← 填写了真实标识
-✅ 正确: 文件名 20260226-01-analysis-xxx.md ← 有日期前缀+序号
+✅ 正确: 文件名 01-analysis-deep-review.md ← 在 <agent>/YYYYMMDD/ 目录下
 ```
 
 ### 规范 1: 严格按模板结构

@@ -145,9 +145,10 @@ core/workflows/09-opensource-init/**
 core/tools/README.md:**missing-file.md
 
 # -------------------------------------------
-# QUICK-REFERENCE.md 中的示例占位链接
+# QUICK-REFERENCE.md / CROSS-VALIDATION.md 中的示例占位链接
 # -------------------------------------------
 core/QUICK-REFERENCE.md:./path
+core/CROSS-VALIDATION.md:./path
 
 # -------------------------------------------
 # vext 项目代码片段中的误匹配（方括号+圆括号在代码中被误识别为 Markdown 链接）
@@ -158,4 +159,3 @@ projects/vext/**
 # 需求文档中的方案引用（尚未创建的后续文档）
 # -------------------------------------------
 **/requirements/**
-

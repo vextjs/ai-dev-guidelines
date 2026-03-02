@@ -11,7 +11,6 @@
 | [base-workflow.md](./base-workflow.md) | 基础工作流模板 | 所有工作流共用的基础结构 |
 | [confirmation-points.md](./confirmation-points.md) | 确认点机制 | CP1-CP6 确认点定义 |
 | [document-sync.md](./document-sync.md) | 文档同步规范 | 任务完成后更新相关文档 |
-| [stop-and-save.md](./stop-and-save.md) | 中断保存机制 | 任务中断时保存上下文 |
 | [task-memory.md](./task-memory.md) | 任务记忆机制 | 🆕 跨会话上下文传递 |
 | [temp-reports.md](./temp-reports.md) | 临时报告规范 | 🆕 AI 临时分析报告管理 |
 
@@ -44,16 +43,6 @@
 
 详见 [document-sync.md](./document-sync.md)
 
-### 中断保存
-
-当任务需要中断时，保存上下文以便后续恢复：
-
-1. 记录当前进度
-2. 保存未完成的工作
-3. 生成恢复指引
-
-详见 [stop-and-save.md](./stop-and-save.md)
-
 ---
 
 ## 📎 相关文档
@@ -64,5 +53,4 @@
 
 ---
 
-**最后更新**: 2026-02-24
-
+**最后更新**: 2026-03-02

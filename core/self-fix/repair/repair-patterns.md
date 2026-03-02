@@ -2,9 +2,7 @@
 
 > 规范问题的标准化修复模式
 
-**版本**: v2.0
-**创建日期**: 2026-02-12
-**最后更新**: 2026-02-27
+**最后更新**: 2026-03-02
 
 ---
 
@@ -140,7 +138,7 @@
   - 即使本次没有修改某个文件，也必须检查其版本号
   - 8 个文件全部一致才算修复完成
 
-🔴 版本号文件清单（8 个 — 与 QUICK-REFERENCE.md §版本号文件清单 同源）:
+🔴 版本号文件清单（8 个 — 与 CROSS-VALIDATION.md §版本号文件清单 同源）:
 
   | # | 文件路径                           | 版本号位置                                                          |
   |:-:|-----------------------------------|-------------------------------------------------------------------|
@@ -153,8 +151,8 @@
   | 7 | core/workflows/decision-tree.yaml      | L1 注释 + L4 `version` 字段 + L82 注释 + L87 `mandatory_precheck.version` |
   | 8 | core/workflows/00-pre-check/README.md  | L3 `> **版本**: vX.Y.Z` + 文件末尾 `**版本**: vX.Y.Z`（两处）         |
 
-  ⚠️ 此清单与 QUICK-REFERENCE.md 同源，新增文件时两处必须同步更新。
-  ⚠️ 非入口文件（如 task-memory.md v1.7、temp-reports.md v1.5）使用独立版本号，不在此清单中。
+  ⚠️ 此清单与 CROSS-VALIDATION.md §版本号文件清单 同源，新增文件时两处必须同步更新。
+  ⚠️ 子文件不再维护独立版本号（2026-03-02 起取消），仅保留最后更新日期。
 
 执行步骤（v2.0）:
   1. 确定目标版本号（通常从 copilot-instructions.md 或用户指令获取）
@@ -196,7 +194,7 @@ v2.0 示例:
 关联:
   - detection/conflict-detection.md §规则 1（8 文件清单的检测逻辑）
   - triggers/auto-triggers.md §场景 5（版本号全量同步自动触发）
-  - QUICK-REFERENCE.md §版本号文件清单（权威清单来源）
+  - CROSS-VALIDATION.md §版本号文件清单（权威清单来源）
   - CONSTRAINTS.md 约束 #14（交叉验证要求）
 ```
 
@@ -295,7 +293,7 @@ v2.0 示例:
 
 修复目标:
   确保阶段 0 时序强制规则在以下两个文件中保持一致:
-  - core/workflows/common/task-memory.md §阶段 0（权威来源）
+  - core/workflows/common/task-memory/triggers.md §阶段 0（权威来源）
   - core/workflows/00-pre-check/README.md §阶段 0（同步副本）
 
 时序强制规则内容（必须在两处都存在）:
@@ -309,7 +307,7 @@ v2.0 示例:
   - [ ] 🔴 记忆写入是否在分析用户问题之前完成？（不是分析完才补写）
 
 执行步骤:
-  1. 读取 task-memory.md §阶段 0 的完整时序规则（权威来源）
+  1. 读取 task-memory/triggers.md §阶段 0 的完整时序规则（权威来源）
   2. 读取 00-pre-check/README.md §阶段 0 的时序规则
   3. 对比两处内容:
      a. 两处都有时序规则 → 检查内容是否一致，不一致则以 task-memory.md 为准同步
@@ -348,7 +346,7 @@ v2.0 示例:
   - detection/conflict-detection.md §规则 5（流程时序合规性检测）
   - detection/obsolete-detection.md §规则 5（流程时序过时检测）
   - triggers/auto-triggers.md §场景 6（阶段 0 时序合规自动触发）
-  - core/workflows/common/task-memory.md §阶段 0 时序强制规则
+  - core/workflows/common/task-memory/triggers.md §阶段 0 时序强制规则
   - core/workflows/00-pre-check/README.md §阶段 0 时序强制规则
 ```
 
@@ -475,7 +473,7 @@ v2.0 示例:
   "6. 📝 记忆已创建: .ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN (🔄)"
   标注: "← 🔴 阶段0 硬性阻塞"
 
-关联的自检清单更新（task-memory.md §阶段 0）:
+关联的自检清单更新（task-memory/triggers.md §阶段 0）:
   自检清单首项必须为:
   "🔴 预检查第 6 行是否已输出？（'6. 📝 记忆已创建: ...'）— 未输出 = 预检查未完成"
 
@@ -486,7 +484,7 @@ v2.0 示例:
      b. 插入第 6 行标准格式
      c. 如有按需检查编号（原 6/7），调整为 7/8
      d. 确保标注 "🔴 阶段0 硬性阻塞"（防止被误认为可选项）
-  3. 检查 task-memory.md §阶段 0:
+  3. 检查 task-memory/triggers.md §阶段 0:
      a. 自检清单首项是否为第 6 行输出检查
      b. 阶段 0 步骤中是否包含 "输出预检查第 6 行" 步骤
      c. 硬性阻塞机制说明是否存在
@@ -508,7 +506,7 @@ v2.0 示例:
   | QUICK-REFERENCE.md §预检查 | 第 5 行后插入第 6 行 | 与 README.md 格式一致 |
   | memory-and-rules.md §阶段 0 | 输出行更新为第 6 行格式 | 与 README.md 格式一致 |
   | copilot-instructions.md | 预检查描述追加硬性阻塞说明 | 包含 "第 6 行" 关键词 |
-  | task-memory.md §阶段 0 | 自检清单首项 + 步骤 10 + 硬性阻塞说明 | 首项为第 6 行检查 |
+  | task-memory/triggers.md §阶段 0 | 自检清单首项 + 步骤 10 + 硬性阻塞说明 | 首项为第 6 行检查 |
 
 示例:
   检测: QUICK-REFERENCE.md §预检查模板只有 5 行（无第 6 行）
@@ -537,7 +535,7 @@ v2.0 示例:
   - detection/conflict-detection.md §规则 5（预检查第 6 行存在性检测）
   - triggers/auto-triggers.md §场景 9（预检查缺少记忆写入确认行检测）
   - 模式 9（时序违规修复 — 互补关系：模式 9 修复时序规则定义，模式 11 修复硬性阻塞机制）
-  - core/workflows/common/task-memory.md §阶段 0 硬性阻塞机制
+  - core/workflows/common/task-memory/triggers.md §阶段 0 硬性阻塞机制
   - core/workflows/00-pre-check/README.md §输出格式 第 6 行
 ```
 
@@ -604,7 +602,7 @@ v2.0 (2026-02-27):
   升级:
     - 模式 5: 版本号批量更新
       - 从"扫描发现→修复"升级为"对照 8 文件清单→逐个 read_file→主动全量检查→修复→验证"
-      - 嵌入完整的 8 文件版本号清单（与 QUICK-REFERENCE.md 同源）
+      - 嵌入完整的 8 文件版本号清单（与 CROSS-VALIDATION.md §版本号文件清单 同源）
       - 新增修复后再次全量验证步骤
       - 新增 v1.0 vs v2.0 对比示例
   新增:
@@ -642,12 +640,9 @@ v1.0 (2026-02-12):
 - [../triggers/auto-triggers.md](../triggers/auto-triggers.md) §场景 5/6/7 - 自动触发场景
 - [../triggers/auto-triggers.md](../triggers/auto-triggers.md) §场景 9 - 预检查第 6 行存在性触发（🆕 v2.1）
 - [../triggers/user-intent-detection.md](../triggers/user-intent-detection.md) §模式 5 - 反复问题升级触发
-- [QUICK-REFERENCE.md](../../QUICK-REFERENCE.md) §版本号文件清单 - 权威清单来源
+- [CROSS-VALIDATION.md](../../CROSS-VALIDATION.md) §版本号文件清单 - 权威清单来源
 - [CONSTRAINTS.md](../../CONSTRAINTS.md) 约束 #14 - 交叉验证要求
 
 ---
 
-**版本**: v2.1
-**最后更新**: 2026-02-28
-**v2.1 核心改进**: 新增模式 11（预检查-记忆原子操作修复 — 确保第 6 行在 4 处文件一致存在）
-**v2.0 核心改进**: 模式 5 升级（主动全量 8 文件）；新增模式 9（时序违规修复）；新增模式 10（知识库断层修复）
+**最后更新**: 2026-03-02

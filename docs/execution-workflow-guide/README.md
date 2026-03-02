@@ -3,9 +3,7 @@
 > 当你向 AI 发送任务请求时，AI 会按照本文档描述的流程执行。
 > 本指南整合了所有工作流的公共流程和各场景的专属流程，帮助你理解 AI 的每一步行为。
 
-**版本**: v1.1
-**创建日期**: 2026-02-28
-**最后更新**: 2026-02-28
+**最后更新**: 2026-03-02
 **适用范围**: 所有任务类型（需求开发、Bug 修复、性能优化、深度分析等）
 
 ---
@@ -256,15 +254,11 @@ ai-dev-guidelines/projects/chat/
 |------|------|------|
 | 速查手册 | `ai-dev-guidelines/QUICK-REFERENCE.md` | AI 执行速查 |
 | 约束清单 | `ai-dev-guidelines/CONSTRAINTS.md` | 20 条核心约束 |
-| 任务记忆机制 | `ai-dev-guidelines/core/workflows/common/task-memory.md` | 5 阶段消息驱动 |
+| 任务记忆机制 | `ai-dev-guidelines/core/workflows/common/task-memory.md` | 5+1 阶段消息驱动 |
 | 报告规范 | `ai-dev-guidelines/core/workflows/common/temp-reports.md` | 报告命名与存储 |
 | 自我修复机制 | `ai-dev-guidelines/docs/spec-self-fix-guide/README.md` | 规范自我修复 |
 | 设计理念 | `ai-dev-guidelines/docs/DESIGN-PHILOSOPHY.md` | 架构设计哲学 |
 
 ---
 
-**版本**: v1.2
-**创建日期**: 2026-02-28
 **最后更新**: 2026-03-02
-**v1.2 变更**: 全局流程图新增步骤 ⑤.5（执行合规性回溯检查 — 出口门禁）；阶段 B 消息驱动记忆图新增阶段 4.5；阶段 E 新增检测点 11；对齐 task-memory v1.9（5+1 阶段）
-**v1.1 变更**: 拆分为 4 个子文件；补充全局流程图步骤 ⑤（任务完成后轻量检测）；补全 11 个工作流的关键词映射

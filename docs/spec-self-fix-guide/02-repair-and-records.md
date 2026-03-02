@@ -2,9 +2,7 @@
 
 > 本文档描述自我修复机制中的"修复层"和"记录层"：发现问题后怎么修、怎么验证、怎么记录，以及如何防止问题再次出现。
 
-**版本**: v1.1
-**创建日期**: 2026-02-28
-**最后更新**: 2026-02-28
+**最后更新**: 2026-03-02
 **源模块**: `core/self-fix/repair/` + `core/self-fix/records/`
 
 ---
@@ -50,7 +48,7 @@
   - 补充缺失的标准化章节（使用模板）
   - 修复明显的死链接（路径拼写错误）
   - 同步时序规则（以 task-memory.md 为权威来源）
-  - 同步清单内容（以 QUICK-REFERENCE.md 为权威来源）
+  - 同步清单内容（以 CROSS-VALIDATION.md 为权威来源）
 
 ❌ 不能自动:
   - 删除任何内容
@@ -488,7 +486,7 @@ Why 5: 根因
   → 缺少一份固定的、不依赖记忆的版本号文件清单
 
 解决方案:
-  1. 建立 8 文件清单（固定在 QUICK-REFERENCE 中）
+  1. 建立 8 文件清单（固定在 CROSS-VALIDATION.md 中）
   2. 检查方式从"被动扫描"升级为"主动全量"
   3. 新增自动触发场景 5（版本号变更时自动检测）
 ```
@@ -506,12 +504,9 @@ Why 5: 根因
 | 修复模式库源文件 | `core/self-fix/repair/repair-patterns.md` | 模式 1~10 详情 |
 | 修复验证源文件 | `core/self-fix/repair/repair-validation.md` | 7 步验证详情 |
 | 修复记录汇总 | `core/self-fix/records/summary.md` | 修复记录统计 |
-| QUICK-REFERENCE §版本号清单 | `ai-dev-guidelines/QUICK-REFERENCE.md` | 版本号 8 文件权威清单 |
-| QUICK-REFERENCE §约束条数清单 | `ai-dev-guidelines/QUICK-REFERENCE.md` | 约束条数 11 文件权威清单 |
+| CROSS-VALIDATION §版本号清单 | `ai-dev-guidelines/core/CROSS-VALIDATION.md` | 版本号 8 文件 + 约束条数 11 文件 + 日期 8 文件权威清单 |
 | 约束 #14 | `ai-dev-guidelines/CONSTRAINTS.md` | 规范修改需交叉验证 |
 
 ---
 
-**版本**: v1.1
-**创建日期**: 2026-02-28
-**v1.1 变更**: 从单体文件拆分而来；对齐修复模式总数为 11 种（含模式 11 预检查-记忆原子操作修复）；补充 5-Why 升级分析示例；补充 soft gate vs hard gate 的本质区别说明
+**最后更新**: 2026-03-02

@@ -436,7 +436,7 @@ P0 清单格式:
 - [预检查流程](../00-pre-check/README.md)
 - [风险等级定义](../00-task-identification/risk-levels.md)
 - [禁止项清单](../../CONSTRAINTS.md)
-- [Stop & Save 机制](./stop-and-save.md)
+
 
 ---
 

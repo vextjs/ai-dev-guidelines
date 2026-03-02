@@ -2,8 +2,6 @@
 
 > AI 在执行任务时自动触发规范检测的规则
 
-**版本**: v2.3
-**创建日期**: 2026-02-12
 **最后更新**: 2026-03-02
 
 ---
@@ -111,8 +109,8 @@
   | 7 | core/workflows/decision-tree.yaml      | L1 注释 + L4 `version` 字段 + L82 注释 + L87 `mandatory_precheck.version` |
   | 8 | core/workflows/00-pre-check/README.md  | L3 `> **版本**: vX.Y.Z` + 文件末尾 `**版本**: vX.Y.Z`（两处）         |
 
-  ⚠️ 此清单与 QUICK-REFERENCE.md §版本号文件清单 同源，新增文件时两处必须同步更新。
-  ⚠️ 非入口文件（如 task-memory.md v1.7、temp-reports.md v1.5）使用独立版本号，不在此清单中。
+  ⚠️ 此清单与 CROSS-VALIDATION.md §版本号文件清单 同源，新增文件时两处必须同步更新。
+  ⚠️ 子文件不再维护独立版本号（2026-03-02 起取消），仅保留最后更新日期。
 
 执行方式: 🔴 自动执行，发现不一致立即报告
 
@@ -135,7 +133,7 @@
 
 关联:
   - detection/conflict-detection.md §规则 1（8 文件清单的检测逻辑）
-  - QUICK-REFERENCE.md §版本号文件清单（权威清单来源）
+  - CROSS-VALIDATION.md §版本号文件清单（权威清单来源）
   - CONSTRAINTS.md 约束 #14（交叉验证要求）
   - repair/repair-patterns.md §模式 5（版本号批量更新修复模式）
 ```
@@ -153,7 +151,7 @@
 
 检测内容:
   1. 阶段 0 时序强制规则是否在两处文件中都存在:
-     - core/workflows/common/task-memory.md §阶段 0
+     - core/workflows/common/task-memory/triggers.md §阶段 0
      - core/workflows/00-pre-check/README.md §阶段 0
   2. 两处的时序规则内容是否一致
   3. 阶段 0 自检清单首项是否为时序检查:
@@ -195,7 +193,7 @@
   - detection/conflict-detection.md §规则 5（流程时序合规性检测逻辑）
   - detection/obsolete-detection.md §规则 5（流程时序过时检测）
   - repair/repair-patterns.md §模式 9（时序违规修复模式）
-  - core/workflows/common/task-memory.md §阶段 0 时序强制规则
+  - core/workflows/common/task-memory/triggers.md §阶段 0 时序强制规则
   - core/workflows/00-pre-check/README.md §阶段 0 时序强制规则
 ```
 
@@ -304,7 +302,7 @@
   | 10| changelogs/v<当前版本>.md                          | 相关链接描述                                     |
   | 11| core/self-fix/detection/conflict-detection.md  | §规则 6 检测示例基准值                              |
 
-  ⚠️ 此清单与 QUICK-REFERENCE.md §约束条数引用清单 同源，新增引用文件时两处必须同步更新。
+  ⚠️ 此清单与 CROSS-VALIDATION.md §约束条数引用清单 同源，新增引用文件时两处必须同步更新。
 
 执行方式: 🔴 自动执行，发现不一致立即报告
 
@@ -327,7 +325,7 @@
   遗漏了其他卫星文件。v2.1 新增完整的 11 文件清单，确保全量检查。
 
 关联:
-  - QUICK-REFERENCE.md §约束条数引用清单（权威清单来源）
+  - CROSS-VALIDATION.md §约束条数引用清单（权威清单来源）
   - detection/conflict-detection.md §规则 6（约束条数一致性检测逻辑）
   - CONSTRAINTS.md 约束 #14（交叉验证要求）
   - 场景 5（版本号全量同步 — 同类问题的已有解法，本场景照此模式建立）
@@ -353,7 +351,7 @@
   2. 第 6 行格式是否统一为:
      "6. 📝 记忆已创建: .ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN (🔄)"
   3. 第 6 行是否标注为 "🔴 阶段0 硬性阻塞"（防止被误认为可选项）
-  4. task-memory.md §阶段 0 自检清单首项是否包含预检查第 6 行输出检查
+  4. task-memory/triggers.md §阶段 0 自检清单首项是否包含预检查第 6 行输出检查
   5. AI 实际输出的预检查结果是否包含第 6 行（运行时自检）
 
 执行方式: 🔴 自动执行，发现缺失立即补齐
@@ -396,7 +394,7 @@
   - detection/conflict-detection.md §规则 5（预检查第 6 行存在性检测逻辑）
   - repair/repair-patterns.md §模式 11（预检查-记忆原子操作修复）
   - 场景 6（阶段 0 时序合规检测 — 互补关系）
-  - core/workflows/common/task-memory.md §阶段 0 硬性阻塞机制
+  - core/workflows/common/task-memory/triggers.md §阶段 0 硬性阻塞机制
   - core/workflows/00-pre-check/README.md §输出格式 第 6 行
 ```
 
@@ -406,7 +404,7 @@
 
 ```yaml
 触发时机:
-  - 🔴 每次任务结束前（阶段 4.5 执行时 — 与 task-memory.md §阶段 4.5 联动）
+  - 🔴 每次任务结束前（阶段 4.5 执行时 — 与 task-memory/triggers.md §阶段 4.5 联动）
   - 阶段 4.5 合规检查发现未通过项且无法立即修复时
   - 用户指出 AI 跳过了流程步骤时
 
@@ -464,7 +462,7 @@
   即使入口被跳过，出口也能发现并记录/修复。
 
 关联:
-  - core/workflows/common/task-memory.md §阶段 4.5（权威定义 — 出口门禁）
+  - core/workflows/common/task-memory/triggers.md §阶段 4.5（权威定义 — 出口门禁）
   - 场景 6（阶段 0 时序合规检测 — 入口门禁，互补关系）
   - 场景 9（预检查第 6 行存在性检测 — 入口门禁，互补关系）
   - 场景 7（反复问题自动升级 — 联动升级）
@@ -609,7 +607,7 @@ v2.3 (2026-03-02):
     - 阶段 0 时序违规已发生 3 次，根因是流程只有入口检查而无出口检查
     - AI 跳过步骤后无机制发现，需要出口门禁兜底
   关联:
-    - core/workflows/common/task-memory.md §阶段 4.5（权威定义，task-memory v1.9）
+    - core/workflows/common/task-memory/triggers.md §阶段 4.5（权威定义，task-memory v1.9）
     - 场景 6/9（入口门禁，互补关系）
     - 场景 7（反复问题升级，联动触发）
 
@@ -640,7 +638,7 @@ v2.1 (2026-02-27):
     - 根因: 交叉验证清单只列了 3 个文件，遗漏了卫星文件
     - 解法: 照版本号清单（场景 5）模式建立完整的约束条数引用清单
   关联:
-    - QUICK-REFERENCE.md §约束条数引用清单（权威清单来源）
+    - CROSS-VALIDATION.md §约束条数引用清单（权威清单来源）
     - detection/conflict-detection.md §规则 6（检测逻辑）
 
 v2.0 (2026-02-27):
@@ -677,16 +675,10 @@ v1.0 (2026-02-12):
 - `../repair/repair-patterns.md` §模式 9 - 时序违规修复
 - `../repair/repair-patterns.md` §模式 11 - 预检查-记忆原子操作修复（🆕 v2.2）
 - `core/workflows/common/task-memory.md` §阶段 4.5 - 出口门禁权威定义（🆕 v2.3）
-- `QUICK-REFERENCE.md` §版本号文件清单 - 权威清单来源
-- `QUICK-REFERENCE.md` §约束条数引用清单 - 约束条数权威清单来源（🆕 v2.1）
+- `CROSS-VALIDATION.md` §版本号文件清单 - 权威清单来源
+- `CROSS-VALIDATION.md` §约束条数引用清单 - 约束条数权威清单来源（🆕 v2.1）
 - `CONSTRAINTS.md` 约束 #14 - 交叉验证要求
 
 ---
 
-**版本**: v2.3
 **最后更新**: 2026-03-02
-**核心价值**: 在任务执行过程中主动发现规范问题
-**v2.3 核心改进**: 新增执行合规性回溯检查联动（场景 10）— 阶段 4.5 出口门禁，与阶段 0 入口门禁形成闭环
-**v2.2 核心改进**: 新增预检查第 6 行存在性触发（场景 9）— 确保阶段 0 硬性阻塞机制不被遗漏
-**v2.1 核心改进**: 新增约束条数全量同步触发（场景 8）— 防止新增/删除约束时遗漏卫星文件
-**v2.0 核心改进**: 新增版本号全量同步触发 + 阶段 0 时序合规触发 + 反复问题自动升级触发

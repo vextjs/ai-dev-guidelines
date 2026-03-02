@@ -232,6 +232,4 @@ projects/payment-service/security/SEC-auth-overhaul-20260211/
 
 ---
 
-**版本**: v2.1.0  
-**更新日期**: 2026-02-24  
-**核心改进**: 新增实施方案环节（Step 4），增加 CP1/CP2/CP3 确认点
+**最后更新**: 2026-02-24

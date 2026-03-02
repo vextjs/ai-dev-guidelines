@@ -2,8 +2,7 @@
 
 > 首次使用 ai-dev-guidelines 规范体系的 AI Agent 快速指引
 
-**版本**: v1.0  
-**最后更新**: 2026-02-27  
+**最后更新**: 2026-03-02
 **适用对象**: 首次接入本规范体系的 AI Agent（GitHub Copilot / Claude / GPT / Cursor 等）
 
 ---

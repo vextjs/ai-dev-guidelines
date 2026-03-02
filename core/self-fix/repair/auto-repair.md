@@ -2,9 +2,7 @@
 
 > 规范问题的自动修复、半自动修复和辅助修复
 
-**版本**: v2.0
-**创建日期**: 2026-02-12
-**最后更新**: 2026-02-27
+**最后更新**: 2026-03-02
 
 ---
 
@@ -43,8 +41,8 @@
 
 示例 3（🆕 v2.0 — 时序规则同步）:
   检测: 00-pre-check/README.md 缺少阶段 0 时序强制规则
-  修复: 从 task-memory.md §阶段 0 复制时序强制规则到 00-pre-check
-  执行: 自动应用（task-memory.md 为权威来源）
+  修复: 从 task-memory/triggers.md §阶段 0 复制时序强制规则到 00-pre-check
+  执行: 自动应用（task-memory/triggers.md 为权威来源）
   记录: records/2026-02-27-auto-timing-sync.md
 ```
 
@@ -128,7 +126,7 @@
 
 安全等级: ✅ 安全（版本号是纯元数据，不影响业务逻辑）
 
-🔴 版本号文件清单（8 个 — 与 QUICK-REFERENCE.md §版本号文件清单 同源）:
+🔴 版本号文件清单（8 个 — 与 CROSS-VALIDATION.md §版本号文件清单 同源）:
 
   | # | 文件路径                           | 版本号位置                                                          |
   |:-:|-----------------------------------|-------------------------------------------------------------------|
@@ -141,8 +139,8 @@
   | 7 | core/workflows/decision-tree.yaml      | L1 注释 + L4 `version` 字段 + L82 注释 + L87 `mandatory_precheck.version` |
   | 8 | core/workflows/00-pre-check/README.md  | L3 `> **版本**: vX.Y.Z` + 文件末尾 `**版本**: vX.Y.Z`（两处）         |
 
-  ⚠️ 此清单与 QUICK-REFERENCE.md 同源，新增文件时两处必须同步更新。
-  ⚠️ 非入口文件（如 task-memory.md v1.7、temp-reports.md v1.5）使用独立版本号，不在此清单中。
+  ⚠️ 此清单与 CROSS-VALIDATION.md §版本号文件清单 同源，新增文件时两处必须同步更新。
+  ⚠️ 子文件不再维护独立版本号（2026-03-02 起取消），仅保留最后更新日期。
 
 自动修复步骤:
   1. 确定目标版本号（从 copilot-instructions.md 或多数文件版本号取最新值）
@@ -169,7 +167,7 @@ v1.0 vs v2.0 对比:
   - detection/conflict-detection.md §规则 1（检测逻辑）
   - triggers/auto-triggers.md §场景 5（触发时机）
   - repair/repair-patterns.md §模式 5（修复模式详情）
-  - QUICK-REFERENCE.md §版本号文件清单（权威清单来源）
+  - CROSS-VALIDATION.md §版本号文件清单（权威清单来源）
 ```
 
 ---
@@ -195,7 +193,7 @@ v1.0 vs v2.0 对比:
   - [ ] 🔴 记忆写入是否在分析用户问题之前完成？（不是分析完才补写）
 
 自动修复步骤:
-  1. 读取 task-memory.md §阶段 0 的完整时序规则（权威来源）
+  1. 读取 task-memory/triggers.md §阶段 0 的完整时序规则（权威来源）
   2. 读取 00-pre-check/README.md §阶段 0 的时序规则
   3. 对比两处内容:
      a. 两处都有且一致 → 无需修复 ✅
@@ -220,7 +218,7 @@ v1.0 vs v2.0 对比:
   - detection/obsolete-detection.md §规则 5（流程时序过时检测）
   - triggers/auto-triggers.md §场景 6（阶段 0 时序合规自动触发）
   - repair/repair-patterns.md §模式 9（时序违规修复模式）
-  - core/workflows/common/task-memory.md §阶段 0 时序强制规则（权威来源）
+  - core/workflows/common/task-memory/triggers.md §阶段 0 时序强制规则（权威来源）
   - core/workflows/00-pre-check/README.md §阶段 0 时序强制规则（同步副本）
 ```
 
@@ -231,12 +229,12 @@ v1.0 vs v2.0 对比:
 ```yaml
 触发条件:
   - detection/obsolete-detection.md §规则 6 检测到版本号清单不同步
-  - QUICK-REFERENCE.md 的 8 文件清单发生增减
+  - CROSS-VALIDATION.md §版本号文件清单 发生增减
 
 安全等级: ✅ 安全（清单内容同步，不影响业务逻辑）
 
 同步目标:
-  当 QUICK-REFERENCE.md §版本号文件清单 的文件数量或内容发生变化时，
+  当 CROSS-VALIDATION.md §版本号文件清单 的文件数量或内容发生变化时，
   自动同步更新以下引用处:
   1. core/self-fix/detection/conflict-detection.md §规则 1 的 8 文件清单
   2. core/self-fix/repair/repair-patterns.md §模式 5 的 8 文件清单
@@ -244,17 +242,17 @@ v1.0 vs v2.0 对比:
   4. core/self-fix/triggers/auto-triggers.md §场景 5 的 8 文件清单
   5. CONSTRAINTS.md 约束 #14 的清单引用
 
-  ⚠️ QUICK-REFERENCE.md 是权威来源，其他文件为同步副本
+  ⚠️ CROSS-VALIDATION.md 是权威来源，其他文件为同步副本
 
 自动修复步骤:
-  1. 读取 QUICK-REFERENCE.md §版本号文件清单 中的文件列表
+  1. 读取 CROSS-VALIDATION.md §版本号文件清单 中的文件列表
   2. 读取上述 5 处引用的文件列表
   3. 对比是否一致
-  4. 不一致时，以 QUICK-REFERENCE.md 为准同步更新
+  4. 不一致时，以 CROSS-VALIDATION.md 为准同步更新
 
 关联:
   - detection/obsolete-detection.md §规则 6（版本号清单同步检测）
-  - QUICK-REFERENCE.md §版本号文件清单（权威来源）
+  - CROSS-VALIDATION.md §版本号文件清单（权威来源）
 ```
 
 ---
@@ -461,14 +459,14 @@ core/workflows/04-research/README.md 缺少专属验证清单
 v2.0 (2026-02-27):
   新增:
     - 场景 A: 版本号全量同步自动修复
-      - 嵌入 8 文件版本号清单（与 QUICK-REFERENCE.md 同源）
+      - 嵌入 8 文件版本号清单（与 CROSS-VALIDATION.md 同源）
       - 主动全量检查 → 逐个 read_file → 修复 → 再次全量验证
       - v1.0 vs v2.0 对比说明
     - 场景 B: 阶段 0 时序规则同步自动修复
       - task-memory.md 为权威来源，00-pre-check 为同步副本
       - 包含完整时序规则内容模板和自检清单首项要求
     - 场景 C: 版本号清单跨模块同步自动修复
-      - QUICK-REFERENCE.md 为权威来源，5 处引用处为同步副本
+      - CROSS-VALIDATION.md 为权威来源，5 处引用处为同步副本
     - 修复验证新增 3 项（版本号一致性、时序规则一致性、回写完整性）
     - 半自动修复新增"知识库断层修复"场景
     - v2.0 自动修复记录格式模板
@@ -498,12 +496,9 @@ v1.0 (2026-02-12):
 - `../detection/conflict-detection.md` §规则 1/5 - 版本号 + 时序检测
 - `../detection/obsolete-detection.md` §规则 5/6 - 时序过时 + 清单同步检测
 - `../records/` - 修复记录
-- `QUICK-REFERENCE.md` §版本号文件清单 - 权威清单来源
+- `CROSS-VALIDATION.md` §版本号文件清单 - 权威清单来源
 - `CONSTRAINTS.md` 约束 #14 - 交叉验证要求
 
 ---
 
-**版本**: v2.0
-**最后更新**: 2026-02-27
-**核心价值**: 安全、高效地修复规范问题
-**v2.0 核心改进**: 新增版本号全量同步 + 时序规则同步 + 清单跨模块同步为自动修复场景；新增知识库断层修复为半自动场景；修复验证扩展到 7 步
+**最后更新**: 2026-03-02
