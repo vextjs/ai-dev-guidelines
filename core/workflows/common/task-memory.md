@@ -136,6 +136,14 @@ ai-dev-guidelines/projects/<project>/          # 如 projects/chat/
 > - 不污染业务源码目录
 > - .ai-memory/ 和 reports/ 加入 ai-dev-guidelines/.gitignore 忽略即可
 
+> 🔴 **禁止在以下位置创建 `.ai-memory/` 或 `reports/`（NO EXCEPTIONS）**:
+> - ❌ 工作区根目录（如 `MySelf/.ai-memory/`）
+> - ❌ `ai-dev-guidelines/` 根目录（如 `ai-dev-guidelines/.ai-memory/`）
+> - ❌ 业务项目源码目录（如 `schema-dsl/.ai-memory/`）
+> - ✅ **唯一正确位置**: `ai-dev-guidelines/projects/<project>/.ai-memory/`
+>
+> 根因: 已发生事故 — Agent 在工作区根目录 `MySelf/.ai-memory/` 创建记忆文件，导致记忆与项目脱钩、其他 Agent 无法恢复上下文。
+
 ---
 
 ## 📂 子文件索引

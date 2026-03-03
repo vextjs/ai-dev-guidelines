@@ -226,6 +226,11 @@
   - 使用 find_path / glob 扫描 .ai-memory（glob 跳过隐藏目录）
   - 输出"⚠️ 无"时不附带实际扫描路径
   - list_directory 返回空时不做二次验证就断定"无记忆"（🆕 BUG-047）
+  - 🔴 在错误位置创建 .ai-memory/（已发生事故）:
+    ❌ 工作区根目录（如 MySelf/.ai-memory/）
+    ❌ ai-dev-guidelines/ 根目录
+    ❌ 业务项目源码目录（如 schema-dsl/.ai-memory/）
+    ✅ 唯一正确位置: ai-dev-guidelines/projects/<project>/.ai-memory/
 ```
 
 ### Step 6: 项目规范加载（按需）

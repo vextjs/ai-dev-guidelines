@@ -781,7 +781,7 @@
      - docs/DESIGN-PHILOSOPHY.md
      - core/workflows/decision-tree.yaml
      - core/workflows/README.md
-     - docs/issue.md                          # 🆕 问题追踪（自我审查时逐条核对）
+     - issue.md                               # 🆕 问题追踪（自我审查时逐条核对）
 
   2. 机制文件读取（按需深入）:
      - core/workflows/common/task-memory.md
@@ -888,11 +888,11 @@
   审查不能止步于"发现问题、记入待跟进" — 能修的当场修，不能修的明确标注原因。
 
 步骤:
-  0. 🆕 核对 docs/issue.md 问题追踪表:
-     a. 读取 docs/issue.md，筛选所有 🔴 未解决 和 🟡 部分解决 的问题
+  0. 🆕 核对 issue.md 问题追踪表:
+     a. 读取 issue.md，筛选所有 🔴 未解决 和 🟡 部分解决 的问题
      b. 对每条问题验证当前状态（是否已被修复/仍存在）
      c. 仍存在的问题 → 分析根因 → 按下方分级规则分流处理（与审查发现的问题合并）
-     d. 已修复的问题 → 更新 docs/issue.md 中该问题状态为 ✅ 已解决 + 填写解决日期
+     d. 已修复的问题 → 更新 issue.md 中该问题状态为 ✅ 已解决 + 填写解决日期
      e. 分析未解决问题的根因，评估是否需要新增防复现机制
 
   1. 遍历审查报告中的问题清单（含 issue.md 中未解决的问题），按分级分流处理
