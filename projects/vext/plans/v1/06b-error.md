@@ -502,6 +502,8 @@ const localeMiddleware: VextMiddleware = async (req, _res, next) => {
 
 **目录结构约定**：
 
+**模式 A：平铺文件（默认，适合小型项目）**
+
 ```
 src/locales/
 ├── zh-CN.ts         # export default { 'key': { code, message }, ... }
@@ -509,6 +511,62 @@ src/locales/
 ├── ja-JP.ts         # 可选，按需添加
 └── ...
 ```
+
+**模式 B：子目录拆分（v1.2.3+，适合多人协作项目）** 🆕
+
+> 依赖 schema-dsl ≥ v1.2.3 的 i18n 子目录合并功能。
+
+```
+src/locales/
+├── core/               # 公共 code 段：1000-1999（框架层维护）
+│   ├── zh-CN.ts
+│   └── en-US.ts
+├── account/            # 账户模块 code 段：10000-10999（开发者A）
+│   ├── zh-CN.ts
+│   └── en-US.ts
+├── order/              # 订单模块 code 段：20000-20999（开发者B）
+│   ├── zh-CN.ts
+│   └── en-US.ts
+└── payment/            # 支付模块 code 段：30000-30999（开发者C）
+    ├── zh-CN.ts
+    └── en-US.ts
+```
+
+子目录模式下，各模块独立维护自己的语言文件，启动时 schema-dsl 自动递归扫描并按语言合并。
+
+**使用子目录模式**：通过插件将路径传给 `dsl.config({ i18n: path })`，利用 schema-dsl 内置的递归扫描能力：
+
+```typescript
+// src/plugins/i18n-subdir.ts
+import { definePlugin } from 'vextjs'
+import { dsl } from 'schema-dsl'
+import path from 'path'
+
+export default definePlugin({
+  name: 'i18n-subdir',
+  setup(app) {
+    // 传路径给 schema-dsl，自动递归扫描子目录并按语言合并
+    dsl.config({
+      i18n: path.join(app.config.rootDir, 'src/locales'),
+      strict: true,  // 推荐：同名 key 冲突时直接抛 Error（CI 环境）
+    })
+  },
+})
+```
+
+> **注意**：子目录模式使用 schema-dsl 内置的文件扫描（仅支持 `.js` / `.json`），
+> 不经过 vext 的 i18n-loader（后者支持 `.ts` 但仅扫描平铺文件）。
+> 如果项目语言文件为 `.ts` 格式且需要子目录，建议使用 `vext build` 编译后以 `.js` 运行，
+> 或在 locales 子目录中直接使用 `.js` / `.cjs` 格式。
+
+**子目录模式关键特性**（schema-dsl v1.2.3）：
+
+| 特性 | 说明 |
+|------|------|
+| 递归合并 | 同语言文件自动合并为一个完整语言包 |
+| 冲突检测 | 默认 WARN 日志，`strict: true` 时抛 Error 阻断启动 |
+| 文件名校验 | 只加载 BCP 47 格式文件名（`zh-CN.js`），自动跳过工具文件 |
+| 100% 向后兼容 | 无子目录时行为与平铺模式完全一致 |
 
 语言文件格式见 **[00-directory-structure.md](./00-directory-structure.md)** 的 locales 示例。
 

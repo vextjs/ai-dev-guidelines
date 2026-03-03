@@ -413,6 +413,115 @@ this.app.throw(400, '邮箱已注册', 10001)    // { code: 10001, message, requ
 |-------|---------|
 | 文件无默认导出或导出非 class | `user.ts must export default a class` |
 | key 冲突 | `Service key "user" is already registered` |
+| 🆕 循环依赖检测（运行时） | `Circular dependency detected: order → user → order` |
+
+### 7.1 循环依赖运行时检测（🆕 Q52）
+
+> **背景**：架构约束第 7 条「禁止 service 之间形成循环依赖」此前仅靠文档约束，无运行时保障。
+
+**检测时机**：所有 service 实例化完成后、路由注册之前（bootstrap 步骤④完成时）。
+
+**检测策略**：静态分析 + 运行时代理
+
+```typescript
+// vextjs/lib/service-dependency-checker.ts（框架内部）
+
+/**
+ * 在所有 service 加载完成后，构建 service 间调用依赖图并检测环路。
+ *
+ * 检测方式：
+ *   1. 对 app.services 的每个叶节点 service 创建 Proxy 包装
+ *   2. 在首次请求周期内（或 bootstrap 阶段的 dry-run 中），
+ *      记录每个 service 方法内部对 this.app.services.xxx 的访问
+ *   3. 构建有向图，使用 DFS 检测环路
+ *
+ * 简化版（静态分析）：
+ *   读取每个 service 文件的源码文本，正则匹配 this.app.services.<key> 调用，
+ *   构建依赖图后 DFS 检测环路。
+ *   优点：零运行时开销，bootstrap 阶段即可检测
+ *   缺点：无法检测动态拼接的 key（极少见场景）
+ */
+export function checkServiceCircularDeps(
+  services: Record<string, unknown>,
+  serviceFiles: Map<string, string>,  // key → 源文件绝对路径
+  app: VextApp,
+): void {
+  // 1. 构建依赖图
+  const graph = new Map<string, Set<string>>()
+  const allKeys = flattenServiceKeys(services)
+
+  for (const key of allKeys) {
+    const filePath = serviceFiles.get(key)
+    if (!filePath) continue
+
+    const source = fs.readFileSync(filePath, 'utf-8')
+    const deps = new Set<string>()
+
+    // 匹配 this.app.services.xxx 或 app.services.xxx
+    const regex = /(?:this\.)?app\.services\.(\w+(?:\.\w+)*)/g
+    let match: RegExpExecArray | null
+    while ((match = regex.exec(source)) !== null) {
+      const dep = match[1]
+      if (dep !== key && allKeys.includes(dep)) {
+        deps.add(dep)
+      }
+    }
+
+    graph.set(key, deps)
+  }
+
+  // 2. DFS 检测环路
+  const visited = new Set<string>()
+  const stack = new Set<string>()
+
+  function dfs(node: string, path: string[]): void {
+    if (stack.has(node)) {
+      const cycleStart = path.indexOf(node)
+      const cycle = [...path.slice(cycleStart), node].join(' → ')
+      throw new Error(
+        `[vextjs] Circular dependency detected in services: ${cycle}\n` +
+        `         Break the cycle by extracting shared logic into a separate service or utility.`
+      )
+    }
+    if (visited.has(node)) return
+
+    stack.add(node)
+    path.push(node)
+
+    const deps = graph.get(node)
+    if (deps) {
+      for (const dep of deps) {
+        dfs(dep, [...path])
+      }
+    }
+
+    stack.delete(node)
+    visited.add(node)
+  }
+
+  for (const key of allKeys) {
+    if (!visited.has(key)) {
+      dfs(key, [])
+    }
+  }
+
+  if (allKeys.length > 0) {
+    app.logger.debug(`[service-loader] Circular dependency check passed (${allKeys.length} services)`)
+  }
+}
+```
+
+**行为说明**：
+
+| 场景 | 行为 |
+|------|------|
+| 检测到环路 | 抛出 Error，启动终止（Fail Fast），错误信息包含完整环路链 |
+| 无环路 | 输出 DEBUG 日志，继续启动 |
+| 仅 `vext dev` 模式 | 每次 Soft Reload 重新检测（service 文件可能变更） |
+| `vext start` 生产模式 | 仅启动时检测一次 |
+| 动态拼接 key（`app.services[name]`） | 静态分析无法捕获，但此模式极少见且通常有合理理由 |
+
+> **设计取舍**：选择源码文本静态分析而非运行时 Proxy，原因是零运行时开销、bootstrap 阶段即可检测、实现简单。覆盖率约 95%（无法捕获动态 key 拼接，但这种模式在实际项目中极为罕见）。
 ---
 ## 8. 与路由层的边界
 
