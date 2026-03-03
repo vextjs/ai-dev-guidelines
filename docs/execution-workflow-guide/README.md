@@ -252,8 +252,8 @@ ai-dev-guidelines/projects/chat/
 
 | 文档 | 路径 | 说明 |
 |------|------|------|
-| 速查手册 | `ai-dev-guidelines/QUICK-REFERENCE.md` | AI 执行速查 |
-| 约束清单 | `ai-dev-guidelines/CONSTRAINTS.md` | 20 条核心约束 |
+| 速查手册 | `ai-dev-guidelines/core/QUICK-REFERENCE.md` | AI 执行速查 |
+| 约束清单 | `ai-dev-guidelines/core/CONSTRAINTS.md` | 20 条核心约束 |
 | 任务记忆机制 | `ai-dev-guidelines/core/workflows/common/task-memory.md` | 5+1 阶段消息驱动 |
 | 报告规范 | `ai-dev-guidelines/core/workflows/common/temp-reports.md` | 报告命名与存储 |
 | 自我修复机制 | `ai-dev-guidelines/docs/spec-self-fix-guide/README.md` | 规范自我修复 |

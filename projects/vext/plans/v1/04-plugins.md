@@ -273,7 +273,7 @@ export default definePlugin({
       _res.setHeader('X-Content-Type-Options', 'nosniff')
       _res.setHeader('X-Frame-Options', 'DENY')
       _res.setHeader('X-XSS-Protection', '1; mode=block')
-      next()
+      await next()
     })
   },
 })

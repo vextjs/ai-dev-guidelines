@@ -486,14 +486,14 @@ if (existsSync(localesDir)) {
 
 // ② 请求级：从 Accept-Language 提取 locale，写入 requestContext
 //    （集成在内置 requestId 中间件之后，作为框架层 1 中间件的一部分）
-const localeMiddleware: VextMiddleware = (req, _res, next) => {
+const localeMiddleware: VextMiddleware = async (req, _res, next) => {
   const store = requestContext.getStore()
   if (store) {
     const accept = req.headers['accept-language'] ?? ''
     // 取第一个语言标签（如 'zh-CN,en-US;q=0.9' → 'zh-CN'）
     store.locale = accept.split(',')[0]?.trim() || app.config.locale?.default || 'zh-CN'
   }
-  next()
+  await next()
 }
 ```
 
@@ -789,7 +789,7 @@ app.setRateLimiter({
     const count = await app.cache.incr(key)
     if (count === 1) await app.cache.expire(key, config.window)
     if (count > config.max) req.app.throw(429, 'Too Many Requests')
-    next()
+    await next()
   },
 })
 ```

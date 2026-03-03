@@ -504,8 +504,8 @@ Why 5: 根因
 | 修复模式库源文件 | `core/self-fix/repair/repair-patterns.md` | 模式 1~10 详情 |
 | 修复验证源文件 | `core/self-fix/repair/repair-validation.md` | 7 步验证详情 |
 | 修复记录汇总 | `core/self-fix/records/summary.md` | 修复记录统计 |
-| CROSS-VALIDATION §版本号清单 | `ai-dev-guidelines/core/CROSS-VALIDATION.md` | 版本号 8 文件 + 约束条数 11 文件 + 日期 8 文件权威清单 |
-| 约束 #14 | `ai-dev-guidelines/CONSTRAINTS.md` | 规范修改需交叉验证 |
+| CROSS-VALIDATION §版本号清单 | `ai-dev-guidelines/core/CROSS-VALIDATION.md` | 版本号 8 文件 + 约束条数 11 文件 + 日期 7 文件权威清单 |
+| 约束 #14 | `ai-dev-guidelines/core/CONSTRAINTS.md` | 规范修改需交叉验证 |
 
 ---
 

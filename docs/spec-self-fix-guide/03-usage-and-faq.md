@@ -363,7 +363,7 @@
 
 | 文件 | 关联点 |
 |------|--------|
-| `CROSS-VALIDATION.md` §交叉验证清单 | 版本号 8 文件 + 约束条数 11 文件 + 日期 8 文件清单 + docs/ 同步检查 |
+| `CROSS-VALIDATION.md` §交叉验证清单 | 版本号 8 文件 + 约束条数 11 文件 + 日期 7 文件清单 + docs/ 同步检查 |
 | `CONSTRAINTS.md` 约束 #12 | 主动合理性分析（模式 6 评估阶段使用） |
 | `CONSTRAINTS.md` 约束 #14 | 规范修改需交叉验证（所有修复后必须执行，含 docs/ 同步） |
 | `core/workflows/common/task-memory/triggers.md` §阶段 0 | 时序强制规则（场景 6/9 检测对象） |

@@ -81,7 +81,7 @@ export default defineRoutes((app) => {
 // 中间件中（通过 req.app）
 export default (async (req, _res, next) => {
   req.app.logger.info('请求进入', { path: req.path, method: req.method })
-  next()
+  await next()
 }) satisfies VextMiddleware
 ```
 

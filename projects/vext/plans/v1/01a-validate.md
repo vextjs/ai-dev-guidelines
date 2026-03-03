@@ -90,7 +90,7 @@ app.post('/', {
   ↓
   调用 validate(compiledSchema, rawData)
   ↓
-  全部通过 → 写入 req._validatedData[location]，调用 next()
+  全部通过 → 写入 req._validatedData[location]，调用 await next()
   校验失败 → 抛出 VextValidationError(422, errors)
   ↓
   全局错误处理捕获 → 返回 422 响应（见 01c-response.md）
@@ -274,7 +274,7 @@ export function buildValidateMiddleware(
     }
 
     req._validatedData = validated
-    next()
+    await next()
   }
 }
 

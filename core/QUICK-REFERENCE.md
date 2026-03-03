@@ -88,6 +88,7 @@
 | 事故、故障、复盘 | 事故复盘 | `core/workflows/08-incident/` |
 | 新项目、开源、npm包、初始化 | 开源项目初始化 | `core/workflows/09-opensource-init/` 🆕 |
 | 分析、审查、评估、深度分析 | 深度分析 | `core/workflows/10-analysis/` 🆕 |
+| 自我审查、规范审查、spec audit、全面体检、规范健康检查 | 规范自我审查 | `core/workflows/11-self-audit/` 🆕 |
 
 > 🔴 **混合意图规则**（FIX-010）：请求同时含"分析"和变更意图（调整/重构/修改/移动/拆分）时 → **需求开发**，不是深度分析。详见 `core/workflows/00-task-identification/rules.md §混合意图优先级规则`
 
@@ -401,7 +402,7 @@ projects/<project>/
 
 > 交叉验证清单已提取为独立文件，仅在修改规范文件时按需加载：
 > 
-> 👉 **[core/CROSS-VALIDATION.md](./CROSS-VALIDATION.md)** — 包含文件对照表、版本号清单（8 文件）、约束条数清单（11 文件）、🆕 日期同步清单（8 文件）、检查清单
+> 👉 **[core/CROSS-VALIDATION.md](./CROSS-VALIDATION.md)** — 包含文件对照表、版本号清单（8 文件）、约束条数清单（11 文件）、🆕 日期同步清单（7 文件）、检查清单
 
 ---
 

@@ -372,7 +372,7 @@ AI 在执行任务过程中自动检测规范问题，无需你主动触发。
 | 用户意图检测源文件 | `core/self-fix/triggers/user-intent-detection.md` | 6 种模式 + 子模块 |
 | 自动触发源文件 | `core/self-fix/triggers/auto-triggers.md` | 10 个场景详情 |
 | 阶段 4.5 权威定义 | `core/workflows/common/task-memory/triggers.md` §阶段 4.5 | 出口门禁 |
-| 交叉验证清单 | `ai-dev-guidelines/core/CROSS-VALIDATION.md` | 版本号 8 文件 + 约束条数 11 文件 + 日期 8 文件权威清单 |
+| 交叉验证清单 | `ai-dev-guidelines/core/CROSS-VALIDATION.md` | 版本号 8 文件 + 约束条数 11 文件 + 日期 7 文件权威清单 |
 
 ---
 

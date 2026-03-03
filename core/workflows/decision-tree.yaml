@@ -69,8 +69,20 @@ task_identification:
 
     analysis:
       weight: 7
+      patterns: ["分析", "审查", "评估", "深度分析", "全面检查", "评审"]
+
+    self_audit:
+      weight: 9
       patterns:
-        ["分析", "审查", "评估", "深度分析", "全面检查", "健康检查", "评审"]
+        [
+          "自我审查",
+          "规范审查",
+          "spec audit",
+          "全面体检",
+          "规范健康检查",
+          "规范自检",
+          "审查规范体系",
+        ]
 
     opensource_init:
       weight: 8
@@ -88,6 +100,7 @@ task_identification:
     incident: "core/workflows/08-incident/"
     opensource_init: "core/workflows/09-opensource-init/"
     analysis: "core/workflows/10-analysis/"
+    self_audit: "core/workflows/11-self-audit/"
 
 # ===========================================
 # 强制预检查 (v2.11.0 - 5项必做 + Agent 标识 + 上次记忆)

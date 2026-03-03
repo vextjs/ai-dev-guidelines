@@ -130,7 +130,7 @@ export default definePlugin({
       res.setHeader('X-Frame-Options', 'DENY')
       res.setHeader('X-XSS-Protection', '1; mode=block')
       res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin')
-      next()
+      await next()
     })
   },
 })
@@ -142,7 +142,7 @@ export default definePlugin({
     app.use(async (req, _res, next) => {
       // 将 requestId 注入到 APM context，后续所有异步操作都能追踪
       apmSdk.setContext({ traceId: req.requestId })
-      next()
+      await next()
     })
   },
 })
@@ -167,12 +167,17 @@ export default definePlugin({
 // vextjs/lib/types.ts
 
 /**
- * 标准中间件（同步或异步，无参数）
+ * 标准中间件（同步或异步）
+ *
+ * P0-3 修复（2026-03-03）：next 返回类型从 void 改为 Promise<void>。
+ * executeChain 内部的 next 是 async 函数，类型签名必须与实现对齐。
+ * 用户中间件应 `await next()` 以支持洋葱模型的 after-middleware 逻辑
+ * （如请求耗时统计、after-response logging、cleanup 等）。
  */
 export type VextMiddleware = (
   req:  VextRequest,
   res:  VextResponse,
-  next: () => void,
+  next: () => Promise<void>,
 ) => Promise<void> | void
 
 /**
@@ -214,12 +219,22 @@ export function defineMiddlewareFactory<T>(factory: VextMiddlewareFactory<T>): V
 **用法**：
 
 ```typescript
-// 普通中间件
+// 普通中间件（before-only，最常见）
 import { defineMiddleware } from 'vextjs'
 
 export default defineMiddleware(async (req, _res, next) => {
-  // ...
-  next()
+  // before 逻辑
+  await next()
+})
+
+// 洋葱模型（after-middleware，用于耗时统计/cleanup 等）
+import { defineMiddleware } from 'vextjs'
+
+export default defineMiddleware(async (req, res, next) => {
+  const start = Date.now()
+  await next()               // ← 等待下游完成
+  const ms = Date.now() - start
+  req.app.logger.info('request completed', { path: req.path, ms })
 })
 
 // 工厂中间件
@@ -228,7 +243,7 @@ import { defineMiddlewareFactory } from 'vextjs'
 export default defineMiddlewareFactory<{ roles: string[] }>((options) => {
   return async (req, _res, next) => {
     if (!options.roles.includes(req.user.role)) req.app.throw(403, 'Forbidden')
-    next()
+    await next()
   }
 })
 ```
@@ -300,7 +315,7 @@ export const responseWrapper: VextMiddleware = async (req, res, next) => {
   // 开启内建包装标志 — json() 调用时会自动包装为 { code: 0, data, requestId }
   // _enableWrap 是 VextResponse 的内部方法，用户不可见（通过 Omit 排除）
   ;(res as any)._enableWrap()
-  next()
+  await next()
 }
 ```
 
@@ -385,7 +400,7 @@ export default defineMiddleware(async (req, _res, next) => {
   const token = req.headers['authorization']
   if (!token) req.app.throw(401, 'Unauthorized')
   req.user = await verifyToken(token)
-  next()
+  await next()
 })
 
 // ✅ 也可以：try-catch 后重抛
@@ -394,7 +409,7 @@ import { defineMiddleware } from 'vextjs'
 export default defineMiddleware(async (req, _res, next) => {
   try {
     req.user = await authService.verify(req.headers['authorization'])
-    next()
+    await next()
   } catch {
     req.app.throw(401, 'auth.token_invalid')
   }
@@ -416,7 +431,7 @@ export default defineMiddlewareFactory<{ roles: string[] }>((options) => {
     if (!options.roles.includes(req.user.role)) {
       req.app.throw(403, 'Forbidden', 40301)  // 带业务错误码
     }
-    next()
+    await next()
   }
 })
 ```

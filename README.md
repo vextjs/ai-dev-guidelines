@@ -4,7 +4,7 @@
 
 [![版本](https://img.shields.io/badge/版本-v2.11.0-blue)]()
 [![约束](https://img.shields.io/badge/约束-20_条-red)]()
-[![工作流](https://img.shields.io/badge/工作流-10_种-green)]()
+[![工作流](https://img.shields.io/badge/工作流-11_种-green)]()
 [![模板](https://img.shields.io/badge/模板-29_个-orange)]()
 
 ---
@@ -15,7 +15,7 @@
 
 | 能力 | 说明 | 对应模块 |
 |------|------|---------|
-| **标准化工作流** | 10 种开发场景（需求/Bug/优化/安全...），AI 按步骤执行 | `core/workflows/` |
+| **标准化工作流** | 11 种开发场景（需求/Bug/优化/安全...），AI 按步骤执行 | `core/workflows/` |
 | **持久化记忆** | 跨会话记忆 + 多 Agent 协同，告别每次从零开始 | `.ai-memory/` + `reports/` |
 | **行为约束** | 20 条护栏规则，防止 AI 未经确认执行破坏性操作 | `core/CONSTRAINTS.md` |
 | **文档模板** | 29 个结构化模板（快速/完整双模式），输出格式统一 | `core/templates/` |
@@ -52,11 +52,11 @@ ai-dev-guidelines:
 
 ```
 第 1 层: 入口指引（~39 行）  → 每次必读
-第 2 层: 速查手册（~500 行） → 日常执行
+第 2 层: 速查手册（~420 行） → 日常执行
 第 3 层: 完整规范（4000+ 行）→ 按需加载
 ```
 
-AI 日常只需加载 ~500 行即可执行大部分任务。
+AI 日常只需加载 ~460 行即可执行大部分任务。
 
 ---
 
@@ -65,7 +65,7 @@ AI 日常只需加载 ~500 行即可执行大部分任务。
 ```
 ai-dev-guidelines/
 ├── core/              # 🤖 AI 规范内核
-│   ├── workflows/     #    10 种工作流
+│   ├── workflows/     #    11 种工作流
 │   ├── templates/     #    29 个文档模板
 │   ├── standards/     #    9 个开发规范
 │   ├── tools/         #    7 个自动化工具
@@ -125,7 +125,7 @@ cp -r projects/_template projects/<your-project>
 |------|------|
 | 当前版本 | v2.11.0 |
 | 规范文件 | ~4000 行 |
-| 工作流 | 10 种 |
+| 工作流 | 11 种 |
 | 模板 | 29 个 |
 | 约束 | 20 条 |
 | 工具脚本 | 7 个 |

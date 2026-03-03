@@ -84,7 +84,7 @@ export default defineMiddleware(async (req, _res, next) => {
   const token = req.headers['authorization']
   if (!token) req.app.throw(401, 'Unauthorized')
   req.user = verifyToken(token)
-  next()
+  await next()
 })
 ```
 
@@ -101,7 +101,7 @@ export default defineMiddlewareFactory<{ max: number; window?: number }>(
     return async (req, _res, next) => {
       // 按 options.max / options.window 执行限流逻辑
       // options 来自：路由覆盖值 > config/default.ts 默认值
-      next()
+      await next()
     }
   }
 )
@@ -160,7 +160,7 @@ import { defineMiddleware } from 'vextjs'
 export default defineMiddleware(async (req, _res, next) => {
   const token = req.headers['authorization']
   if (!token) req.app.throw(401, 'Unauthorized')   // 抛出 HttpError，终止执行链
-  next()
+  await next()
 })
 
 // 写法 2：try-catch 捕获后重抛（适合调用第三方 SDK 的场景）
@@ -169,7 +169,7 @@ import { defineMiddleware } from 'vextjs'
 export default defineMiddleware(async (req, _res, next) => {
   try {
     req.user = await authService.verify(req.headers['authorization'])
-    next()
+    await next()
   } catch (err) {
     req.app.throw(401, 'Token 无效或已过期')
   }

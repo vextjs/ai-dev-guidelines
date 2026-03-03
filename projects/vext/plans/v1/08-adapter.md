@@ -192,6 +192,8 @@ Adapter 负责按顺序执行中间件链。vextjs 采用 **洋葱模型**，`ne
 
 ```typescript
 // adapter 内部：执行中间件链
+// P0-3 修复（2026-03-03）：next 为 async 函数，类型与 VextMiddleware 的 next: () => Promise<void> 对齐
+// 用户中间件应 await next() 以支持洋葱模型的 after-middleware 逻辑
 async function executeChain(
   chain: VextMiddleware[],
   req:   VextRequest,
@@ -199,7 +201,7 @@ async function executeChain(
 ): Promise<void> {
   let index = 0
 
-  const next = async () => {
+  const next = async (): Promise<void> => {
     if (index >= chain.length) return
     const middleware = chain[index++]
     await middleware(req, res, next)
@@ -774,5 +776,5 @@ const { app, internals } = createApp(finalConfig)
 | `VextRequest` | `vextjs/lib/adapter.ts` | 请求对象（见 `01c-response.md` §3） |
 | `VextResponse` | `vextjs/lib/adapter.ts` | 响应对象（见 `01c-response.md` §4） |
 | `VextHandler` | `vextjs/lib/adapter.ts` | `(req: VextRequest, res: VextResponse) => Promise<void> \| void` |
-| `VextMiddleware` | `vextjs/lib/types.ts` | `(req, res, next) => Promise<void> \| void` |
+| `VextMiddleware` | `vextjs/lib/types.ts` | `(req, res, next: () => Promise<void>) => Promise<void> \| void` |
 | `VextErrorMiddleware` | `vextjs/lib/types.ts` | `(err, req, res) => void` |
