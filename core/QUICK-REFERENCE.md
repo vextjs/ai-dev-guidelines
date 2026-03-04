@@ -15,11 +15,11 @@
 2. 任务类型: [需求/Bug/优化/分析/...]
 3. 输出位置: [projects/<project>/...]
 4. Agent: [zed-copilot / webstorm-copilot / cursor / vscode-copilot / ...]
-5. 上次记忆: [.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN + 状态] 或 [⚠️ 无]
-6. 📝 记忆已创建: [.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN (🔄)] ← 🔴 阶段0 硬性阻塞
+5. 上次记忆: [projects/<project>/.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN + 状态] 或 [⚠️ 无]
+6. 📝 记忆已创建: [projects/<project>/.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN (🔄)] ← 🔴 阶段0 硬性阻塞
 ```
 
-> 💡 **tool call 顺序约束**: 会话的前三个 tool call 必须是 `now()` → `list_directory(.ai-memory/...)` → `edit_file(记忆文件)`，完成前禁止执行任何分析性文件读取
+> 💡 **tool call 顺序约束**: 会话的前三个 tool call 必须是 `now()` → `list_directory(projects/<project>/.ai-memory/...)` → `edit_file(记忆文件)`，完成前禁止执行任何分析性文件读取
 
 ### 🏷️ Agent 标识速查
 
@@ -141,8 +141,12 @@
 
 ```
 ai-dev-guidelines/projects/<project-name>/
-├── optimizations/<中文描述>/    # 任务产物（工作流交付物）
+├── optimizations/<中文描述>/           # 任务产物（工作流交付物）
 ├── requirements/<中文描述>/
+│   ├── 01-需求定义.md                  #   需求层（做什么）
+│   ├── 02-技术方案.md 或 02-技术方案/   #   方案层（怎么做）
+│   ├── 03-实施方案/                    #   实施层（具体改什么，>= 5 文件时生成目录）
+│   └── IMPLEMENTATION-PLAN.md         #   🔴 实施计划（强制，任务编号+进度+中断恢复）
 ├── bugs/<中文描述>/
 ├── reports/<子目录>/<agent>/YYYYMMDD/  # 报告（会话分析载体）
 └── .ai-memory/clients/<agent>/tasks/   # 记忆（索引）

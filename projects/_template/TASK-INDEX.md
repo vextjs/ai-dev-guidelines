@@ -28,7 +28,7 @@
 
 | ID | 日期 | 标题 | 状态 | 路径 |
 |----|------|------|------|------|
-| REQ-001 | YYYY-MM-DD | [示例] 功能名称 | ✅ 完成 | `requirements/YYYYMMDD-feature-name/` |
+| REQ-001 | YYYY-MM-DD | [示例] 功能名称 | ✅ 完成 | `requirements/<中文描述>/` |
 
 ---
 

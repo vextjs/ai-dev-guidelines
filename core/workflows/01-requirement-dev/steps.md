@@ -1,10 +1,18 @@
 # 需求开发详细步骤
 
-> ⚠️ **注意**: 本文件基于 v1.x 的 8 步流程编写，部分内容已过时。  
-> **v2.0 当前流程请以 `README.md` 为准（5阶段快速模式 / 7阶段完整模式）。**  
-> 本文件中的技术细节（收集上下文、生成文档、代码实现逻辑等）仍可作为参考。
-
-> 补充 README.md 中的详细执行逻辑
+> ## ⚠️🔴 DEPRECATED — 本文件已弃用，仅作历史参考
+>
+> **本文件基于 v1.x 的 8 步流程编写，大量内容已过时。**
+>
+> | 项目 | 本文件（旧） | 当前规范 |
+> |------|------------|---------|
+> | **执行流程** | 8 步流程 | **5 阶段快速模式 / 7 阶段完整模式** → 见 `README.md` |
+> | **任务 ID** | `REQ-user-20260211-rate-limit` | **中文描述目录**（如 `用户限流功能/`）→ 见 `decision-tree.yaml` |
+> | **文件命名** | `01-requirement.md` / `02-technical.md` | **`01-需求定义.md` / `02-技术方案.md` / `03-实施方案/`** → 见 `doc-standards.md` |
+> | **记忆格式** | `<YYYYMMDD>-<TYPE>-<id>.md` | **`YYYYMMDD.md`（每日一文件）** → 见 `QUICK-REFERENCE.md` |
+>
+> 🔴 **AI 执行任务时必须以 `README.md` 为准，禁止参照本文件的流程和命名格式。**
+> 本文件中的技术细节（收集上下文、生成文档、代码实现逻辑等）仅可作为补充参考。
 
 ---
 
@@ -65,12 +73,15 @@ function generateTaskId(projectName: string, description: string): string {
 projects/
 └── <project-name>/
     └── requirements/
-        └── <task-id>/
-            ├── 01-requirement.md      # 需求文档
-            ├── 02-technical.md        # 技术方案
-            ├── 03-implementation.md   # 实施记录
-            ├── 04-integration.md      # 对接文档（可选）
-            └── scripts/               # 脚本目录
+        └── <中文描述>/
+            ├── 01-需求定义.md            # 需求文档
+            ├── 02-技术方案.md            # 技术方案（或 02-技术方案/ 目录）
+            ├── 03-实施方案/              # 实施方案目录（>= 5 文件时）
+            │   ├── README.md            # 实施总索引
+            │   └── <模块名>.md          # 各变更文件的完整代码
+            ├── IMPLEMENTATION-PLAN.md   # 🔴 实施计划（强制）
+            ├── 04-接口文档.md            # 接口文档（可选）
+            └── scripts/                 # 脚本目录
                 ├── install.sh
                 └── test.js
 ```
@@ -715,14 +726,14 @@ await runCommand('npm test -- rate-limiter.test.ts');
 
 ---
 
-## 📋 Step 7 详解: 生成实施记录文档
+## 📋 Step 7 详解: 生成实施方案文档
 
 ### 目标
 记录实施过程的详细信息，便于回顾和维护
 
 ### 文档模板路径
 ```
-core/templates/implementation-template.md
+core/templates/core/implementation-template.md
 ```
 
 ### 生成内容
@@ -837,7 +848,7 @@ done
 
 ### 保存文档
 ```typescript
-const outputPath = `projects/${projectName}/requirements/${taskId}/03-implementation.md`;
+const outputPath = `projects/${projectName}/requirements/${taskId}/03-实施方案/README.md`;
 await writeFile(outputPath, implementationDoc);
 ```
 
@@ -845,7 +856,7 @@ await writeFile(outputPath, implementationDoc);
 ```markdown
 ✅ 实施记录文档已生成
 
-文件路径: projects/user-service/requirements/REQ-user-20260211-rate-limit/03-implementation.md
+文件路径: projects/user-service/requirements/REQ-user-20260211-rate-limit/03-实施方案/README.md
 
 文档内容:
 - ✅ 变更清单 (7 个文件)
@@ -877,11 +888,12 @@ await writeFile(outputPath, implementationDoc);
 #### 8.1 文档完整性
 ```yaml
 检查项:
-  - ✅ 01-requirement.md 已生成
-  - ✅ 02-technical.md 已生成
-  - ✅ 03-implementation.md 已生成
-  - ✅ scripts/ 目录已创建
-  - ✅ 安装脚本已创建
+  - ✅ 01-需求定义.md 已生成
+  - ✅ 02-技术方案.md 已生成
+  - ✅ 03-实施方案/ 已生成（或快速模式下在对话中输出）
+  - ✅ IMPLEMENTATION-PLAN.md 已生成
+  - ✅ scripts/ 目录已创建（如需要）
+  - ✅ 安装脚本已创建（如需要）
 ```
 
 #### 8.2 代码质量
@@ -958,7 +970,8 @@ AI 应向用户报告：
 📦 输出内容:
 - 📄 需求文档: projects/user-service/requirements/REQ-user-20260211-rate-limit/01-requirement.md
 - 📄 技术方案: projects/user-service/requirements/REQ-user-20260211-rate-limit/02-technical.md
-- 📄 实施记录: projects/user-service/requirements/REQ-user-20260211-rate-limit/03-implementation.md
+- 📄 实施方案: projects/user-service/requirements/REQ-user-20260211-rate-limit/03-实施方案/README.md
+- 📄 实施计划: projects/user-service/requirements/REQ-user-20260211-rate-limit/IMPLEMENTATION-PLAN.md
 - 🔧 安装脚本: projects/user-service/requirements/REQ-user-20260211-rate-limit/scripts/install.sh
 
 ✅ 验证结果:

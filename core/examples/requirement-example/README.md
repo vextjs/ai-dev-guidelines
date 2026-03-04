@@ -33,14 +33,19 @@ requirement-example/
 ├── user-input.md                       # 用户原始输入
 │
 └── outputs/                            # 生成的文档
-    ├── 01-requirement.md               # 需求文档
-    ├── 02-technical.md                 # 技术方案
-    ├── 03-implementation.md            # 实施方案
+    ├── 01-需求定义.md                   # 需求文档
+    ├── 02-技术方案.md                   # 技术方案
+    ├── 03-实施方案/                     # 实施方案（目录）
+    │   ├── README.md                   # 实施总索引
+    │   └── RateLimitMiddleware.md      # 限流中间件变更
+    ├── IMPLEMENTATION-PLAN.md          # 实施计划（🔴 强制生成）
     └── scripts/                        # 脚本目录
 ```
 
-> **注意**: 完整示例应包含 `ai-execution-log.md` (执行日志) 和 `code-changes/` (代码变更) 目录，
-> 当前为精简示例，仅展示核心输出文档。
+> **注意**: 任务产物文件使用中文命名（FIX-011 决策 2026-02-28），`IMPLEMENTATION-PLAN.md` 为强制生成文件。
+
+> **注意**: 完整示例应包含 `code-changes/` (代码变更) 目录，当前为精简示例，仅展示核心输出文档。
+> 当前 `outputs/` 下实际文件仍为旧英文命名（历史遗留），规范要求的产物命名以上方目录树为准。
 
 ---
 

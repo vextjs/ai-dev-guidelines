@@ -100,9 +100,11 @@ AI 通过你消息中的关键词自动匹配：
 | 事故、故障、复盘、P0 | 事故复盘 | `core/workflows/08-incident/` |
 | 开源、初始化、脚手架 | 开源项目初始化 | `core/workflows/09-opensource-init/` |
 | 分析、审查、评估、深度分析 | 深度分析 | `core/workflows/10-analysis/` |
+| 自查、自审、规范检查、self-audit | 规范自审 | `core/workflows/11-self-audit/` |
+| 规范走查、场景验证、walkthrough、模拟用户 | 场景化走查 | `core/workflows/12-scenario-walkthrough/` |
 | 继续、接着、上次、恢复 | 继续任务 | 恢复流程（见 [02-session-and-modes.md](./02-session-and-modes.md)） |
 
-> **完整映射表**：覆盖全部 11 个工作流（00-10），详见 [01-task-workflows.md](./01-task-workflows.md)。
+> **完整映射表**：覆盖全部 12 个工作流（00-11）+ 1 个质量保障工具（12），详见 [01-task-workflows.md](./01-task-workflows.md)。
 
 ---
 

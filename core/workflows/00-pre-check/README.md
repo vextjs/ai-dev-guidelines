@@ -268,7 +268,7 @@
 3. 输出位置: projects/user/requirements/20260212-rate-limit/
 4. Agent: zed-copilot
 5. 上次记忆: projects/user/.ai-memory/clients/zed-copilot/tasks/20260226.md §会话02 (✅ 完成)
-6. 📝 记忆已创建: .ai-memory/clients/zed-copilot/tasks/20260227.md §会话01 (🔄)
+6. 📝 记忆已创建: projects/user/.ai-memory/clients/zed-copilot/tasks/20260227.md §会话01 (🔄)
 ```
 
 > 🔴 **第 6 行是阶段 0 硬性阻塞输出**：AI 必须在输出预检查结果时同步完成记忆文件的创建/追加，第 6 行未输出 = 预检查未完成，禁止开始分析用户问题。
@@ -285,7 +285,7 @@
 3. 输出位置: projects/user/requirements/20260212-rate-limit/
 4. Agent: webstorm-copilot
 5. 上次记忆: projects/user/.ai-memory/clients/webstorm-copilot/tasks/20260226.md §会话01 (✅ 完成)
-6. 📝 记忆已创建: .ai-memory/clients/webstorm-copilot/tasks/20260227.md §会话01 (🔄)
+6. 📝 记忆已创建: projects/user/.ai-memory/clients/webstorm-copilot/tasks/20260227.md §会话01 (🔄)
 7. 项目规范: ✅ 已加载 profile/（模块化 5 个文件）
 8. 任务记忆: ✅ 已读取（最近 3 条任务，含 2 条 webstorm-copilot + 1 条 zed-copilot）
 
@@ -296,7 +296,7 @@
 3. 输出位置: projects/chat/requirements/20260224-xxx/
 4. Agent: zed-copilot
 5. 上次记忆: ⚠️ 无（首次任务 / 未找到记忆文件）
-6. 📝 记忆已创建: .ai-memory/clients/zed-copilot/tasks/20260224.md §会话01 (🔄)
+6. 📝 记忆已创建: projects/chat/.ai-memory/clients/zed-copilot/tasks/20260224.md §会话01 (🔄)
 7. 项目规范: ⚠️ 未找到
    → 是否需要我分析 chat 项目并生成项目规范文件？[是/否]
 8. 任务记忆: ⚠️ 无历史记忆（首次任务）

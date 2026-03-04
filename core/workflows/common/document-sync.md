@@ -128,7 +128,7 @@ changelogs/vX.Y.Z.md 必需章节:
 更新位置: ai-dev-guidelines/projects/<project>/.ai-memory/
 
 执行:
-  1. 生成单任务记忆 → .ai-memory/clients/<agent>/tasks/<YYYYMMDD>-<TYPE>-<id>.md
+  1. 更新当日记忆文件 → .ai-memory/clients/<agent>/tasks/YYYYMMDD.md（每天一个文件，会话内以 ## 会话 NN 分段）
   2. 更新 clients/<agent>/SUMMARY.md → 追加到最近任务
   3. 同步关键决策到全局 .ai-memory/SUMMARY.md
 
@@ -306,5 +306,5 @@ PATCH: Bug 修复（向后兼容）
 
 ---
 
-**最后更新**: 2026-02-12
+**最后更新**: 2026-03-02
 

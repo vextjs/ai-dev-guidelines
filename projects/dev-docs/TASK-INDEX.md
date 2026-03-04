@@ -131,6 +131,13 @@
 | ANA-014 | 2026-02-27 | 一致性审计（三项问题） | SUMMARY日期精度升级+文件拆分规范(约束#20)+自我修复模式6 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/15-analysis-consistency-audit-three-issues.md` |
 | ANA-015 | 2026-02-27 | 约束条数跨文件同步审计 | BUG-032~042修复；防复现机制(约束条数引用清单11文件+auto-triggers场景8) | ✅ 完成 | `reports/analysis/zed-copilot/20260227/16-analysis-constraint-count-sync-audit.md` |
 | ANA-016 | 2026-02-27 | 全面深度审计 v4 | BUG-043~046；综合评分8.4/10；6个优化建议 | ✅ 完成 | `reports/analysis/zed-copilot/20260227/17-analysis-full-depth-audit-v4.md` |
+| ANA-017 | 2026-03-04 | 第三轮全面审查 | 60+文件逐文件审查+30+交叉验证；核心数值100%一致；P2×4 | ✅ 完成 | `reports/analysis/zed-copilot/20260304/01-analysis-第三轮全面审查.md` |
+| ANA-018 | 2026-03-04 | P2修复与第四轮链接审查 | P2×4全部修复；858条链接验证；P0/P1/P2归零；⭐⭐⭐⭐⭐ | ✅ 完成 | `reports/analysis/zed-copilot/20260304/02-analysis-P2修复与第四轮链接审查.md` |
+| ANA-019 | 2026-03-04 | 场景化走查工作流创建 | 12-scenario-walkthrough/目录+36用例写入；质量保障工具定位 | ✅ 完成 | `reports/analysis/zed-copilot/20260304/03-analysis-场景化走查工作流创建.md` |
+| ANA-020 | 2026-03-04 | 场景化走查结果 | 36用例走查：✅29/🟡7/❌0；活体验证6/6；约束覆盖19/20；⭐⭐⭐⭐½ | ✅ 完成 | `reports/analysis/zed-copilot/20260304/04-analysis-场景化走查结果.md` |
+| ANA-021 | 2026-03-04 | 走查改进落地 | 7个🟡用例深度验证+3个P2规范改进+SUMMARY/TASK-INDEX补齐+E12新增；约束覆盖90%→95% | ✅ 完成 | `reports/analysis/zed-copilot/20260304/05-analysis-走查改进落地.md` |
+| ANA-022 | 2026-03-04 | 自我审查流程自检 | 增量聚焦4维度审查：bump-version 38项0偏差；发现并修复SUMMARY走查通过数笔误28→29；P0/P1/P2归零 | ✅ 完成 | `reports/analysis/zed-copilot/20260304/06-analysis-自我审查流程自检.md` |
+| ANA-023 | 2026-03-04 | 三轮全面15维度自我审查 | 三轮×15维度全量审查：38匹配点0偏差；748链接0内部断链；7/7会话100%合规；issue.md 9/9闭环；⭐⭐⭐⭐⭐ | ✅ 完成 | `reports/analysis/zed-copilot/20260304/07-analysis-三轮全面15维度自我审查.md` |
 
 ---
 

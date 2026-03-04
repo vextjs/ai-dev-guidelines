@@ -88,6 +88,21 @@ task_identification:
       weight: 8
       patterns: ["新项目", "开源", "npm包", "初始化", "脚手架", "项目模板"]
 
+    # 质量保障工具（非用户任务类型工作流，不计入 11 种工作流统计）
+    scenario_walkthrough:
+      weight: 9
+      patterns:
+        [
+          "规范走查",
+          "场景验证",
+          "walkthrough",
+          "模拟用户",
+          "走查用例",
+          "场景化测试",
+          "验证规范执行",
+          "流程走查",
+        ]
+
   # 任务类型到工作流映射
   workflow_mapping:
     requirement_dev: "core/workflows/01-requirement-dev/"
@@ -101,6 +116,7 @@ task_identification:
     opensource_init: "core/workflows/09-opensource-init/"
     analysis: "core/workflows/10-analysis/"
     self_audit: "core/workflows/11-self-audit/"
+    scenario_walkthrough: "core/workflows/12-scenario-walkthrough/" # 质量保障工具
 
 # ===========================================
 # 强制预检查 (v2.11.0 - 5项必做 + Agent 标识 + 上次记忆)
@@ -432,11 +448,12 @@ three_round_validation:
 # ===========================================
 output_paths:
   requirement:
-    pattern: "projects/<project>/requirements/<YYYYMMDD>-<feature>/"
+    pattern: "projects/<project>/requirements/<中文描述>/"
     files:
-      - "01-requirement.md"
-      - "02-technical.md"
-      - "03-implementation.md"
+      - "01-需求定义.md"
+      - "02-技术方案.md"
+      - "03-实施方案/"
+      - "IMPLEMENTATION-PLAN.md"
       - "scripts/"
 
   bug:
@@ -456,7 +473,7 @@ output_paths:
 # 文档编号规范
 # ===========================================
 document_naming:
-  requirement: "YYYYMMDD-<feature>"
+  requirement: "<中文描述>"
   bug: "BUG-<project>-<id>-<desc>"
   optimization: "OPT-<module>-<id>"
   refactoring: "REF-<module>-<date>"

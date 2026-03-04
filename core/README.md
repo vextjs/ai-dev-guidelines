@@ -164,8 +164,8 @@ ai-dev-guidelines/
 - 示例: `user-service`, `payment-gateway`, `chat-system`
 
 ### 功能/需求命名
-- 格式: `YYYYMMDD-<feature-name>`
-- 示例: `20260211-rate-limit-integration`
+- 格式: `<中文描述>`（FIX-011 2026-02-28）
+- 示例: `用户限流功能`、`退款功能集成`
 
 ### Bug 命名
 - 格式: `BUG-<project>-<id>-<description>`

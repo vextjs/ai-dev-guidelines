@@ -471,7 +471,7 @@ const template = await read_file({
 
 // 创建文档
 await create_file({
-  filePath: `projects/${projectName}/requirements/${taskId}/01-requirement.md`,
+  filePath: `projects/${projectName}/requirements/${taskId}/01-需求定义.md`,
   content: filledTemplate
 });
 

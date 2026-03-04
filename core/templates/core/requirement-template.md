@@ -4,14 +4,15 @@
 
 - **项目**: <project-name>
 - **类型**: 需求开发
-- **需求编号**: <YYYYMMDD-feature-name>
+- **需求编号**: <中文描述>
 - **创建日期**: YYYY-MM-DD
 - **负责人**: [姓名]
 - **状态**: 🔵 待分析 / 🟡 设计中 / 🟢 已完成 / 🔴 已取消
 
 > **关联文档**:
-> - 技术方案: [02-technical.md](./02-technical.md)
-> - 实施方案: [03-implementation/](./03-implementation/README.md)
+> - 技术方案: [02-技术方案.md](./02-技术方案.md)
+> - 实施方案: [03-实施方案/](./03-实施方案/README.md)
+> - 实施计划: [IMPLEMENTATION-PLAN.md](./IMPLEMENTATION-PLAN.md)
 
 ---
 

@@ -163,8 +163,8 @@ AI: 我识别到 2 个任务：
 示例:
 用户: "在 user 和 order 项目都添加限流"
 AI: 识别到跨项目任务，我将分别执行：
-  1. user 项目 - REQ-user-20260211-rate-limit
-  2. order 项目 - REQ-order-20260211-rate-limit
+  1. user 项目 - requirements/用户限流功能/
+  2. order 项目 - requirements/订单限流功能/
 ```
 
 ---

@@ -334,7 +334,7 @@ Mermaid 示例:
 
 ## 📁 文件命名规范
 
-### 文档文件
+### 代码/工程文档文件
 
 ```yaml
 格式: <序号>-<描述>.md 或 <YYYYMMDD>-<描述>.md
@@ -345,24 +345,55 @@ Mermaid 示例:
   - 禁止使用空格和特殊字符
   - 有序文档使用两位数序号
 
+适用范围: 代码仓库内的工程文档（README.md、CHANGELOG.md、API 文档等）
+
 示例:
-  ✅ 01-requirement.md
+  ✅ 01-requirement.md（代码仓库内的工程文档）
   ✅ 02-technical-design.md
   ✅ 20260212-rate-limit.md
   ❌ Technical Design.md
-  ❌ 技术方案.md
+  ❌ Requirements Doc.md
+```
+
+### 🔴 任务文档命名（requirements/ 下的任务产物 — 🆕 FIX-011 2026-02-28）
+
+```yaml
+格式: <序号>-<中文描述>.md 或 <中文描述>/
+
+规则:
+  - 任务产物文件（projects/<project>/requirements/ 下）使用中文命名
+  - 固定序号前缀保留数字: 01-、02-、03-
+  - 目录名使用中文描述（无日期前缀）
+  - 报告文件简述部分也使用中文（见 temp-reports.md §FIX-008）
+
+适用范围: ai-dev-guidelines/projects/<project>/requirements/<中文描述>/ 下的需求/技术/实施文档
+
+示例:
+  ✅ requirements/用户限流功能/01-需求定义.md
+  ✅ requirements/用户限流功能/02-技术方案.md
+  ✅ requirements/用户限流功能/03-实施方案/README.md
+  ✅ requirements/用户限流功能/IMPLEMENTATION-PLAN.md
+  ❌ requirements/20260212-rate-limit/01-requirement.md  ← 旧格式（英文+日期前缀）
+
+原因:
+  - FIX-011 决策（2026-02-28）确认任务产物使用中文命名
+  - copilot-instructions.md 入口声明"所有输出使用中文"
+  - 模板（requirement-lite.md / technical-lite.md）关联链接已使用中文名
+
+详见: core/workflows/common/temp-reports.md §命名语言规则（FIX-008）
 ```
 
 ### 目录命名
 
 ```yaml
-格式: <类型>-<描述> 或 <YYYYMMDD>-<描述>
+格式: <类型>-<描述> 或 <中文描述>（任务目录）
 
 示例:
-  ✅ requirements/
-  ✅ 20260212-user-auth/
+  ✅ requirements/（顶级分类目录）
+  ✅ requirements/用户限流功能/（任务目录 — 中文）
+  ✅ 20260212-user-auth/（代码仓库内的工程目录）
   ❌ Requirements/
-  ❌ 需求文档/
+  ❌ 需求文档/（顶级分类目录不用中文）
 ```
 
 ---

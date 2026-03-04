@@ -53,13 +53,13 @@
 🔴 tool call 顺序约束（NO EXCEPTIONS）:
   会话的前三个 tool call 必须是以下顺序，完成前禁止执行任何分析性文件读取:
     1. now()             — 获取真实日期
-    2. list_directory()  — 扫描 .ai-memory/clients/<agent>/tasks/
+    2. list_directory()  — 扫描 projects/<project>/.ai-memory/clients/<agent>/tasks/
     3. edit_file()       — 创建/追加今日记忆文件
   为什么: 防止"先读目标文件分析问题、再补写记忆"的绕过模式（已发生 3 次事故）
 
 AI 自动执行（🆕 v1.8 简化）:
   1. 确定当前 Agent 标识（预检查第 4 项已获取）
-  2. 确保 .ai-memory/clients/<agent>/tasks/ 目录存在（不存在则创建）
+  2. 确保 projects/<project>/.ai-memory/clients/<agent>/tasks/ 目录存在（不存在则创建）
   3. 获取当前真实日期和时间（使用 now() 工具）
   4. 确定今天的记忆文件:
      a. 文件路径 = tasks/YYYYMMDD.md（纯日期，无序号）
@@ -71,13 +71,13 @@ AI 自动执行（🆕 v1.8 简化）:
      - 状态标记为 🔄 进行中
      - 写入任务目标（来自用户首条消息）
      - 📨 对话记录 → 记录首条用户消息摘要（轮次 1, 👤→, 含关联引用）
-  6. 更新 .ai-memory/clients/<agent>/SUMMARY.md（追加到最近任务，状态 🔄）
+  6. 更新 projects/<project>/.ai-memory/clients/<agent>/SUMMARY.md（追加到最近任务，状态 🔄）
   7. 🔴 输出预检查第 6 行（硬性阻塞确认）:
-     "6. 📝 记忆已创建: .ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN (🔄)"
+     "6. 📝 记忆已创建: projects/<project>/.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN (🔄)"
      此行未输出 = 阶段 0 未完成 = 禁止进入后续阶段
 
 输出（嵌入预检查第 6 行）:
-  "6. 📝 记忆已创建: .ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN (🔄)"
+  "6. 📝 记忆已创建: projects/<project>/.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN (🔄)"
 
 文件名示例（在各 Agent 目录内）:
 clients/zed-copilot/tasks/20260226.md    # 2026-02-26 的所有会话

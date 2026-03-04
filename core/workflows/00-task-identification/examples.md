@@ -21,7 +21,7 @@ AI 分析:
 AI 输出:
   "✅ 识别为需求开发任务
    工作流: 01-requirement-dev
-   任务 ID: REQ-user-20260211-rate-limit
+   输出位置: projects/user-service/requirements/用户限流功能/
    
    我将按需求开发流程执行..."
 ```
@@ -83,7 +83,7 @@ AI 分析:
 AI 输出:
   "✅ 识别为需求开发任务（系统对接场景）
    工作流: 01-requirement-dev
-   任务 ID: REQ-payment-20260211-wechat-integration
+   输出位置: projects/payment-service/requirements/微信支付对接/
    
    注意: 此任务涉及第三方系统对接，将额外生成对接文档
    
@@ -106,7 +106,7 @@ AI 分析:
 AI 输出:
   "✅ 识别为需求开发任务（API 接口新增）
    工作流: 01-requirement-dev
-   任务 ID: REQ-user-20260302-credits-api
+   输出位置: projects/user-service/requirements/用户积分接口/
    
    注意: 此任务涉及 API 接口新增，将额外生成接口文档（04-接口文档.md）
    模板: core/templates/core/api-doc-template.md
@@ -130,7 +130,7 @@ AI 分析:
 AI 输出:
   "✅ 识别为 Bug 修复任务（涉及接口变更）
    工作流: 02-bug-fix
-   Bug ID: BUG-user-20260302-register-validation
+   输出位置: projects/user-service/bugs/注册接口参数校验错误/
    
    注意: 此修复涉及接口契约变更（新增错误码），将额外生成接口变更文档（04-接口变更.md）
    
@@ -154,7 +154,7 @@ AI 分析:
 AI 输出:
   "✅ 识别为 Bug 修复任务（性能问题）
    工作流: 02-bug-fix
-   Bug ID: BUG-payment-20260211-performance
+   输出位置: projects/payment-service/bugs/支付接口性能问题/
    
    注意: 这是性能相关的 Bug，分析时会关注性能指标
    
@@ -200,10 +200,10 @@ AI 输出:
   "✅ 检测到 2 个任务：
    
    1. 需求开发: 实现限流功能
-      任务 ID: REQ-user-20260211-rate-limit
+      输出位置: projects/user-service/requirements/用户限流功能/
    
    2. Bug 修复: 修复登录超时
-      Bug ID: BUG-user-20260211-login-timeout
+      输出位置: projects/user-service/bugs/登录超时问题/
    
    建议按顺序执行，请确认优先级或告知同时处理。"
 ```

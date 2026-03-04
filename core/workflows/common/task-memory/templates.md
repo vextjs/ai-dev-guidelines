@@ -114,17 +114,19 @@
   | CP1 | HH:MM | 任务 1.0 schema-adapter | `lib/schema-adapter.ts` (新建) |
   | CP2 | HH:MM | 任务 1.1 config-loader | `lib/config-loader.ts` (新建) |
 
-  无 IMPLEMENTATION-PLAN 时:
+  旧项目无 IMPLEMENTATION-PLAN 时（兜底向后兼容）:
   | CP1 | HH:MM | 3/7 文件完成 | `types/export.ts` (新建), `services/export-service.ts` (新建), `routes/export.ts` (新建) |
 
+🔴 IMPLEMENTATION-PLAN.md 为强制产物（阶段 3 生成，详见 01-requirement-dev §阶段 3）
+
 写入时机:
-  有 IMPLEMENTATION-PLAN: 每完成一个任务编号 → 追加 1 行
-  无 IMPLEMENTATION-PLAN: 每完成 3 个文件变更 → 追加 1 行
+  默认（参考 IMPLEMENTATION-PLAN 任务编号）: 每完成一个任务编号 → 追加 1 行
+  兜底（旧项目无 PLAN 时向后兼容）: 每完成 3 个文件变更 → 追加 1 行
 
 同步操作（检查点写入时必须一并完成）:
   1. 追加 📦 编码检查点表格行
   2. 更新 ⚠️ 待跟进中对应条目标记 [x]
-  3. 有 IMPLEMENTATION-PLAN 时: 更新 PLAN 中该任务状态 🔲→✅
+  3. 更新 IMPLEMENTATION-PLAN.md 中该任务状态 🔲→✅（旧项目无 PLAN 时跳过此步）
 
 不触发的场景:
   - 计划变更文件数 < 3（沿用阶段 3 默认机制）

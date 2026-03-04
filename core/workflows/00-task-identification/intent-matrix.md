@@ -46,9 +46,10 @@
 
 工作流: core/workflows/01-requirement-dev/
 输出文档:
-  - 01-requirement.md
-  - 02-technical.md
-  - 03-implementation/（实施方案目录）
+  - 01-需求定义.md
+  - 02-技术方案.md
+  - 03-实施方案/（实施方案目录）
+  - IMPLEMENTATION-PLAN.md（🔴 强制生成，大小需求均需）
   - 04-接口文档.md（涉及 API 接口新增/变更时，可选）或 04-对接文档.md（涉及第三方系统对接时，可选）
   - api.http（跟随 04-接口文档/04-对接文档自动生成，可选）
 
