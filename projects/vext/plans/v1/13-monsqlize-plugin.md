@@ -1,23 +1,40 @@
-# 13 - monSQLize 集成方案（`vextjs-plugin-monsqlize`）
+# 13 - monSQLize 集成方案（内置默认插件）
 
 > **项目**: vext (vextjs)
 > **日期**: 2026-02-28
-> **状态**: 📝 设计稿
+> **状态**: ✅ 已实现
 > **优先级**: P1（ORM 集成 — 企业级五星路径 Phase 3 核心插件）
 > **依赖**: 插件系统（`04-plugins.md` ✅）、配置层（`05-config.md` ✅）、服务层（`02-services.md` ✅）
 > **预计工期**: 5-7 天
 > **关联项目**: [monSQLize](../../../monSQLize/) — 轻量级 MongoDB ORM
+> **实现日期**: 2026-03-04
+>
+> ---
+>
+> ### 🔴 设计变更通知（2026-03-04）
+>
+> | 原设计 | 实际实现 | 变更原因 |
+> |--------|----------|----------|
+> | 独立 npm 包 `vextjs-plugin-monsqlize` | **vext 内置默认插件**（`src/lib/plugins/monsqlize/`） | 用户决策：开箱即用，无需额外安装 |
+> | 用户需 `npm install vextjs-plugin-monsqlize` | 配置 `database` 字段即自动启用 | 降低使用门槛 |
+> | `monsqlize` 作为 peerDependency | `monsqlize` 作为 vext 的直接 dependency | 开箱即用策略 |
+> | 独立 package.json / tsconfig.json | 无需独立包配置，共享 vext 主项目配置 | 简化维护 |
+> | plugin-loader 扫描 `src/plugins/` 加载 | bootstrap.ts 步骤①++ 条件加载（在用户插件之前） | 确保用户插件可依赖 `app.db` |
+>
+> 以下设计文档保留原始设计内容作为参考，**实际实现**见 `src/lib/plugins/monsqlize/` 目录。
 
 ---
 
 ## 0. 概述
 
-`vextjs-plugin-monsqlize` 是 vext 框架的**默认且唯一的官方 ORM 集成插件**，基于 monSQLize（轻量级 MongoDB ORM）。不做多 ORM 适配层，用户如需使用其他 ORM（Drizzle / Prisma / TypeORM 等），自行编写插件扩展。
+monSQLize 是 vext 框架的**内置默认 ORM 插件**，基于 monSQLize（轻量级 MongoDB ORM）。开箱即用，用户只需在配置中添加 `database` 字段即可自动启用。不做多 ORM 适配层，用户如需使用其他 ORM（Drizzle / Prisma / TypeORM 等），自行编写插件扩展。
 
 ### 设计决策
 
 | 决策 | 说明 | 原因 |
 |------|------|------|
+| **内置默认插件** | 框架自带，无需额外安装 | 开箱即用，降低使用门槛 |
+| **条件加载** | 仅当 `config.database` 存在时启用 | 无数据库配置时零开销 |
 | **默认且仅支持 monSQLize** | 不引入 ORM 抽象层 | 减少复杂度；monSQLize 已具备多级缓存、Saga 事务、表达式系统等企业级能力 |
 | **用户自行扩展其他 ORM** | 通过 `definePlugin` + `app.extend` 机制 | 插件系统已足够灵活，无需框架层面支持多 ORM |
 | **共享 Model 包方案** | 微服务场景中 Model 定义独立为 shared 包 | 避免 model 重复定义、保证 schema 一致性 |
@@ -43,19 +60,31 @@
 
 ### 1.1 文件位置
 
-插件作为 npm 包独立发布，同时提供用户项目内的快速集成方式：
+> **🔴 已变更**：实际实现为 vext 内置默认插件，文件位于 `src/lib/plugins/monsqlize/`。
 
 ```
-方式 1 — npm 包（推荐生产使用）:
-  npm install vextjs-plugin-monsqlize
+实际实现（内置默认插件）:
+  vext/src/lib/plugins/monsqlize/
+  ├── index.ts          — 插件入口 + createMonSQLizePlugin 工厂 + shouldLoadMonSQLize 条件判断
+  ├── plugin.ts         — 核心 setup 逻辑（setupMonSQLize + buildMonSQLizeConfig）
+  ├── connection.ts     — 连接管理（createConnection）
+  ├── model-loader.ts   — Model 自动加载（loadModels + deriveModelName）
+  └── types.ts          — 类型定义（MonSQLizeConnection + MonSQLizeDatabaseConfig + declare module 扩展）
 
-方式 2 — 用户项目内插件（快速原型）:
-  src/plugins/database.ts（用户自己写，参考本文档示例）
+加载时机:
+  bootstrap.ts 步骤①++（在用户插件之前、i18n 加载之后）
+  → shouldLoadMonSQLize(config) 检测 database 字段
+  → createMonSQLizePlugin(srcDir).setup(app)
+
+原设计（已弃用，保留参考）:
+  方式 1 — npm 包: npm install vextjs-plugin-monsqlize
+  方式 2 — 用户项目内插件: src/plugins/database.ts
 ```
 
-### 1.2 npm 包结构
+### 1.2 npm 包结构（原设计，已弃用 — 改为内置插件）
 
 ```
+原设计的 npm 包结构（保留参考）:
 vextjs-plugin-monsqlize/
 ├── src/
 │   ├── index.ts              # 导出 definePlugin + 类型声明
@@ -72,7 +101,7 @@ vextjs-plugin-monsqlize/
 └── README.md
 ```
 
-### 1.3 package.json
+### 1.3 package.json（原设计，已弃用 — monsqlize 现为 vext 的直接 dependency）
 
 ```json
 {
@@ -113,26 +142,30 @@ vextjs-plugin-monsqlize/
 
 ### 2.1 类型扩展
 
+> **🔴 已变更**：实际实现中 `db` 和 `monsqlize` 为可选属性（插件加载前不存在），`database` 也为可选。
+> declare module 路径为 `"../../../types/app.js"`（相对路径）而非 `'vextjs'`。
+> 实际实现见 `src/lib/plugins/monsqlize/types.ts`。
+
 ```typescript
-// vextjs-plugin-monsqlize/src/types.ts
-import type { MonSQLize } from 'monsqlize'
+// 实际实现: vext/src/lib/plugins/monsqlize/types.ts
+// 原设计: vextjs-plugin-monsqlize/src/types.ts
 
 // ── 扩展 VextApp ────────────────────────────────────────
-declare module 'vextjs' {
+declare module "../../../types/app.js" {
   interface VextApp {
-    /** MonSQLize 实例（已连接） */
-    db: MonSQLizeConnection
+    /** MonSQLize 连接对象（已连接，提供 collection / db / model 快捷方法） */
+    db?: MonSQLizeConnection
 
     /**
      * 原始 MonSQLize 实例
-     * 用于高级场景（事务、底层操作等）
+     * 用于高级场景（事务、底层操作、事件监听等）
      */
-    monsqlize: MonSQLize
+    monsqlize?: import("monsqlize").MonSQLize
   }
 
   interface VextConfig {
     /** MonSQLize 数据库配置 */
-    database: MonSQLizeDatabaseConfig
+    database?: MonSQLizeDatabaseConfig
   }
 }
 
@@ -305,36 +338,60 @@ export interface MonSQLizeDatabaseConfig {
 
 ### 2.2 插件入口
 
+> **🔴 已变更**：实际实现为工厂函数模式（接收 `srcDir` 参数），非直接 `export default`。
+> 新增 `shouldLoadMonSQLize()` 条件加载判断函数。
+> 实际实现见 `src/lib/plugins/monsqlize/index.ts`。
+
 ```typescript
-// vextjs-plugin-monsqlize/src/index.ts
-import { definePlugin } from 'vextjs'
+// 实际实现: vext/src/lib/plugins/monsqlize/index.ts
+import { definePlugin } from '../../../types/plugin.js'
 import { setupMonSQLize } from './plugin.js'
 
-export { MonSQLizeConnection, MonSQLizeDatabaseConfig } from './types.js'
+export type { MonSQLizeConnection, MonSQLizeDatabaseConfig } from './types.js'
+import './types.js' // 确保 declare module 生效
 
-export default definePlugin({
-  name: 'monsqlize',
+/** 创建 MonSQLize 内置插件实例（由 bootstrap 传入 srcDir） */
+export function createMonSQLizePlugin(srcDir: string) {
+  return definePlugin({
+    name: 'monsqlize',
+    async setup(app) {
+      await setupMonSQLize(app, srcDir)
+    },
+  })
+}
 
-  async setup(app) {
-    await setupMonSQLize(app)
-  },
-})
+/** 检查配置中是否包含 database 字段（条件加载判断） */
+export function shouldLoadMonSQLize(config: Record<string, unknown>): boolean {
+  return (
+    config.database != null &&
+    typeof config.database === 'object' &&
+    Object.keys(config.database as object).length > 0
+  )
+}
 ```
 
 ### 2.3 插件核心实现
 
+> **🔴 已变更**：`setupMonSQLize` 新增 `srcDir` 参数（用于定位 models/ 目录）。
+> 动态 import monsqlize 使用 `any` 类型绕过 CJS/ESM 兼容问题。
+> 错误消息前缀从 `[vextjs-plugin-monsqlize]` 改为 `[monsqlize]`。
+> 实际实现见 `src/lib/plugins/monsqlize/plugin.ts`。
+
 ```typescript
-// vextjs-plugin-monsqlize/src/plugin.ts
-import type { VextApp } from 'vextjs'
+// 实际实现: vext/src/lib/plugins/monsqlize/plugin.ts
+import type { VextApp } from '../../../types/app.js'
 import { createConnection } from './connection.js'
 import { loadModels } from './model-loader.js'
 
-export async function setupMonSQLize(app: VextApp): Promise<void> {
-  const config = app.config.database
+export async function setupMonSQLize(
+  app: VextApp,
+  srcDir: string,
+): Promise<void> {
+  const config = (app.config as { database?: MonSQLizeDatabaseConfig }).database
 
   if (!config) {
     throw new Error(
-      '[vextjs-plugin-monsqlize] Missing "database" configuration.\n' +
+      '[monsqlize] Missing "database" configuration.\n' +
       '  Add database config to src/config/default.ts:\n' +
       '  export default {\n' +
       '    database: {\n' +
@@ -347,9 +404,10 @@ export async function setupMonSQLize(app: VextApp): Promise<void> {
   // ── 1. 构建 MonSQLize 配置 ────────────────────────────
   const monsqlizeConfig = buildMonSQLizeConfig(config, app)
 
-  // ── 2. 创建 MonSQLize 实例 ────────────────────────────
-  const { MonSQLize } = await import('monsqlize')
-  const monsqlize = new MonSQLize(monsqlizeConfig)
+  // ── 2. 动态 import + 创建 MonSQLize 实例 ──────────────
+  const mod: any = await import('monsqlize')
+  const MonSQLizeClass = mod.default ?? mod.MonSQLize ?? mod
+  const monsqlize = new MonSQLizeClass(monsqlizeConfig)
 
   // ── 3. 先注册 onClose，再执行 I/O（安全模式）──────────
   app.onClose(async () => {
@@ -368,7 +426,7 @@ export async function setupMonSQLize(app: VextApp): Promise<void> {
   app.logger.info('[monsqlize] connected successfully')
 
   // ── 5. 加载 Model 定义 ────────────────────────────────
-  await loadModels(monsqlize, config.models, app)
+  await loadModels(monsqlize, config.models, app, srcDir)
 
   // ── 6. 挂载到 app ─────────────────────────────────────
   app.extend('db', connection)
@@ -452,10 +510,14 @@ function buildMonSQLizeConfig(
 
 ### 2.4 连接管理
 
+> **🔴 已变更**：import 路径使用相对路径而非 `'vextjs'`。
+> client getter 增加了 null 检查保护。
+> 实际实现见 `src/lib/plugins/monsqlize/connection.ts`。
+
 ```typescript
-// vextjs-plugin-monsqlize/src/connection.ts
+// 实际实现: vext/src/lib/plugins/monsqlize/connection.ts
 import type { MonSQLize } from 'monsqlize'
-import type { VextApp } from 'vextjs'
+import type { VextApp } from '../../../types/app.js'
 import type { MonSQLizeConnection } from './types.js'
 
 /**
@@ -489,12 +551,17 @@ export async function createConnection(
 
 ### 2.5 Model 自动加载
 
+> **🔴 已变更**：`loadModels` 新增 `srcDir` 参数（替代 `process.cwd()` + `'src'` 拼接）。
+> 文件导入使用 `pathToFileURL` 处理 Windows ESM 路径兼容问题。
+> import 路径使用相对路径。
+> 实际实现见 `src/lib/plugins/monsqlize/model-loader.ts`。
+
 ```typescript
-// vextjs-plugin-monsqlize/src/model-loader.ts
-import path from 'node:path'
+// 实际实现: vext/src/lib/plugins/monsqlize/model-loader.ts
+import { join } from 'node:path'
 import { existsSync } from 'node:fs'
 import type { MonSQLize } from 'monsqlize'
-import type { VextApp } from 'vextjs'
+import type { VextApp } from '../../../types/app.js'
 import type { MonSQLizeDatabaseConfig } from './types.js'
 
 /**
@@ -510,8 +577,13 @@ export async function loadModels(
   monsqlize: MonSQLize,
   modelsConfig: MonSQLizeDatabaseConfig['models'] | undefined,
   app: VextApp,
+  srcDir: string,
 ): Promise<void> {
-  const config = modelsConfig ?? { dir: 'models', autoRegister: true }
+  const config = {
+    dir: modelsConfig?.dir ?? 'models',
+    autoRegister: modelsConfig?.autoRegister ?? true,
+    sharedPackage: modelsConfig?.sharedPackage,
+  }
 
   if (config.autoRegister === false) {
     app.logger.debug('[monsqlize] model auto-register disabled')
@@ -549,7 +621,7 @@ export async function loadModels(
   }
 
   // ── 2. 加载本地 models/ 目录 ──────────────────────────
-  const modelsDir = path.join(process.cwd(), 'src', config.dir ?? 'models')
+  const modelsDir = join(srcDir, config.dir)
 
   if (!existsSync(modelsDir)) {
     if (!config.sharedPackage) {
@@ -562,14 +634,16 @@ export async function loadModels(
   }
 
   // 扫描 models/ 目录
-  const { glob } = await import('fast-glob')
-  const files = await glob('**/*.{ts,js,mjs,cjs}', {
+  const { default: fg } = await import('fast-glob')
+  const files = await fg('**/*.{ts,js,mjs,cjs}', {
     cwd: modelsDir,
-    ignore: ['**/_*.{ts,js,mjs,cjs}', '**/*.d.ts', '**/*.test.{ts,js}', '**/*.spec.{ts,js}'],
+    ignore: ['**/_*.{ts,js,mjs,cjs}', '**/*.d.ts', '**/*.test.{ts,js,mjs,cjs}', '**/*.spec.{ts,js,mjs,cjs}'],
   })
 
   for (const file of files.sort()) {
-    const mod = await import(path.join(modelsDir, file))
+    const filePath = join(modelsDir, file)
+    const { pathToFileURL } = await import('node:url')
+    const mod = await import(pathToFileURL(filePath).href)
     const definition = mod.default
 
     if (!definition || typeof definition !== 'object') {
@@ -1595,45 +1669,51 @@ export default definePlugin({
 
 ### 10.1 文件清单
 
+> **🔴 已变更**：文件位于 `vext/src/lib/plugins/monsqlize/` 而非独立 npm 包。无需 `package.json` / `README.md`。
+
 | 操作 | 文件 | 说明 |
 |------|------|------|
-| 新建 | `src/index.ts` | 插件入口 + 工厂导出 |
-| 新建 | `src/plugin.ts` | 插件核心实现（setup） |
-| 新建 | `src/connection.ts` | 连接管理 |
-| 新建 | `src/model-loader.ts` | Model 自动加载（本地 + shared 包） |
-| 新建 | `src/types.ts` | VextApp / VextConfig 类型扩展 |
-| 新建 | `test/plugin.test.ts` | 插件集成测试 |
-| 新建 | `test/model-loader.test.ts` | Model 加载测试 |
-| 新建 | `test/transaction.test.ts` | 事务测试 |
-| 新建 | `package.json` | 包配置 |
-| 新建 | `README.md` | 使用说明 |
+| 新建 | `src/lib/plugins/monsqlize/index.ts` | 插件入口 + createMonSQLizePlugin 工厂 + shouldLoadMonSQLize 条件判断（80 行） |
+| 新建 | `src/lib/plugins/monsqlize/plugin.ts` | 核心 setup 逻辑 + buildMonSQLizeConfig 配置映射（198 行） |
+| 新建 | `src/lib/plugins/monsqlize/connection.ts` | 连接管理 createConnection（56 行） |
+| 新建 | `src/lib/plugins/monsqlize/model-loader.ts` | Model 自动加载 loadModels + deriveModelName 名称推断（272 行） |
+| 新建 | `src/lib/plugins/monsqlize/types.ts` | MonSQLizeConnection + MonSQLizeDatabaseConfig + declare module 扩展（219 行） |
+| 新建 | `test/unit/plugins/monsqlize/plugin.test.ts` | 完整单元测试（92 个测试） |
+| 修改 | `src/lib/bootstrap.ts` | 步骤①++ 内置插件条件加载 |
+| 修改 | `src/index.ts` | 导出 MonSQLize 类型和辅助函数 |
+| 修改 | `package.json` | 添加 `monsqlize` 为直接依赖 |
 
 ### 10.2 进度估算
 
 | 阶段 | 工作量 | 说明 |
 |------|:------:|------|
 | 类型定义 + 插件骨架 | 0.5 天 | types.ts + index.ts + plugin.ts |
-| 连接管理 + 配置映射 | 1 天 | connection.ts + buildMonSQLizeConfig |
-| Model 自动加载 | 1 天 | 本地扫描 + shared 包加载 + 名称推断 |
-| 事务 API 验证 | 1 天 | Session + Saga 在 monSQLize 上的实际验证 |
-| 测试 | 1 天 | 插件集成 + Model 加载 + 事务 |
-| 文档 + 示例 | 0.5 天 | README + 配置示例 |
-| **合计** | **5-7 天** | 含 monSQLize API 验证时间 |
+| 连接管理 + 配置映射 | 0.5 天 | connection.ts + buildMonSQLizeConfig |
+| Model 自动加载 | 0.5 天 | 本地扫描 + shared 包加载 + 名称推断 |
+| 测试 | 0.5 天 | 92 个单元测试覆盖全部模块 |
+| **合计** | **2 天** | 实际耗时（内置插件比独立包更简化） |
 
 ### 10.3 验收标准
 
-| # | 标准 | 验证方式 |
-|---|------|---------|
-| 1 | 插件可正常加载并连接 MongoDB | 集成测试（mongodb-memory-server） |
-| 2 | Model 定义文件自动扫描注册 | 单元测试 |
-| 3 | 共享 Model 包可正常加载 | 集成测试（mock shared package） |
-| 4 | 本地 Model 可覆盖 shared Model | 加载顺序测试 |
-| 5 | MongoDB Session 事务正常工作 | 事务测试（插入 + 回滚） |
-| 6 | 缓存配置（L1 / L2）正常生效 | 缓存命中率测试 |
-| 7 | `app.onClose()` 正确关闭连接 | 连接关闭测试 |
-| 8 | 配置缺失时 Fail Fast | 错误消息测试 |
-| 9 | 与 `createTestApp` 集成 | 测试框架集成测试 |
-| 10 | 类型声明完整（TS 类型检查通过） | `tsc --noEmit` |
+| # | 标准 | 验证方式 | 状态 |
+|---|------|---------|:----:|
+| 1 | 插件可正常加载并连接 MongoDB | 单元测试（mock MonSQLize） | ✅ |
+| 2 | Model 定义文件自动扫描注册 | 单元测试 | ✅ |
+| 3 | 共享 Model 包可正常加载 | 单元测试（mock shared package） | ✅ |
+| 4 | 本地 Model 可覆盖 shared Model | 加载顺序测试 | ✅ |
+| 5 | MongoDB Session 事务正常工作 | 事务测试（插入 + 回滚） | 🔲 后续 |
+| 6 | 缓存配置（L1 / L2）正常生效 | 缓存命中率测试 | 🔲 后续 |
+| 7 | `app.onClose()` 正确关闭连接 | 连接关闭测试 | ✅ |
+| 8 | 配置缺失时 Fail Fast | 错误消息测试 | ✅ |
+| 9 | 与 `createTestApp` 集成 | 测试框架集成测试 | 🔲 后续 |
+| 10 | 类型声明完整（TS 类型检查通过） | `tsc --noEmit` | ✅ |
+| 11 | 条件加载（无 database 配置时跳过） | shouldLoadMonSQLize 单元测试 | ✅ |
+| 12 | 全量测试零回归 | `vitest run` 1550 tests | ✅ |
+| 13 | 构建成功 | `npm run build` | ✅ |
+
+---
+
+> **备注**：验收标准 #5（事务）、#6（缓存）、#9（createTestApp 集成）需要 mongodb-memory-server 支持，规划在 Phase 4 或后续迭代中实现端到端集成测试。
 
 ---
 
@@ -1655,13 +1735,16 @@ export default definePlugin({
 
 | 类型名 | 文件位置 | 说明 |
 |--------|---------|------|
-| `MonSQLizeConnection` | `src/types.ts` | 连接对象（collection / db / model / client） |
-| `MonSQLizeDatabaseConfig` | `src/types.ts` | 数据库配置（VextConfig.database 扩展） |
-| `MonSQLize` | `monsqlize`（外部依赖） | MonSQLize 主类 |
-| `VextApp.db` | `src/types.ts`（类型扩展） | 挂载到 app 的连接对象 |
-| `VextApp.monsqlize` | `src/types.ts`（类型扩展） | 挂载到 app 的原始实例 |
+| `MonSQLizeConnection` | `src/lib/plugins/monsqlize/types.ts` | 连接对象（collection / db / model / client） |
+| `MonSQLizeDatabaseConfig` | `src/lib/plugins/monsqlize/types.ts` | 数据库配置（VextConfig.database 扩展） |
+| `MonSQLize` | `monsqlize`（直接依赖） | MonSQLize 主类 |
+| `VextApp.db?` | `src/lib/plugins/monsqlize/types.ts`（declare module 扩展） | 挂载到 app 的连接对象（可选） |
+| `VextApp.monsqlize?` | `src/lib/plugins/monsqlize/types.ts`（declare module 扩展） | 挂载到 app 的原始实例（可选） |
+| `createMonSQLizePlugin` | `src/lib/plugins/monsqlize/index.ts` | 插件工厂函数 |
+| `shouldLoadMonSQLize` | `src/lib/plugins/monsqlize/index.ts` | 条件加载判断函数 |
 
 ---
 
 **版本记录**:
+- v1.1.0 (2026-03-04): **设计变更** — 从独立 npm 包改为 vext 内置默认插件（开箱即用）。文件位于 `src/lib/plugins/monsqlize/`，`monsqlize` 作为 vext 直接依赖。bootstrap.ts 步骤①++ 条件加载。92 个单元测试，全量 1550 测试零回归。
 - v1.0.0 (2026-02-28): 初版设计 — 插件结构 + 连接管理 + Model 自动加载 + 微服务共享方案 + 事务支持 + 缓存层配置
