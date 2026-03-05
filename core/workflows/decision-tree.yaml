@@ -307,7 +307,7 @@ inquiry_points:
       - "S: 跳过"
 
 # ===========================================
-# 禁止项（编号对齐 CONSTRAINTS.md 的 20 条约束）
+# 禁止项（编号对齐 CONSTRAINTS.md 的 21 条约束）
 # ===========================================
 constraints:
   # 对应 CONSTRAINTS.md 核心约束
@@ -395,6 +395,10 @@ constraints:
     - id: 20
       rule: "文件过大必须拆分"
       violation: "AI 新创建的单个 .md 文件超过 500 行而不拆分；向已接近 500 行的文件大量追加内容而不考虑拆分（已有文件豁免）"
+
+    - id: 21
+      rule: "编码后诊断检查"
+      violation: "AI 完成代码生成/修改后未运行 diagnostics 检查；发现类型错误后静默忽略遗留给用户；使用其他框架的 API 语法而不验证当前框架的类型定义"
 
   # 附加禁止项（未在 CONSTRAINTS.md 中编号，但在决策树中强制）
   additional_forbidden:

@@ -298,13 +298,72 @@ PATCH: Bug 修复（向后兼容）
 
 ---
 
+## 6. 文档站内容（P1 有文档站的项目强制触发）
+
+```yaml
+适用条件: 项目存在 website/ 或 docs-site/ 目录（Rspress / VitePress 等静态文档站）
+
+触发条件（满足任一即触发）:
+  - 公共 API 变更: src/types/*.ts 中导出的接口/类型新增、修改、删除字段
+  - 配置项变更: VextConfig / DEFAULT_CONFIG 新增、修改、删除配置字段
+  - CLI 变更: src/cli/ 新增命令、修改参数、变更行为
+  - 中间件变更: 内置中间件新增、删除、修改配置项
+  - 插件接口变更: definePlugin / VextPlugin 接口变更
+  - Adapter 变更: 新增 adapter、adapter 接口变更
+  - 路由接口变更: RouteOptions / RouteDefinition 字段变更
+
+检查范围:
+  - website/docs/guide/ — 对应功能的指南文档
+  - website/docs/api/ — 对应的 API 参考文档
+  - website/docs/examples/ — 使用到该 API 的示例代码
+
+检测逻辑:
+  1. 识别本次变更涉及的公共 API / 配置 / CLI
+  2. 在 website/docs/ 中搜索引用了该 API 的页面
+  3. 检查页面中的代码示例、配置说明、参数表是否仍然正确
+  4. 列出需要同步更新的页面清单
+
+更新内容:
+  - 代码示例中的 API 调用签名
+  - 配置表格中的字段名、类型、默认值、说明
+  - CLI 帮助文本和参数说明
+  - 新增功能对应的新文档页面（如需要）
+
+豁免条件:
+  - 纯内部实现重构（不影响公共 API）
+  - 仅测试文件变更
+  - 仅性能优化（不改变接口行为）
+```
+
+### 文档站同步检查清单
+
+```yaml
+AI 执行步骤:
+  1. 变更完成后，判断是否命中上述触发条件
+  2. 若命中，grep website/docs/ 搜索相关关键词（函数名、配置字段名、CLI 命令名）
+  3. 列出受影响的文档页面
+  4. 在报告中标注"📖 文档站待同步"+ 具体页面清单
+  5. 若当前任务范围内可修复，直接修复并标注
+  6. 若超出当前任务范围，记录为后续待办
+
+输出格式（在报告或对话中）:
+  📖 文档站同步检查:
+    - ✅ website/docs/guide/configuration.md — 已同步（新增 requestContext 配置说明）
+    - ⚠️ website/docs/api/config.md — 需更新（缺少 VextRequestContextConfig 接口）
+    - ➡️ 记录为后续待办
+```
+
+---
+
 ## 📎 相关文档
 
 - [确认点机制](./confirmation-points.md) - CP6 定义
 - [STATUS 模板](../../templates/common/STATUS-template.md)
 - [CHANGELOG 模板](../../templates/common/CHANGELOG-template.md)
+- [文档同步机制](../../../workflows/common/document-sync.md) - 自动同步规范
+- [约束 13: 自动关联文件检查](../../CONSTRAINTS.md) - 通用关联检查规则
 
 ---
 
-**最后更新**: 2026-03-02
+**最后更新**: 2026-03-05
 

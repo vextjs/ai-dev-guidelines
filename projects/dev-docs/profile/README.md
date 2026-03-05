@@ -44,7 +44,7 @@
 ai-dev-guidelines/
 ├── README.md                 # 项目入口（AI 首读）
 ├── QUICK-REFERENCE.md        # 快速参考
-├── CONSTRAINTS.md            # 约束清单（20 条）
+├── CONSTRAINTS.md            # 约束清单（21 条）
 ├── STATUS.md                 # 项目状态
 ├── CHANGELOG.md              # 变更日志索引
 │
@@ -208,7 +208,7 @@ ai-dev-guidelines/
 |-----|------|------|
 | 入口文档 | `README.md` | AI 首读文档 |
 | 快速参考 | `QUICK-REFERENCE.md` | 执行时速查 |
-| 约束清单 | `CONSTRAINTS.md` | 核心约束（20 条） |
+| 约束清单 | `CONSTRAINTS.md` | 核心约束（21 条） |
 | 项目状态 | `STATUS.md` | 完成度追踪 |
 | 决策树 | `core/workflows/decision-tree.yaml` | 任务路由 |
 

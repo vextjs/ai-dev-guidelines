@@ -104,7 +104,7 @@ ai-dev-guidelines/
 ├── core/                              # 🤖 AI 规范内核（你正在阅读的文件所在目录）
 │   ├── README.md                     # 👈 你正在阅读的文件（AI 入口）
 │   ├── QUICK-REFERENCE.md            # 📖 速查手册（推荐首先阅读）
-│   ├── CONSTRAINTS.md                # ⛔ 约束清单（20 条）
+│   ├── CONSTRAINTS.md                # ⛔ 约束清单（21 条）
 │   ├── STATUS.md                     # 📊 项目状态追踪
 │   ├── META.yaml                     # 元数据（版本、约束条数）
 │   ├── workflows/                    # 🤖 AI 执行流程（通用）

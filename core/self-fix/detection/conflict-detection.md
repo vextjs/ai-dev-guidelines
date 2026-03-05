@@ -190,14 +190,14 @@ v2.0 新逻辑（替代）:
   4. 三处数字必须一致
 
 检测示例:
-  CONSTRAINTS.md: 实际 20 个 ### 标题
-  QUICK-REFERENCE.md: "⚠️ 核心约束 (20条)"
+  CONSTRAINTS.md: 实际 21 个 ### 标题
+  QUICK-REFERENCE.md: "⚠️ 核心约束 (21条)"
   copilot-instructions.md: 未直接提及条数
   结果: ✅ 一致
 
   ❌ 冲突情况:
-  CONSTRAINTS.md: 实际 21 个 ### 标题
-  QUICK-REFERENCE.md: "⚠️ 核心约束 (20条)"
+  CONSTRAINTS.md: 实际 22 个 ### 标题
+  QUICK-REFERENCE.md: "⚠️ 核心约束 (21条)"
   结果: 🔴 约束条数不一致
 ```
 
