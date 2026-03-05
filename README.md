@@ -2,8 +2,8 @@
 
 > **AI 工作操作系统** — 给 AI Agent 一个完整的工程任务执行框架
 
-[![版本](https://img.shields.io/badge/版本-v2.11.0-blue)]()
-[![约束](https://img.shields.io/badge/约束-20_条-red)]()
+[![版本](https://img.shields.io/badge/版本-v2.12.0-blue)]()
+[![约束](https://img.shields.io/badge/约束-21_条-red)]()
 [![工作流](https://img.shields.io/badge/工作流-11_种-green)]()
 [![模板](https://img.shields.io/badge/模板-29_个-orange)]()
 
@@ -123,7 +123,7 @@ cp -r projects/_template projects/<your-project>
 
 | 指标 | 数据 |
 |------|------|
-| 当前版本 | v2.11.0 |
+| 当前版本 | v2.12.0 |
 | 规范文件 | ~4000 行 |
 | 工作流 | 11 种 |
 | 模板 | 29 个 |

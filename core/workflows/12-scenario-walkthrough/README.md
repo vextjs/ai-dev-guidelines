@@ -156,7 +156,7 @@
 - [规范自我审查](../11-self-audit/README.md) — 文档一致性审查（上游）
 - [决策树配置](../decision-tree.yaml) — 关键词映射
 - [自动触发规则](../../self-fix/triggers/auto-triggers.md) — 自修复触发
-- [约束清单](../../CONSTRAINTS.md) — 20 条执行约束
+- [约束清单](../../CONSTRAINTS.md) — 21 条执行约束
 - [速查手册](../../QUICK-REFERENCE.md) — AI 执行速查
 
 ---

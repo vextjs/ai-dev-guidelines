@@ -1,19 +1,39 @@
 # 任务识别规则详解
 
 > 本文档详细说明 AI 如何识别用户输入的任务类型
+>
+> **v2.13.0 重构**：识别流程从 2 层+补丁 升级为 4 层流程，新增 Layer 3 意图推断，解决关键词映射无法穷举表达方式的根因问题
 
 ---
 
-## 🎯 识别优先级
+## 🎯 识别流程（4 层递进）
 
-### Level 1: 精确匹配（最高优先级）
+```
+Layer 1: 精确匹配    — 用户明确声明 → 直接采用
+    ↓ 未声明
+Layer 2: 关键词信号  — 提取关键词 → 产出候选类型（可能多个）
+    ↓ 候选列表
+Layer 3: 意图推断    — 分析最终目的 → 确定唯一类型（🔴 核心判断层）
+    ↓ 判定结果
+Layer 4: 上下文校验  — 结合会话/项目上下文 → 确认或修正
+```
+
+---
+
+### Layer 1: 精确匹配（最高优先级）
+
 如果用户明确说明任务类型，直接匹配：
 - "这是一个需求" → 需求开发
 - "这是一个 Bug" → Bug 修复
 - "需要优化性能" → 性能优化
 
-### Level 2: 关键词匹配
-根据关键词权重计算：
+---
+
+### Layer 2: 关键词信号提取
+
+> ⚠️ **定位**：Layer 2 的输出是**候选类型列表**，不是最终判定。最终判定由 Layer 3 意图推断决定。
+
+根据关键词权重提取候选信号：
 
 #### 需求开发关键词（权重表）
 | 关键词 | 权重 | 示例 |
@@ -39,42 +59,103 @@
 | 性能、效率 | 9 | "提升性能" |
 | 降低、减少（资源） | 8 | "降低内存占用" |
 
+> 💡 Layer 2 仅提取信号。当关键词冲突或存在"分析"+"变更"混合信号时，**必须进入 Layer 3 意图推断**才能判定。
+
 ---
 
-## 🔴 混合意图优先级规则（🆕 FIX-010 2026-02-28）
+### 🔴 Layer 3: 意图推断（核心判断层）
+
+> **设计原则**：判断用户的**最终目的**，而不是匹配表面关键词。
+> 关键词列表永远无法穷举所有表达方式，但意图推断可以。
+>
+> **历史背景**：v2.12.0 前此层逻辑以"混合意图规则 FIX-010"补丁形式存在，依赖关键词列表近似模拟意图推断，
+> 导致 issue#2（2026-03-03）和 issue#11（2026-03-05）两次误判事故。v2.13.0 将其升级为正式识别层级。
+
+#### 三个判断问题（按顺序执行）
 
 ```yaml
-🔴 强制规则（NO EXCEPTIONS）:
+🔴 Q1 — 最终目的是什么？（最关键）
 
-  当用户请求同时包含"分析/评估/审查"和"变更/重构/调整/修改/删除/新增"意图时：
-    → 判定为需求开发（01-requirement-dev），不是深度分析（10-analysis）
-    → 必须走 CP1 → CP2 → CP3 确认点流程
+  用户最终想达成的结果是：
+    A. 产出代码/文件/配置的实质性变更 → 变更类工作流（需求开发/Bug修复/重构/数据库/安全...）
+    B. 获得分析结论/评估报告/调研结果 → 分析类工作流（深度分析/技术调研）
+    C. 获得知识/解答/解释 → 简单问答
+    D. 回顾事故经过和教训 → 事故复盘
 
-  判断依据:
-    - 用户表达中包含具体变更意图（"调整成这样"、"改成"、"重构"、"移到"、"拆分"等）
-    - 分析只是变更的前置步骤，不是最终目的
-    - 分析结果会直接导致文件/目录/代码的实质性修改
+🔴 Q2 — "分析/评估/审查"是手段还是目的？
 
-  示例:
-    ❌ 误判: "分析目录结构合理性并给重构方案" → 深度分析
-    ✅ 正确: "分析目录结构合理性并给重构方案" → 需求开发（因为最终要执行重构）
+  如果请求中包含"分析/评估/审查"类词语：
+    手段: 分析是为了后续变更服务（前置步骤）→ 变更类工作流
+    目的: 分析本身就是最终交付物 → 分析类工作流
+  
+  判断方法: 如果去掉"分析"部分，请求仍然有明确的变更诉求 → 分析是手段
 
-    ❌ 误判: "分析下这个方案合理性然后调整" → 深度分析
-    ✅ 正确: "分析下这个方案合理性然后调整" → 需求开发（因为要调整）
+🔴 Q3 — 是否描述了具体要执行的事项？
 
-  纯分析场景（走 10-analysis）:
-    - "分析这个项目架构质量" — 只分析不改
-    - "评估当前规范健康度" — 只评估不改
-    - "审查代码规范一致性" — 只审查不改
+  是: 请求中列举了具体的需求项、变更项、实现目标（编号列表、"需求如下"、"功能如下"）→ 变更类工作流
+  否: 只描述了想了解/评估/检查的内容，无具体执行事项 → 分析类工作流
+```
 
-  根因:
-    FIX-010 — AI 将含变更意图的请求误判为分析任务，跳过了需求开发的 CP1/CP2/CP3 确认点，
-    直接输出完整分析+方案，违反"收到需求后不得直接分析执行"的强制规则。
+#### 判定规则
+
+```yaml
+变更类（Q1=A 或 Q2=手段 或 Q3=是，任一成立）:
+  → 根据 Layer 2 候选信号选择具体变更工作流（需求开发/Bug修复/重构...）
+  → 如果 Layer 2 无明确候选 → 默认需求开发（01-requirement-dev）
+  → 必须走对应确认点流程（CP1→CP2→CP3）
+
+分析类（Q1=B 且 Q2=目的 且 Q3=否，三者同时成立）:
+  → 深度分析（10-analysis）或技术调研（04-research）
+  → 仅当用户全文不含任何变更诉求时才走此路径
+```
+
+#### 示例（用三问验证）
+
+| 用户输入 | Q1 最终目的 | Q2 分析是… | Q3 具体事项 | 判定 |
+|---------|:---:|:---:|:---:|------|
+| "分析目录结构合理性并给重构方案" | 重构(变更) | 手段 | 有(重构) | ✅ 需求开发 |
+| "分析chat项目…需求如下 1、添加字段 2、支持…" | 开发(变更) | 手段 | 有(编号列表) | ✅ 需求开发 |
+| "分析下方案合理性然后调整" | 调整(变更) | 手段 | 有(调整) | ✅ 需求开发 |
+| "帮我看看这个接口为什么报错然后修一下" | 修复(变更) | 手段 | 有(修复) | ✅ Bug 修复 |
+| "分析这个项目架构质量" | 获得结论 | 目的 | 无 | ✅ 深度分析 |
+| "评估当前规范健康度" | 获得结论 | 目的 | 无 | ✅ 深度分析 |
+| "对比 Redis 和 Memcached" | 获得结论 | 目的 | 无 | ✅ 技术调研 |
+| "MongoDB 的索引原理是什么" | 获取知识 | N/A | 无 | ✅ 简单问答 |
+
+#### 与 FIX-010 的关系
+
+```yaml
+FIX-010 历史追溯:
+  FIX-010（2026-02-28）是 Layer 3 的前身，以"混合意图关键词列表"补丁形式存在于 v2.12.0。
+  其核心逻辑"分析只是变更的前置步骤→走需求开发"已被 Layer 3 的 Q2 自然覆盖。
+  FIX-010 编号保留用于历史追溯（issue#2、issue#11），但不再作为独立规则存在。
+  
+  根因回顾:
+    issue#2 (2026-03-03) — 首次发现，AI 将含变更意图的请求误判为分析
+    issue#11 (2026-03-05) — 复发，关键词列表不完整导致遗漏
+    v2.13.0 — 根因修复，用意图推断替代关键词穷举
 ```
 
 ---
 
-## 🔍 模糊场景判断规则
+### Layer 4: 上下文校验
+
+Layer 3 判定结果出来后，结合以下上下文信息进行确认或修正：
+
+```yaml
+校验项:
+  1. 会话上下文: 当前会话中之前的任务是什么？是否有未完成的上下文延续？
+  2. 项目状态: 项目是否有 IMPLEMENTATION-PLAN？当前进度是什么？
+  3. 用户历史: 用户在之前的对话中是否表达过相关意图？
+
+修正规则:
+  - Layer 4 可以修正 Layer 3 的判定，但必须说明修正理由
+  - 如果 Layer 4 仍然不确定 → 向用户询问确认
+```
+
+---
+
+## 🔍 模糊场景判断规则（Layer 2 + Layer 3 协同）
 
 ### 场景 1: 同时包含多个关键词
 ```
@@ -254,29 +335,39 @@ graph TD
 
 ```typescript
 interface TaskIdentification {
-  type: 'requirement' | 'bug' | 'optimization' | 'research' | 'refactoring' | 'database' | 'security' | 'incident';
+  type: 'requirement' | 'bug' | 'optimization' | 'research' | 'refactoring' | 'database' | 'security' | 'incident' | 'analysis' | 'self_audit';
   confidence: number; // 0-100
-  keywords: string[];
+  keywords: string[];           // Layer 2 提取的关键词信号
+  intentReasoning: string;      // Layer 3 意图推断理由
   workflow: string;
 }
 
-function identifyTask(userInput: string): TaskIdentification {
+function identifyTask(userInput: string, context?: SessionContext): TaskIdentification {
+  // Layer 1: 精确匹配
+  const explicitType = matchExplicitDeclaration(userInput);
+  if (explicitType) return explicitType;
+
+  // Layer 2: 关键词信号提取（候选列表）
   const keywords = extractKeywords(userInput);
-  const weights = calculateWeights(keywords);
-  const maxWeight = Math.max(...Object.values(weights));
-  
-  if (maxWeight >= 10) {
-    const type = getTaskTypeByMaxWeight(weights);
-    return {
-      type,
-      confidence: Math.min(maxWeight * 10, 100),
-      keywords,
-      workflow: getWorkflowPath(type)
-    };
-  }
-  
-  // 无法确定，需要询问用户
-  return null;
+  const candidates = getCandidateTypes(keywords);
+
+  // Layer 3: 意图推断（核心判断）
+  const intent = analyzeIntent(userInput, {
+    q1_finalPurpose: determineFinalPurpose(userInput),    // 变更/结论/知识/复盘
+    q2_analysisRole: isAnalysisMeansOrEnd(userInput),     // 手段/目的
+    q3_hasActionItems: hasConcreteActionItems(userInput),  // 是/否
+  });
+
+  // Layer 4: 上下文校验
+  const finalType = validateWithContext(intent, candidates, context);
+
+  return {
+    type: finalType.type,
+    confidence: finalType.confidence,
+    keywords,
+    intentReasoning: intent.reasoning,
+    workflow: getWorkflowPath(finalType.type)
+  };
 }
 ```
 
@@ -291,7 +382,10 @@ AI 识别任务后应输出：
 任务类型: 需求开发
 工作流文件: core/workflows/01-requirement-dev/README.md
 置信度: 95%
-关键词: ["实现", "限流", "集成"]
+关键词信号: ["实现", "限流", "集成"]
+意图推断: 用户最终目的是添加限流功能（代码变更），分析是前置步骤 → 需求开发
 
 下一步: 读取需求开发工作流并执行...
 ```
+
+> 💡 `意图推断` 字段是 v2.13.0 新增，用于记录 Layer 3 的判断理由，便于事后审计和纠错。

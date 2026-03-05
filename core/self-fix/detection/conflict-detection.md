@@ -201,38 +201,43 @@ v2.0 新逻辑（替代）:
   结果: 🔴 约束条数不一致
 ```
 
-### 规则 7: 混合意图防护一致性（🆕 v2.2 FIX-010）
+### 规则 7: 意图推断一致性（v2.13.0，FIX-010 升级为 Layer 3）
 
 ```yaml
 检测逻辑:
-  1. 确认以下 3 处文件都包含混合意图优先级规则:
-     a. core/workflows/00-task-identification/rules.md §混合意图优先级规则
-     b. core/workflows/01-requirement-dev/README.md §强制执行规则（混合意图判定）
-     c. core/workflows/10-analysis/README.md §变更意图检测
-  2. 确认 QUICK-REFERENCE.md 任务类型映射表包含混合意图说明
-  3. 确认 3 处文件的规则表述一致（含变更意图 → 需求开发）
+  1. 确认以下 4 处文件都包含 Layer 3 意图推断规则（三问：Q1 最终目的 / Q2 分析是手段还是目的 / Q3 是否有具体事项）:
+     a. core/workflows/00-task-identification/rules.md §Layer 3 意图推断
+     b. core/workflows/01-requirement-dev/README.md §强制执行规则（意图推断判定）
+     c. core/workflows/10-analysis/README.md §意图推断入口检测
+     d. .github/copilot-instructions.md §五条绝对规则（意图推断条目）
+  2. 确认 QUICK-REFERENCE.md 任务类型映射表包含意图推断规则说明
+  3. 确认 decision-tree.yaml 包含 Layer 2/Layer 3 注释说明
+  4. 确认上述所有文件的规则表述一致（分析最终目的 → 判定任务类型，不依赖关键词列表）
 
 检测示例:
-  00-task-identification/rules.md: 包含 §混合意图优先级规则 → ✅
-  01-requirement-dev/README.md: 包含 FIX-010 混合意图判定 → ✅
-  10-analysis/README.md: 包含 §变更意图检测 → ✅
-  QUICK-REFERENCE.md: 包含混合意图规则说明 → ✅
-  结果: ✅ 4 处定义一致
+  00-task-identification/rules.md: 包含 §Layer 3 意图推断 + 三问 → ✅
+  01-requirement-dev/README.md: 包含 Layer 3 意图推断判定 → ✅
+  10-analysis/README.md: 包含 §意图推断入口检测 + 三问 → ✅
+  copilot-instructions.md: 包含 Layer 3 三问描述 → ✅
+  QUICK-REFERENCE.md: 包含意图推断规则说明 → ✅
+  decision-tree.yaml: 包含 Layer 2/Layer 3 注释 → ✅
+  结果: ✅ 6 处定义一致
 
   ❌ 缺失情况:
-  10-analysis/README.md: 无变更意图检测入口
-  结果: 🔴 混合意图防护不完整（分析工作流缺少转出规则，可能再次误判）
+  10-analysis/README.md: 无意图推断入口检测
+  结果: 🔴 意图推断不完整（分析工作流缺少 Layer 3 转出规则，可能再次误判）
 
 根因背景:
-  FIX-010 — AI 将含变更意图的请求（目录重构）误判为深度分析任务，
-  跳过了需求开发的 CP1/CP2/CP3 确认点，直接输出完整分析方案。
-  修复方案在 3 处工作流 + 1 处速查手册中加入混合意图防护。
-  本规则确保 4 处定义一致存在，防止后续修改时遗漏。
+  FIX-010（2026-02-28）— AI 将含变更意图的请求误判为深度分析任务，跳过确认点。
+  原修复方案以关键词列表补丁形式存在，但关键词无法穷举导致 issue#2/#11 复发。
+  v2.13.0 将 FIX-010 升级为 Layer 3 意图推断（三问判定），从根因上解决误判问题。
+  本规则确保 6 处定义一致存在，防止后续修改时遗漏。
 
 触发场景:
   - 定期健康检查
   - 修改 00-task-identification/ 后
   - 修改 01-requirement-dev/ 或 10-analysis/ 后
+  - 修改 copilot-instructions.md 或 QUICK-REFERENCE.md 后
   - 用户指出任务类型误判时
 ```
 
@@ -345,6 +350,15 @@ function detectTimingConflict() {
 ## 📋 变更日志
 
 ```yaml
+v2.13.0 (2026-03-05):
+  变更:
+    - 规则 7: 从"混合意图防护一致性"升级为"意图推断一致性"（FIX-010 → Layer 3）
+    - 检测点从 4 处扩展为 6 处（新增 copilot-instructions.md + decision-tree.yaml）
+    - 检测内容从"是否包含关键词列表"改为"是否包含 Layer 3 三问规则"
+  根因:
+    - FIX-010 关键词列表补丁无法穷举，导致 issue#2/#11 复发
+    - v2.13.0 升级为 Layer 3 意图推断（三问判定），需同步更新检测规则
+
 v2.2 (2026-02-28):
   新增:
     - 规则 7: 混合意图防护一致性检测（4 处文件同步）
@@ -353,10 +367,12 @@ v2.2 (2026-02-28):
     - 修复方案在 3 处工作流 + 1 处速查手册中加入防护规则
     - 需要检测规则确保 4 处定义一致存在
   关联:
-    - core/workflows/00-task-identification/rules.md §混合意图优先级规则
+    - core/workflows/00-task-identification/rules.md §Layer 3 意图推断（原 §混合意图优先级规则）
     - core/workflows/01-requirement-dev/README.md §强制执行规则
-    - core/workflows/10-analysis/README.md §变更意图检测
+    - core/workflows/10-analysis/README.md §意图推断入口检测（原 §变更意图检测）
     - QUICK-REFERENCE.md §任务类型映射
+    - .github/copilot-instructions.md §五条绝对规则
+    - core/workflows/decision-tree.yaml §task_identification
 
 v2.1 (2026-02-28):
   新增:

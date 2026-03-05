@@ -167,7 +167,7 @@ ai-dev-guidelines/projects/<project>/          # 如 projects/chat/
 
 - [temp-reports.md](./temp-reports.md) — 报告规范（命名、存储、核心规则）
 - [confirmation-points.md](./confirmation-points.md) — 确认点机制（CP1-CP6）
-- [core/CONSTRAINTS.md](../../CONSTRAINTS.md) — 约束清单（20 条）
+- [core/CONSTRAINTS.md](../../CONSTRAINTS.md) — 约束清单（21 条）
 - [00-pre-check/README.md](../00-pre-check/README.md) — 预检查流程（5 项必做 + 阶段 0）
 
 ---
