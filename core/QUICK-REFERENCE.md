@@ -23,18 +23,19 @@
 
 ### 🏷️ Agent 标识速查
 
-| 编辑器 + AI | 标识值 |
-|------------|--------|
-| Zed + GitHub Copilot | `zed-copilot` |
-| WebStorm + GitHub Copilot | `webstorm-copilot` |
-| VS Code + GitHub Copilot | `vscode-copilot` |
-| Cursor | `cursor` |
-| VS Code + Cline | `vscode-cline` |
-| Windsurf | `windsurf` |
-| 其他 | `<editor>-<ai-provider>` |
+| 编辑器 + AI | 标识值 | 检测线索 |
+|------------|--------|----------|
+| Zed + GitHub Copilot | `zed-copilot` | 系统提示词含 "Zed" |
+| WebStorm + GitHub Copilot | `webstorm-copilot` | 系统提示词含 "JetBrains" / "WebStorm" |
+| VS Code + GitHub Copilot | `vscode-copilot` | 系统提示词含 "VS Code" / "Visual Studio Code" |
+| Cursor | `cursor` | 系统提示词含 "Cursor" |
+| VS Code + Cline | `vscode-cline` | 系统提示词含 "Cline" |
+| Windsurf | `windsurf` | 系统提示词含 "Windsurf" |
+| 其他 | `<editor>-<ai-provider>` | — |
 
-> **为什么需要 Agent？** 用户可能同时使用多个编辑器的 AI 助手，Agent 标识用于区分记忆来源，避免混乱。
-> 详见 [task-memory/multi-agent.md §多 Agent 支持](./workflows/common/task-memory/multi-agent.md)
+> 🔴 **禁止默认猜测 Agent（FIX-012）**：必须通过系统提示词关键字、用户明确提及、或已有记忆目录来确定 Agent。
+> **无法确定时必须使用 `unknown-agent` 并立即提示用户确认，禁止基于"VS Code 最常见"而默认推断。**
+> 详见 [00-pre-check/README.md §Step 4](./workflows/00-pre-check/README.md) / [task-memory/multi-agent.md](./workflows/common/task-memory/multi-agent.md)
 
 ---
 
@@ -366,7 +367,7 @@ projects/<project>/
 **🛡️ 操作安全（确认类）**
 
 1. 🟡P1 **删除操作需确认** - 删除代码/文件前必须用户确认
-2. 🟡P1 **Git 操作需确认** - commit/push 前必须用户确认
+2. 🟡P1 **Git 操作需确认** - commit/push 前必须用户确认；任务涉及源码变更时 AI 主动判断并提示提交；commit message 用中文（Conventional Commits 格式：`<type>(<scope>): <中文描述>`）
 3. 💡P2 **方案选择需确认** - 多方案时必须用户决策
 16. 🔴P0 **文件修改需确认** - 涉及文件修改/删除操作必须先输出变更计划，等待用户确认后再执行（纯分析/只读/报告/记忆写入除外）
 

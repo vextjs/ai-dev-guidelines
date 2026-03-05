@@ -145,7 +145,7 @@
      产物: ai-dev-guidelines/projects/chat/optimizations/创建项目AI标题异步化/"
 ```
 
-### Step 4: Agent 标识（🆕 v2.5.0）
+### Step 4: Agent 标识（🆕 v2.5.0 / 更新 v2.12.0）
 
 ```yaml
 执行: 检测当前编辑器 + AI 组合，确定 Agent 标识
@@ -161,16 +161,31 @@
   | Windsurf          | windsurf            |
   | 其他              | <editor>-<provider> |
 
-检测优先级:
-  1. 工具环境/系统信息推断（如 Zed Agent 面板、JetBrains IDE 特征）
-  2. 用户在对话中提及的编辑器名称
-  3. 无法确定时使用 unknown-agent 并提示用户确认
+🔴 强制检测方法（按优先级执行，必须至少命中一项才能确定 Agent）:
+  1. 系统提示词/工具签名检测:
+     - 系统提示词中包含 "Zed" 关键字 → zed-copilot
+     - 系统提示词中包含 "JetBrains" / "WebStorm" / "IntelliJ" → webstorm-copilot
+     - 系统提示词中包含 "Cursor" → cursor
+     - 系统提示词中包含 "Windsurf" → windsurf
+     - 系统提示词中包含 "Cline" → vscode-cline
+  2. 对话历史中用户明确提及的编辑器名称
+  3. 当前 Agent 记忆目录已有记录（同一会话内不会切换编辑器）:
+     - 若本次会话已在某 Agent 目录下创建/更新过记忆，后续会话沿用该 Agent
+  4. 无法确定时 → 使用 unknown-agent 并立即提示用户确认
+
+🔴 禁止行为（已发生事故 — FIX-012 v2.12.0）:
+  - ❌ 禁止基于"训练数据中 VS Code 最常见"而默认推断为 vscode-copilot
+  - ❌ 禁止在无任何检测证据的情况下填写 Agent 标识
+  - ❌ Agent 字段留空或填占位符
+  - ❌ 不做任何检测就跳过
+
+⚠️ 事故记录（FIX-012）:
+  原因: AI 多次将 Zed 编辑器误判为 vscode-copilot，导致记忆和报告写入错误目录
+  根因: 规范仅定义了"检测优先级"，缺少具体可执行的检测方法，AI 在无法确定时
+        默认选择了训练数据中最常见的 VS Code，而非使用 unknown-agent 并询问用户
+  修复: 增加强制检测方法 + 禁止默认猜测规则 + 事故记录
 
 输出: "4. Agent: zed-copilot"
-
-🔴 禁止行为:
-  - Agent 字段留空或填占位符
-  - 不做任何检测就跳过
 ```
 
 ### Step 5: 上次记忆（🆕 v2.7.0 / 更新 v2.10.0）

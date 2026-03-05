@@ -75,13 +75,37 @@
 
 ---
 
-## Agent 检测方法
+## Agent 检测方法（🆕 更新 v2.12.0）
 
 ```yaml
-优先级:
-  1. 系统信息/环境线索（如本次对话的 "JetBrains-WS editor" → webstorm-copilot）
-  2. 用户在对话中提及的编辑器名称
-  3. 无法确定时使用 unknown-agent，提示用户确认
+🔴 强制检测步骤（按优先级执行，必须至少命中一项才能确定 Agent）:
+
+  Step 1 — 系统提示词/工具签名检测（最可靠）:
+    - 系统提示词中包含 "Zed" 关键字 → zed-copilot
+    - 系统提示词中包含 "JetBrains" / "WebStorm" / "IntelliJ" → webstorm-copilot
+    - 系统提示词中包含 "VS Code" / "Visual Studio Code"（且无 Cline）→ vscode-copilot
+    - 系统提示词中包含 "Cursor" → cursor
+    - 系统提示词中包含 "Cline" → vscode-cline
+    - 系统提示词中包含 "Windsurf" → windsurf
+
+  Step 2 — 对话历史中用户明确提及的编辑器名称:
+    - 用户说"我在 Zed 中" → zed-copilot
+    - 用户说"WebStorm" → webstorm-copilot
+    - 等等
+
+  Step 3 — 当前 Agent 记忆目录已有记录（会话内沿用）:
+    - 同一天/同一会话不会切换编辑器
+    - 若本次会话已在某 Agent 目录下创建/更新过记忆，后续沿用该 Agent
+
+  Step 4 — 无法确定:
+    - 使用 unknown-agent 并立即提示用户确认
+    - 禁止跳过此步骤
+
+🔴 禁止行为（FIX-012 事故修复）:
+  - ❌ 禁止基于"训练数据中 VS Code 最常见"而默认推断为 vscode-copilot
+  - ❌ 禁止在无任何检测证据的情况下填写 Agent 标识
+  - ❌ 禁止 Agent 字段留空或填占位符
+  - ❌ 禁止不做任何检测就跳过
 
 常见映射:
   JetBrains IDE (WebStorm/IDEA) → webstorm-copilot
@@ -89,6 +113,22 @@
   VS Code Copilot Chat         → vscode-copilot
   Cursor                       → cursor
   Windsurf                     → windsurf
+```
+
+### ⚠️ 事故记录（FIX-012 — 2026-03-04）
+
+```yaml
+现象: AI 多次将 Zed 编辑器误判为 vscode-copilot
+影响: 记忆和报告写入错误的 vscode-copilot 目录，需手动迁移修复
+根因: 规范仅定义了"检测优先级"列表，缺少具体可执行的检测方法。
+      AI 在无法从环境中确定编辑器时，基于训练数据分布默认选择了
+      最常见的 VS Code，而非按规范使用 unknown-agent 并询问用户。
+修复:
+  1. 增加强制检测步骤（系统提示词关键字匹配 → 用户提及 → 已有记忆 → unknown-agent）
+  2. 增加 🔴 禁止行为（禁止默认猜测）
+  3. QUICK-REFERENCE.md Agent 速查表增加"检测线索"列
+  4. CONSTRAINTS.md 约束10 增加 Agent 禁止猜测子约束
+  5. 本文件增加事故记录
 ```
 
 ---

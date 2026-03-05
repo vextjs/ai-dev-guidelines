@@ -1,7 +1,7 @@
 # vext 项目
 
 > **项目名称**: vext  
-> **项目描述**: 基于 Hono 的 Node.js Web 框架（支持底层框架可替换）
+> **项目描述**: 高性能 Node.js Web 框架（支持 Native / Fastify / Hono / Koa / Express 五种 adapter 可替换）
 
 ---
 
