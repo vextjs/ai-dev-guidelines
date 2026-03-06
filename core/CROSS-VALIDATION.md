@@ -63,15 +63,15 @@
 
 | # | 文件路径 | 引用位置 | 当前值 |
 |:-:|---------|---------|:------:|
-| 1 | `CONSTRAINTS.md` | §标题 `核心约束（21 条）` + §速查表 + §尾部变更 | 21 |
-| 2 | `QUICK-REFERENCE.md` | §标题 `核心约束 (21条)` | 21 |
-| 3 | `.github/copilot-instructions.md` | 入口表 `执行约束（21 条）` | 21 |
-| 4 | `README.md` | 目录树注释 `约束清单（21 条）` | 21 |
-| 5 | `STATUS.md` | v2.0 核心改进表 `约束体系 21 条` | 21 |
-| 6 | `core/workflows/decision-tree.yaml` | 注释 `编号对齐 CONSTRAINTS.md 的 21 条约束` + constraints 条目数 | 21 |
-| 7 | `projects/dev-docs/profile/README.md` | 目录树注释 + 关键文档表格（两处） | 21 |
-| 8 | `projects/dev-docs/profile/01-项目信息.md` | 目录树注释 + 关键指标表格（两处） | 21 |
-| 9 | `projects/dev-docs/profile/02-架构约束.md` | 相关文档链接描述 | 21 |
+| 1 | `CONSTRAINTS.md` | §标题 `核心约束（22 条）` + §速查表 + §尾部变更 | 22 |
+| 2 | `QUICK-REFERENCE.md` | §标题 `核心约束 (22条)` | 22 |
+| 3 | `.github/copilot-instructions.md` | 入口表 `执行约束（22 条）` | 22 |
+| 4 | `README.md` | 目录树注释 `约束清单（22 条）` | 22 |
+| 5 | `STATUS.md` | v2.0 核心改进表 `约束体系 22 条` | 22 |
+| 6 | `core/workflows/decision-tree.yaml` | 注释 `编号对齐 CONSTRAINTS.md 的 22 条约束` + constraints 条目数 | 22 |
+| 7 | `projects/dev-docs/profile/README.md` | 目录树注释 + 关键文档表格（两处） | 22 |
+| 8 | `projects/dev-docs/profile/01-项目信息.md` | 目录树注释 + 关键指标表格（两处） | 22 |
+| 9 | `projects/dev-docs/profile/02-架构约束.md` | 相关文档链接描述 | 22 |
 | 10 | `changelogs/v<当前>.md` | 相关链接描述 | 21 |
 | 11 | `core/self-fix/detection/conflict-detection.md` | §规则 6 检测示例基准值 | 21 |
 
@@ -104,7 +104,7 @@
 □ 预检查项数: copilot-instructions.md / 00-pre-check / QUICK-REFERENCE 三处一致？
 □ 文件命名: 报告在 `<agent>/YYYYMMDD/` 目录下使用 `NN-<类型>-<简述>.md` 格式（NN 独立）？记忆使用 YYYYMMDD.md 格式（无 NN）？
 □ 多 Agent 方案: 目录隔离 clients/<agent>/（非共享目录+文件名前缀）？
-□ 🔴 约束条数（主动全量）: 上方约束条数引用清单 11 个文件是否全部一致？（逐个 read_file 确认，禁止推断）（当前 21 条）
+□ 🔴 约束条数（主动全量）: 上方约束条数引用清单 11 个文件是否全部一致？（逐个 read_file 确认，禁止推断）（当前 22 条）
 □ 🔴 最后更新日期（主动全量）: 上方日期同步清单 7 个文件的 `最后更新` 日期是否全部一致？（逐个 read_file 确认，禁止推断）
 □ 🔴 版本号（主动全量）: 上方 8 个文件的主版本号是否全部一致？（逐个 read_file 确认，禁止推断）或运行 `node core/tools/bump-version.js` 自动检查
 □ 🔴 CHANGELOG ↔ changelogs/ 同步: CHANGELOG.md 概览表是否包含当前版本？changelogs/v<当前版本>.md 是否存在？（bump-version.js 已含此检查）

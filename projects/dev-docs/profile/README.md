@@ -44,7 +44,7 @@
 ai-dev-guidelines/
 ├── README.md                 # 项目入口（AI 首读）
 ├── QUICK-REFERENCE.md        # 快速参考
-├── CONSTRAINTS.md            # 约束清单（21 条）
+├── CONSTRAINTS.md            # 约束清单（22 条）
 ├── STATUS.md                 # 项目状态
 ├── CHANGELOG.md              # 变更日志索引
 │
@@ -64,8 +64,8 @@ ai-dev-guidelines/
 │   └── decision-tree.yaml    # 决策树配置
 │
 ├── core/templates/                # 📝 文档模板
-│   ├── lite/                 # 精简模板（快速模式，8 个）
-│   ├── core/                 # 核心模板（完整模式，8 个）
+│   ├── lite/                 # 精简模板（小需求，8 个）
+│   ├── core/                 # 核心模板（大需求，8 个）
 │   ├── extended/             # 扩展模板（Tier 2，5 个）
 │   └── common/               # 通用组件
 │
@@ -165,12 +165,12 @@ ai-dev-guidelines/
 
 ## 🔄 工作流规范
 
-### 执行模式
+### 执行流程（统一 7 阶段）
 
-| 模式 | 条件 | 模板目录 |
-|-----|------|---------|
-| 快速模式 | 简单需求、< 5 个文件 | `core/templates/lite/` |
-| 完整模式 | 复杂需求、正式交付 | `core/templates/core/` |
+| 需求规模 | 条件 | 模板目录 |
+|---------|------|---------|
+| 小需求 | < 5 个文件、单模块 | `core/templates/lite/`（精简内容，归档文档文件必须存在） |
+| 大需求 | >= 5 个文件、多模块协作 | `core/templates/core/`（完整内容） |
 
 ### 确认点
 
@@ -208,7 +208,7 @@ ai-dev-guidelines/
 |-----|------|------|
 | 入口文档 | `README.md` | AI 首读文档 |
 | 快速参考 | `QUICK-REFERENCE.md` | 执行时速查 |
-| 约束清单 | `CONSTRAINTS.md` | 核心约束（21 条） |
+| 约束清单 | `CONSTRAINTS.md` | 核心约束（22 条） |
 | 项目状态 | `STATUS.md` | 完成度追踪 |
 | 决策树 | `core/workflows/decision-tree.yaml` | 任务路由 |
 

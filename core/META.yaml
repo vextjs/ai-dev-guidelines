@@ -13,17 +13,17 @@
 #   - 禁止手动逐文件修改版本号或约束条数
 #   - 禁止在其他文件中硬编码版本号而不在此注册
 #
-# 最后更新: 2026-03-05
+# 最后更新: 2026-03-06
 # ============================================
 
 # 当前版本号
-version: "2.12.0"
+version: "2.13.0"
 
 # 当前约束条数
-constraint_count: 21
+constraint_count: 22
 
 # 最后更新日期
-last_updated: "2026-03-05"
+last_updated: "2026-03-06"
 
 # ============================================
 # 最后更新日期同步文件清单 (7 个文件)
@@ -155,7 +155,7 @@ constraint_files:
       - "相关文档链接描述"
     description: "架构约束"
 
-  - path: "changelogs/v2.12.0.md"
+  - path: "changelogs/v2.13.0.md"
     locations:
       - "相关链接描述"
     description: "当前版本 changelog"

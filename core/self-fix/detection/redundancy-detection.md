@@ -105,7 +105,7 @@ function detectRedundancy() {
   const definitions = new Map();
   
   // 收集所有关键定义
-  const keyTerms = ['确认点', 'CP1', 'CP2', 'CP3', '预检查', '模式切换'];
+  const keyTerms = ['确认点', 'CP1', 'CP2', 'CP3', '预检查', '统一流程'];
   
   for (const file of getAllMarkdownFiles()) {
     const content = readFile(file);

@@ -1,8 +1,8 @@
-# AI 决策树配置文件 v2.12.0
+# AI 决策树配置文件 v2.13.0
 # 用于快速场景识别和任务路由
 
-version: "2.12.0"
-last_updated: "2026-03-05"
+version: "2.13.0"
+last_updated: "2026-03-06"
 description: "ai-dev-guidelines AI 执行规范的结构化决策树"
 
 # ===========================================
@@ -131,7 +131,7 @@ task_identification:
     scenario_walkthrough: "core/workflows/12-scenario-walkthrough/" # 质量保障工具
 
 # ===========================================
-# 强制预检查 (v2.12.0 - 5项必做 + Agent 标识 + 上次记忆)
+# 强制预检查 (v2.13.0 - 5项必做 + Agent 标识 + 上次记忆)
 # ===========================================
 mandatory_precheck:
   name: "强制启动协议"
@@ -219,39 +219,32 @@ mandatory_precheck:
     message: "预检查失败，请确认后重试"
 
 # ===========================================
-# 执行模式选择 (v2.0 新增)
+# 统一执行流程 (v2.13.0 FIX-016 — 移除快速/完整双模式)
 # ===========================================
-mode_selection:
-  description: "根据条件自动选择快速或完整模式"
+unified_workflow:
+  description: "所有需求开发统一为 7 阶段流程，不再区分快速/完整模式"
+  stages: 7
+  flow: "理解→方案→实施方案→执行→报告→归档文档→验证检查"
+  confirmation_points: "CP1→CP2→CP3（强制）+ CP4/CP5（按需）"
+  archive_docs: "所有需求均须生成归档文档文件（小需求内容可精简，但文件必须存在）"
 
-  quick_mode:
-    name: "快速模式"
-    conditions:
-      - "需求描述 < 100 字"
-      - "涉及文件 < 5 个"
-      - "用户关键词: 快速, 简单, 小改动"
-    template_dir: "core/templates/lite/"
-    stages: 5
-    estimated_time: "15-30 分钟"
-    skip_stages: ["详细文档", "完整测试"]
+  template_selection:
+    description: "根据需求规模选择模板，不影响流程阶段"
+    small_requirement:
+      conditions:
+        - "涉及文件 < 5 个"
+        - "单模块改动"
+      template_dir: "core/templates/lite/"
+      archive_detail: "精简内容（核心需求+改动清单+实现要点）"
+    large_requirement:
+      conditions:
+        - "涉及文件 >= 5 个"
+        - "多模块协作"
+      template_dir: "core/templates/core/"
+      archive_detail: "完整内容（详细架构+模块设计+接口契约）"
 
-  full_mode:
-    name: "完整模式"
-    conditions:
-      - "用户关键词: 完整, 详细, 需要文档"
-      - "涉及文件 >= 5 个"
-      - "复杂需求、核心功能"
-      - "正式交付场景"
-    template_dir: "core/templates/core/"
-    stages: 7
-    estimated_time: "45-90 分钟"
-
-  mode_keywords:
-    quick_triggers: ["快速", "简单", "小改动", "快速处理", "简单修复"]
-    full_triggers: ["完整", "详细", "需要文档", "正式", "完整文档"]
-    skip_doc_triggers: ["只要代码", "跳过文档", "不需要文档"]
-
-  default: "quick_mode"
+  # 历史兼容说明：v2.0.0~v2.12.0 使用快速/完整双模式，
+  # v2.13.0 起因 issue#11/#14/#15 多次流程跳过问题统一为单一流程
 
 # ===========================================
 # 确认点定义
@@ -319,7 +312,7 @@ inquiry_points:
       - "S: 跳过"
 
 # ===========================================
-# 禁止项（编号对齐 CONSTRAINTS.md 的 21 条约束）
+# 禁止项（编号对齐 CONSTRAINTS.md 的 22 条约束）
 # ===========================================
 constraints:
   # 对应 CONSTRAINTS.md 核心约束

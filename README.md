@@ -2,8 +2,8 @@
 
 > **AI 工作操作系统** — 给 AI Agent 一个完整的工程任务执行框架
 
-[![版本](https://img.shields.io/badge/版本-v2.12.0-blue)]()
-[![约束](https://img.shields.io/badge/约束-21_条-red)]()
+[![版本](https://img.shields.io/badge/版本-v2.13.0-blue)]()
+[![约束](https://img.shields.io/badge/约束-22_条-red)]()
 [![工作流](https://img.shields.io/badge/工作流-11_种-green)]()
 [![模板](https://img.shields.io/badge/模板-29_个-orange)]()
 
@@ -17,8 +17,8 @@
 |------|------|---------|
 | **标准化工作流** | 11 种开发场景（需求/Bug/优化/安全...），AI 按步骤执行 | `core/workflows/` |
 | **持久化记忆** | 跨会话记忆 + 多 Agent 协同，告别每次从零开始 | `.ai-memory/` + `reports/` |
-| **行为约束** | 21 条护栏规则，防止 AI 未经确认执行破坏性操作 | `core/CONSTRAINTS.md` |
-| **文档模板** | 29 个结构化模板（快速/完整双模式），输出格式统一 | `core/templates/` |
+| **行为约束** | 22 条护栏规则，防止 AI 未经确认执行破坏性操作 | `core/CONSTRAINTS.md` |
+| **文档模板** | 29 个结构化模板（小需求精简/大需求完整），输出格式统一 | `core/templates/` |
 | **规范自修复** | AI 检测规范冲突并自动修复，系统自维护 | `core/self-fix/` |
 | **防复现机制** | META 单一真相源 + 自动同步工具，同类 Bug 不再重复 | `core/tools/` |
 
@@ -112,7 +112,7 @@ cp -r projects/_template projects/<your-project>
 | **AI 是第一用户** | 所有设计以"AI 能否无歧义执行"为标准 |
 | **有状态 > 无状态** | 消息驱动记忆，AI 拥有跨会话工作记忆 |
 | **防复现 > 事后修复** | META 单一真相源 + 自动同步，消除同类 Bug |
-| **约束是护栏不是枷锁** | 21 条约束防止 AI 犯人类会犯的错 |
+| **约束是护栏不是枷锁** | 22 条约束防止 AI 犯人类会犯的错 |
 | **按需加载** | 三层递进架构控制 Token 成本 |
 
 > 详见 [设计理念文档](./docs/DESIGN-PHILOSOPHY.md)
@@ -123,11 +123,11 @@ cp -r projects/_template projects/<your-project>
 
 | 指标 | 数据 |
 |------|------|
-| 当前版本 | v2.12.0 |
+| 当前版本 | v2.13.0 |
 | 规范文件 | ~4000 行 |
 | 工作流 | 11 种 |
 | 模板 | 29 个 |
-| 约束 | 21 条 |
+| 约束 | 22 条 |
 | 工具脚本 | 7 个 |
 | 接入项目 | 5+ 个 |
 

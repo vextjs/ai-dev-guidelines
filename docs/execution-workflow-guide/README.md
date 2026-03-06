@@ -16,7 +16,7 @@
 |------|------|------------|
 | **本文件** | 全局总览 + 公共流程（预检查、记忆、确认点、报告） | 首次了解 AI 执行机制 |
 | [01-task-workflows.md](./01-task-workflows.md) | 各任务类型的专属流程（需求/Bug/优化/分析/其他） | 想了解某种任务 AI 怎么做 |
-| [02-session-and-modes.md](./02-session-and-modes.md) | 跨会话恢复 + 快速/完整模式 + 输出格式示例 | 说"继续"时 AI 怎么恢复、看到的输出长什么样 |
+| [02-session-and-modes.md](./02-session-and-modes.md) | 跨会话恢复 + 统一 7 阶段流程 + 输出格式示例 | 说"继续"时 AI 怎么恢复、看到的输出长什么样 |
 | [03-faq.md](./03-faq.md) | 常见问题 + 相关文档链接 | 有疑问时快速查找 |
 
 ---
@@ -266,7 +266,7 @@ ai-dev-guidelines/projects/chat/
 | 文档 | 路径 | 说明 |
 |------|------|------|
 | 速查手册 | `ai-dev-guidelines/core/QUICK-REFERENCE.md` | AI 执行速查 |
-| 约束清单 | `ai-dev-guidelines/core/CONSTRAINTS.md` | 21 条核心约束 |
+| 约束清单 | `ai-dev-guidelines/core/CONSTRAINTS.md` | 22 条核心约束 |
 | 任务记忆机制 | `ai-dev-guidelines/core/workflows/common/task-memory.md` | 5+1 阶段消息驱动 |
 | 报告规范 | `ai-dev-guidelines/core/workflows/common/temp-reports.md` | 报告命名与存储 |
 | 自我修复机制 | `ai-dev-guidelines/docs/spec-self-fix-guide/README.md` | 规范自我修复 |

@@ -1,7 +1,7 @@
 # Dev-Docs - AI 开发执行手册
 
-> **版本**: v2.12.0  
-> **最后更新**: 2026-03-05  
+> **版本**: v2.13.0  
+> **最后更新**: 2026-03-06  
 > **核心定位**: AI 工作操作系统 — 给 AI Agent 完整的工程任务执行框架
 > 
 > **目标用户**: AI Agent（GitHub Copilot / Claude / GPT）
@@ -10,30 +10,19 @@
 
 ---
 
-## 🎯 执行模式
+## 🎯 执行流程
 
-### 快速模式 (默认)
-
-| 项目 | 说明 |
-|-----|------|
-| 适用场景 | 简单需求、小改动、快速迭代 |
-| 流程步骤 | 5 个阶段 |
-| 输出文档 | 精简版（使用 `core/templates/lite/`） |
-| 预计时间 | 15-30 分钟 |
-
-### 完整模式
+**统一 7 阶段流程**（FIX-016 v2.13.0 — 移除快速/完整模式二分）
 
 | 项目 | 说明 |
 |-----|------|
-| 适用场景 | 复杂需求、核心功能、正式交付 |
-| 流程步骤 | 7 个阶段 |
-| 输出文档 | 完整版（使用 `core/templates/core/`） |
-| 预计时间 | 45-90 分钟 |
+| 流程步骤 | 7 个阶段（理解→方案→实施方案→执行→报告→归档文档→验证检查） |
+| 确认点 | CP1→CP2→CP3（强制）+ CP4/CP5（按需） |
+| 输出文档 | 完整文档套件 + 代码实现 |
+| 模板 | 小需求用 `core/templates/lite/`（精简内容），大需求用 `core/templates/core/`（完整内容） |
 
-**模式切换**: 
-- 默认使用快速模式
-- 用户说"需要完整文档"、"详细"时切换到完整模式
-- 用户说"只要代码"时跳过文档生成
+> 🔴 **所有需求开发统一走 7 阶段流程**，不再区分快速/完整模式。小需求的文档内容可精简但文件必须创建。
+> 详见 [core/workflows/01-requirement-dev/README.md](./workflows/01-requirement-dev/README.md)
 
 ---
 
@@ -104,7 +93,7 @@ ai-dev-guidelines/
 ├── core/                              # 🤖 AI 规范内核（你正在阅读的文件所在目录）
 │   ├── README.md                     # 👈 你正在阅读的文件（AI 入口）
 │   ├── QUICK-REFERENCE.md            # 📖 速查手册（推荐首先阅读）
-│   ├── CONSTRAINTS.md                # ⛔ 约束清单（21 条）
+│   ├── CONSTRAINTS.md                # ⛔ 约束清单（22 条）
 │   ├── STATUS.md                     # 📊 项目状态追踪
 │   ├── META.yaml                     # 元数据（版本、约束条数）
 │   ├── workflows/                    # 🤖 AI 执行流程（通用）
@@ -200,7 +189,7 @@ ai-dev-guidelines/
 | 用户快速入门（首次使用必读） | [docs/getting-started.md](../docs/getting-started.md) | 🆕 5 分钟了解全貌 + 新项目接入 + 工具速览 |
 | 用户指南（执行流程 + 自修复机制） | [docs/README.md](../docs/README.md) | 🆕 面向用户视角的完整指南入口 |
 | 工作流清单、Tier 分级 | [core/workflows/README.md](./workflows/README.md) | 各类任务的执行流程 |
-| 模板选择指南 | [core/templates/README.md](./templates/README.md) | 快速/完整模式模板 |
+| 模板选择指南 | [core/templates/README.md](./templates/README.md) | 精简/完整内容模板 |
 | 完整输出示例 | [core/examples/README.md](./examples/README.md) | 需求/Bug 修复等示例 |
 
 
@@ -226,6 +215,6 @@ ai-dev-guidelines/
 
 - 项目负责人: rockyshi1993
 - 创建日期: 2026-02-11
-- 最后更新: 2026-03-05
-- 版本: v2.12.0
+- 最后更新: 2026-03-06
+- 版本: v2.13.0
 - 详细变更记录见 [CHANGELOG.md](../CHANGELOG.md)

@@ -340,7 +340,7 @@
 | 文件 | 说明 |
 |------|------|
 | [README.md](./README.md) | 机制总览 + 架构图 + 核心能力 |
-| [01-detection-and-triggers.md](./01-detection-and-triggers.md) | 检测模块（4 类 21 条规则）+ 触发机制（3 类 + 6 种用户意图模式） |
+| [01-detection-and-triggers.md](./01-detection-and-triggers.md) | 检测模块（4 类 22 条规则）+ 触发机制（3 类 + 6 种用户意图模式） |
 | [02-repair-and-records.md](./02-repair-and-records.md) | 修复模块（11 个模式）+ 修复验证（7 步）+ 修复记录 + 防复现机制 |
 
 ### 源模块文件

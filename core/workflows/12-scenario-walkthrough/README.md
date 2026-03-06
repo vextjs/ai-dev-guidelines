@@ -68,7 +68,7 @@
 | 文件 | 用例数 | 覆盖范围 |
 |------|:------:|---------|
 | [01-workflow-scenarios.md](./01-workflow-scenarios.md) | 11 | 11 个工作流的正常路径 |
-| [02-flow-control-scenarios.md](./02-flow-control-scenarios.md) | 13 | 预检查、记忆、确认点、模式切换等流程控制 |
+| [02-flow-control-scenarios.md](./02-flow-control-scenarios.md) | 13 | 预检查、记忆、确认点、统一流程、出口门禁等流程控制 |
 | [03-edge-case-scenarios.md](./03-edge-case-scenarios.md) | 12 | 边界条件、异常处理、禁止行为 |
 | **合计** | **36** | 规范中所有已定义场景 |
 
@@ -156,7 +156,7 @@
 - [规范自我审查](../11-self-audit/README.md) — 文档一致性审查（上游）
 - [决策树配置](../decision-tree.yaml) — 关键词映射
 - [自动触发规则](../../self-fix/triggers/auto-triggers.md) — 自修复触发
-- [约束清单](../../CONSTRAINTS.md) — 21 条执行约束
+- [约束清单](../../CONSTRAINTS.md) — 22 条执行约束
 - [速查手册](../../QUICK-REFERENCE.md) — AI 执行速查
 
 ---

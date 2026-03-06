@@ -6,7 +6,7 @@
 >
 > | 项目 | 本文件（旧） | 当前规范 |
 > |------|------------|---------|
-> | **执行流程** | 8 步流程 | **5 阶段快速模式 / 7 阶段完整模式** → 见 `README.md` |
+> | **执行流程** | 8 步流程 | **统一 7 阶段流程**（v2.13.0 FIX-016 移除快速/完整双模式）→ 见 `README.md` |
 > | **任务 ID** | `REQ-user-20260211-rate-limit` | **中文描述目录**（如 `用户限流功能/`）→ 见 `decision-tree.yaml` |
 > | **文件命名** | `01-requirement.md` / `02-technical.md` | **`01-需求定义.md` / `02-技术方案.md` / `03-实施方案/`** → 见 `doc-standards.md` |
 > | **记忆格式** | `<YYYYMMDD>-<TYPE>-<id>.md` | **`YYYYMMDD.md`（每日一文件）** → 见 `QUICK-REFERENCE.md` |
@@ -890,7 +890,7 @@ await writeFile(outputPath, implementationDoc);
 检查项:
   - ✅ 01-需求定义.md 已生成
   - ✅ 02-技术方案.md 已生成
-  - ✅ 03-实施方案/ 已生成（或快速模式下在对话中输出）
+  - ✅ 03-实施方案/ 已生成（>= 5 文件时生成目录）
   - ✅ IMPLEMENTATION-PLAN.md 已生成
   - ✅ scripts/ 目录已创建（如需要）
   - ✅ 安装脚本已创建（如需要）

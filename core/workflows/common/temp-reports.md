@@ -276,7 +276,7 @@ reports/ (ai-dev-guidelines/projects/<project>/ 下):
 
 ai-dev-guidelines/projects/<project>/requirements/ 等 (归档文档):
   - 正式归档文档，提交 git
-  - 完整模式下生成
+  - 统一 7 阶段流程中生成（所有需求均须生成，小需求可精简）
   - 长期保存，可追溯
 ```
 

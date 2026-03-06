@@ -64,7 +64,7 @@
 ```
 core/templates/
 ├── README.md              # 本文件
-├── lite/                  # 🆕 精简模板（快速模式）
+├── lite/                  # 🆕 精简模板（小需求精简内容）
 │   ├── README.md
 │   ├── technical-lite.md
 │   ├── requirement-lite.md
@@ -74,7 +74,7 @@ core/templates/
 │   ├── research-lite.md          # 🆕
 │   ├── refactoring-lite.md       # 🆕
 │   └── analysis-lite.md          # 🆕 深度分析/架构分析
-├── core/                  # 核心模板（完整模式）
+├── core/                  # 核心模板（大需求完整内容）
 │   ├── requirement-template.md
 │   ├── technical-template.md
 │   ├── implementation-template.md
@@ -103,7 +103,7 @@ core/templates/
 
 ## 🎯 模板选择指南（v2.0 新增）
 
-### 何时使用 Lite 模板（精简版）
+### 何时使用 Lite 模板（精简版 — 小需求）
 
 | 条件 | 说明 |
 |-----|------|
@@ -126,7 +126,7 @@ core/templates/
 ## 🎯 模板分类
 
 ### Lite Templates（精简模板）🆕
-用于快速模式，章节数 3-6 个：
+用于小需求（< 5 个文件、单模块），章节数 3-6 个：
 
 | 模板文件 | 用途 | 章节数 |
 |---------|------|-------|
