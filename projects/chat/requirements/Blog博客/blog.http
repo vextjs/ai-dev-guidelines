@@ -5,155 +5,250 @@
 ### 1. 替换 {{host}} 为实际服务地址（如 http://localhost:7001）
 ### 2. 替换 {{token}} 为用户 JWT token
 ### 3. 替换 {{dbToken}} 为管理端 x-action-token
-### 4. 替换 {{blogId}} 为实际文章 ID
+### 4. 替换 {{blogId}} 为实际文章 ID（lang=zh 版本）
 ### 5. 替换 {{authorId}} 为实际作者用户 ID
+###
+### 多语言说明（方案 B2）：
+###   - 系统使用自定义 "language" 请求头控制语言（非标准 Accept-Language）
+###   - language: zh → 简体中文文章；language: en → 英文文章（默认）；language: hk → 繁体中文
+###   - 不传 language 时默认返回 en 语言的文章
+###   - 同一篇文章的 zh/en/hk 版本为数据库中独立的 3 条记录
 ### ============================================================
 
 @host = http://127.0.0.1:10020
-@token = Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTdkOGJhODJhOWE4Nzg5YWQyMjQ1NiIsImFjY291bnQiOiJyb2NreXNoaTE5OTNAZ21haWwuY29tIiwibmlja19uYW1lIjoiUm9ja3kgc2hpIiwidXNlcl90eXBlIjoyLCJpYXQiOjE3NzIyNjU1NDIsImV4cCI6MTc3Mjg3MDM0Mn0.u5-uQcg-nNcXI3CtNImg89wwSG_wkQVknrcdP9l4rcQaEm22QxHtQbiqYSpdTwVhgWjeIJoOt7SjMVSsi0XN-E33fMZYOIK9A9S1qMwOSIXwL2LvmMP9F6D-Z6pyKJLw0LIp0CQ3W3OOrAkhscCSPReoVJSRuIL-MGNinQM1Za4
+@token = eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTdkOGJhODJhOWE4Nzg5YWQyMjQ1NiIsImFjY291bnQiOiJyb2NreXNoaTE5OTNAZ21haWwuY29tIiwibmlja19uYW1lIjoiUm9ja3kgc2hpIiwidXNlcl90eXBlIjoyLCJpYXQiOjE3NzIyNjU1NDIsImV4cCI6MTc3Mjg3MDM0Mn0.u5-uQcg-nNcXI3CtNImg89wwSG_wkQVknrcdP9l4rcQaEm22QxHtQbiqYSpdTwVhgWjeIJoOt7SjMVSsi0XN-E33fMZYOIK9A9S1qMwOSIXwL2LvmMP9F6D-Z6pyKJLw0LIp0CQ3W3OOrAkhscCSPReoVJSRuIL-MGNinQM1Za4
 @dbToken = QVJUSUNMRV9XUklURV9UT0tFTl8yYzdlOGM5NDQwMGVjNDVjYTUwMGRiNjBjNWE3MzM0NDNhYWY0ODY4ZTQzNDg0N2Y=
-@blogId = 000000000000000000000000
-@authorId = 000000000000000000000000
+@blogId = 69aa55ab1f6d873672944056
+@authorId = 68a7d8ba82a9a8789ad22456
 
 ### ============================================================
 ### Open 接口（无需鉴权）
 ### ============================================================
 
-### --- 公开文章列表（默认参数） ---
+### --- 公开文章列表（默认参数，language=en，默认英文）---
 GET {{host}}/open/blog
 Content-Type: application/json
 
-### --- 公开文章列表（指定分页数量） ---
+### --- 公开文章列表（简体中文）---
+GET {{host}}/open/blog
+Content-Type: application/json
+language: zh
+
+### --- 公开文章列表（繁体中文）---
+GET {{host}}/open/blog
+Content-Type: application/json
+language: hk
+
+### --- 公开文章列表（英文，指定分页数量）---
 GET {{host}}/open/blog?limit=10
 Content-Type: application/json
+language: en
 
-### --- 公开文章列表（关键词搜索） ---
+### --- 公开文章列表（关键词搜索 — 中文：旅行）---
 GET {{host}}/open/blog?keyword=旅行&limit=20
 Content-Type: application/json
+language: zh
 
-### --- 公开文章列表（按标签过滤） ---
+### --- 公开文章列表（关键词搜索 — 英文：travel）---
+GET {{host}}/open/blog?keyword=travel&limit=20
+Content-Type: application/json
+language: en
+
+### --- 公开文章列表（关键词搜索 — 繁体：旅遊）---
+GET {{host}}/open/blog?keyword=旅遊&limit=20
+Content-Type: application/json
+language: hk
+
+### --- 公开文章列表（按标签过滤 — 中文 tag=攻略）---
 GET {{host}}/open/blog?tag=攻略&limit=20
 Content-Type: application/json
+language: zh
 
-### --- 公开文章列表（按作者过滤） ---
+### --- 公开文章列表（按标签过滤 — 英文 tag=guide）---
+GET {{host}}/open/blog?tag=guide&limit=20
+Content-Type: application/json
+language: en
+
+### --- 公开文章列表（按作者过滤）---
 GET {{host}}/open/blog?author_id={{authorId}}&limit=20
 Content-Type: application/json
+language: zh
 
-### --- 公开文章列表（组合过滤：关键词 + 标签） ---
-GET {{host}}/open/blog?keyword=旅行&tag=攻略&limit=10
+### --- 公开文章列表（组合过滤：关键词 + 标签 — 中文）---
+GET {{host}}/open/blog?keyword=旅行&tag=攻略&limit=1
 Content-Type: application/json
+language: zh
 
-### --- 公开文章列表（游标分页 — 下一页，替换 after 值为上一次返回的 endCursor） ---
+### --- 公开文章列表（游标分页 — 下一页，替换 after 值为上一次返回的 endCursor）---
 GET {{host}}/open/blog?limit=10&after=REPLACE_WITH_END_CURSOR
 Content-Type: application/json
+language: zh
 
-### --- 公开文章列表（游标分页 — 上一页，替换 before 值为上一次返回的 startCursor） ---
+### --- 公开文章列表（游标分页 — 上一页，替换 before 值为上一次返回的 startCursor）---
 GET {{host}}/open/blog?limit=10&before=REPLACE_WITH_START_CURSOR
 Content-Type: application/json
+language: zh
 
-### --- 公开文章列表（校验失败：limit 超出范围） ---
+### --- 公开文章列表（校验失败：limit 超出范围）---
 GET {{host}}/open/blog?limit=999
 Content-Type: application/json
 
-### --- 公开文章列表（校验失败：author_id 格式不合法） ---
+### --- 公开文章列表（校验失败：author_id 格式不合法）---
 GET {{host}}/open/blog?author_id=invalid-id
 Content-Type: application/json
 
-### --- 文章详情（正常） ---
+### --- 文章详情（language=zh，返回简体中文版本）---
+### @blogId 对应的是 lang=zh 的记录
+GET {{host}}/open/blog/{{blogId}}
+Content-Type: application/json
+language: zh
+
+### --- 文章详情（language=en，请求英文版本 — 若 blogId 是 zh 记录则返回 BLOG_NOT_FOUND）---
+### 说明：blogId 与 lang 绑定，不同语言版本有各自的 _id
+GET {{host}}/open/blog/{{blogId}}
+Content-Type: application/json
+language: en
+
+### --- 文章详情（不传 language — 默认 en，同上）---
 GET {{host}}/open/blog/{{blogId}}
 Content-Type: application/json
 
-### --- 文章详情（不存在的 ID） ---
+### --- 文章详情（不存在的 ID）---
 GET {{host}}/open/blog/65f1a2b3c4d5e6f7a8b9c0d1
 Content-Type: application/json
 
-### --- 文章详情（校验失败：无效 ObjectId） ---
+### --- 文章详情（校验失败：无效 ObjectId）---
 GET {{host}}/open/blog/not-a-valid-id
 Content-Type: application/json
 
-### --- 文章详情（多语言：英文） ---
+### --- 文章详情（多语言错误消息：英文 — desc=Blog not found）---
 GET {{host}}/open/blog/65f1a2b3c4d5e6f7a8b9c0d1
 Content-Type: application/json
-Accept-Language: en-US
+language: en
 
-### --- 文章详情（多语言：繁体中文） ---
+### --- 文章详情（多语言错误消息：简体中文 — desc=文章不存在）---
 GET {{host}}/open/blog/65f1a2b3c4d5e6f7a8b9c0d1
 Content-Type: application/json
-Accept-Language: zh-HK
+language: zh
+
+### --- 文章详情（多语言错误消息：繁体中文 — desc=文章不存在）---
+GET {{host}}/open/blog/65f1a2b3c4d5e6f7a8b9c0d1
+Content-Type: application/json
+language: hk
 
 
 ### ============================================================
 ### Home 用户端接口（需要 JWT 鉴权）
 ### ============================================================
+### 多语言说明：
+###   创建文章时携带 language 请求头，lang 由后端自动写入，无需在 body 中传 lang
+###   不同语言版本需分别发起独立的 POST 请求（每次创建该语言的独立记录）
+### ============================================================
 
-### --- 创建文章（草稿） ---
+### --- 创建文章（草稿 — 简体中文版本）---
 POST {{host}}/home/blog
 Content-Type: application/json
 Authorization: Bearer {{token}}
+language: zh
 
 {
-    "title": "测试文章标题",
-    "content": "这是一篇测试文章的正文内容，可以包含很长的文本。\n\n支持多段落内容。",
-    "summary": "这是文章摘要",
+    "title": "测试文章标题（简体中文）",
+    "content": "这是一篇简体中文测试文章的正文内容，可以包含很长的文本。\n\n支持多段落内容。",
+    "summary": "这是简体中文文章摘要",
     "cover_image": "https://example.com/cover.jpg",
     "tags": ["测试", "博客"],
     "status": "draft"
 }
 
-### --- 创建文章（直接发布） ---
+### --- 创建文章（草稿 — 英文版本）---
 POST {{host}}/home/blog
 Content-Type: application/json
 Authorization: Bearer {{token}}
+language: en
 
 {
-    "title": "直接发布的文章",
+    "title": "Test Article Title (English)",
+    "content": "This is the content of an English test article. It can contain long text.\n\nMultiple paragraphs supported.",
+    "summary": "This is the English article summary",
+    "cover_image": "https://example.com/cover.jpg",
+    "tags": ["test", "blog"],
+    "status": "draft"
+}
+
+### --- 创建文章（草稿 — 繁体中文版本）---
+POST {{host}}/home/blog
+Content-Type: application/json
+Authorization: Bearer {{token}}
+language: hk
+
+{
+    "title": "測試文章標題（繁體中文）",
+    "content": "這是一篇繁體中文測試文章的正文內容，可以包含很長的文本。\n\n支持多段落內容。",
+    "summary": "這是繁體中文文章摘要",
+    "cover_image": "https://example.com/cover.jpg",
+    "tags": ["測試", "博客"],
+    "status": "draft"
+}
+
+### --- 创建文章（直接发布 — 简体中文）---
+POST {{host}}/home/blog
+Content-Type: application/json
+Authorization: Bearer {{token}}
+language: zh
+
+{
+    "title": "直接发布的文章（简体中文）",
     "content": "这篇文章创建后直接发布，published_at 会自动写入。",
     "tags": ["发布测试"],
     "status": "published"
 }
 
-### --- 创建文章（最小参数 — 仅必填字段，summary 自动截取） ---
+### --- 创建文章（最小参数 — 仅必填字段，summary 自动截取，默认 lang=en）---
 POST {{host}}/home/blog
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "title": "最小参数文章",
-    "content": "只填写标题和内容，其他字段使用默认值。summary 会自动截取前 200 字符。"
+    "title": "Minimal Article",
+    "content": "Only title and content required. Summary will be auto-generated from the first 200 characters of content."
 }
 
-### --- 创建文章（校验失败：缺少标题） ---
+### --- 创建文章（校验失败：缺少标题）---
 POST {{host}}/home/blog
 Content-Type: application/json
 Authorization: Bearer {{token}}
+language: zh
 
 {
     "content": "没有标题的文章"
 }
 
-### --- 创建文章（校验失败：缺少内容） ---
+### --- 创建文章（校验失败：缺少内容）---
 POST {{host}}/home/blog
 Content-Type: application/json
 Authorization: Bearer {{token}}
+language: zh
 
 {
     "title": "没有内容的文章"
 }
 
-### --- 创建文章（校验失败：标题超长） ---
+### --- 创建文章（校验失败：标题超长）---
 POST {{host}}/home/blog
 Content-Type: application/json
 Authorization: Bearer {{token}}
+language: zh
 
 {
     "title": "这是一个超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级长的标题",
     "content": "正文"
 }
 
-### --- 创建文章（业务校验失败：标签超过10个） ---
+### --- 创建文章（业务校验失败：标签超过10个）---
 POST {{host}}/home/blog
 Content-Type: application/json
 Authorization: Bearer {{token}}
+language: zh
 
 {
     "title": "标签超限文章",
@@ -161,7 +256,7 @@ Authorization: Bearer {{token}}
     "tags": ["标签1", "标签2", "标签3", "标签4", "标签5", "标签6", "标签7", "标签8", "标签9", "标签10", "标签11"]
 }
 
-### --- 创建文章（未鉴权 — 应返回 401） ---
+### --- 创建文章（未鉴权 — 应返回 401）---
 POST {{host}}/home/blog
 Content-Type: application/json
 
@@ -170,17 +265,19 @@ Content-Type: application/json
     "content": "应该返回 401"
 }
 
-### --- 更新文章（修改标题和内容） ---
+### --- 更新文章（修改标题和内容 — zh 版本）---
+### 说明：更新通过 _id 直接定位，无需传 language，lang 在创建时已固定
 PUT {{host}}/home/blog/{{blogId}}
 Content-Type: application/json
 Authorization: Bearer {{token}}
+language: zh
 
 {
-    "title": "更新后的标题",
-    "content": "更新后的正文内容"
+    "title": "更新后的标题（简体中文）",
+    "content": "更新后的简体中文正文内容"
 }
 
-### --- 更新文章（仅修改状态：草稿 → 发布） ---
+### --- 更新文章（仅修改状态：草稿 → 发布）---
 PUT {{host}}/home/blog/{{blogId}}
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -189,7 +286,7 @@ Authorization: Bearer {{token}}
     "status": "published"
 }
 
-### --- 更新文章（仅修改标签） ---
+### --- 更新文章（仅修改标签）---
 PUT {{host}}/home/blog/{{blogId}}
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -198,7 +295,7 @@ Authorization: Bearer {{token}}
     "tags": ["新标签1", "新标签2", "旅行"]
 }
 
-### --- 更新文章（修改封面图和摘要） ---
+### --- 更新文章（修改封面图和摘要）---
 PUT {{host}}/home/blog/{{blogId}}
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -208,7 +305,7 @@ Authorization: Bearer {{token}}
     "cover_image": "https://example.com/new-cover.jpg"
 }
 
-### --- 更新文章（校验失败：无效 blogId） ---
+### --- 更新文章（校验失败：无效 blogId）---
 PUT {{host}}/home/blog/invalid-id
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -217,7 +314,7 @@ Authorization: Bearer {{token}}
     "title": "更新标题"
 }
 
-### --- 更新文章（不存在的文章） ---
+### --- 更新文章（不存在的文章）---
 PUT {{host}}/home/blog/65f1a2b3c4d5e6f7a8b9c0d1
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -226,22 +323,22 @@ Authorization: Bearer {{token}}
     "title": "更新不存在的文章"
 }
 
-### --- 删除文章（软删除） ---
+### --- 删除文章（软删除）---
 DELETE {{host}}/home/blog/{{blogId}}
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
-### --- 删除文章（幂等：重复删除同一篇文章应返回成功） ---
+### --- 删除文章（幂等：重复删除同一篇文章应返回成功）---
 DELETE {{host}}/home/blog/{{blogId}}
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
-### --- 删除文章（校验失败：无效 blogId） ---
+### --- 删除文章（校验失败：无效 blogId）---
 DELETE {{host}}/home/blog/invalid-id
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
-### --- 删除文章（不存在的文章） ---
+### --- 删除文章（不存在的文章）---
 DELETE {{host}}/home/blog/65f1a2b3c4d5e6f7a8b9c0d1
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -250,62 +347,81 @@ Authorization: Bearer {{token}}
 ### ============================================================
 ### Home 管理端接口（需要 dbToken 鉴权）
 ### ============================================================
+### 多语言说明：
+###   管理端列表支持可选 lang 参数过滤（zh/en/hk），不传则返回全部语言的文章
+### ============================================================
 
-### --- 管理员文章列表（默认参数） ---
+### --- 管理员文章列表（默认参数，返回全部语言）---
 GET {{host}}/home/blog/admin/list
 Content-Type: application/json
 x-action-token: {{dbToken}}
 
-### --- 管理员文章列表（指定分页数量） ---
+### --- 管理员文章列表（按语言过滤：仅简体中文）---
+GET {{host}}/home/blog/admin/list?lang=zh
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- 管理员文章列表（按语言过滤：仅英文）---
+GET {{host}}/home/blog/admin/list?lang=en
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- 管理员文章列表（按语言过滤：仅繁体中文）---
+GET {{host}}/home/blog/admin/list?lang=hk
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- 管理员文章列表（指定分页数量）---
 GET {{host}}/home/blog/admin/list?limit=50
 Content-Type: application/json
 x-action-token: {{dbToken}}
 
-### --- 管理员文章列表（按状态过滤：仅草稿） ---
+### --- 管理员文章列表（按状态过滤：仅草稿）---
 GET {{host}}/home/blog/admin/list?status=draft
 Content-Type: application/json
 x-action-token: {{dbToken}}
 
-### --- 管理员文章列表（按状态过滤：仅已发布） ---
+### --- 管理员文章列表（按状态过滤：仅已发布）---
 GET {{host}}/home/blog/admin/list?status=published
 Content-Type: application/json
 x-action-token: {{dbToken}}
 
-### --- 管理员文章列表（按删除状态过滤：已删除） ---
+### --- 管理员文章列表（按删除状态过滤：已删除，全语言）---
 GET {{host}}/home/blog/admin/list?del_flag=1
 Content-Type: application/json
 x-action-token: {{dbToken}}
 
-### --- 管理员文章列表（按作者过滤） ---
+### --- 管理员文章列表（按作者过滤，全语言）---
 GET {{host}}/home/blog/admin/list?author_id={{authorId}}
 Content-Type: application/json
 x-action-token: {{dbToken}}
 
-### --- 管理员文章列表（关键词搜索） ---
-GET {{host}}/home/blog/admin/list?keyword=测试
+### --- 管理员文章列表（关键词搜索 + 中文语言）---
+GET {{host}}/home/blog/admin/list?keyword=旅行&lang=zh
 Content-Type: application/json
 x-action-token: {{dbToken}}
 
-### --- 管理员文章列表（组合过滤） ---
-GET {{host}}/home/blog/admin/list?status=published&del_flag=0&keyword=旅行&limit=20
+### --- 管理员文章列表（组合过滤：状态 + 语言 + 关键词）---
+GET {{host}}/home/blog/admin/list?status=published&del_flag=0&keyword=travel&lang=en&limit=20
 Content-Type: application/json
 x-action-token: {{dbToken}}
 
-### --- 管理员文章列表（游标分页 — 下一页） ---
+### --- 管理员文章列表（游标分页 — 下一页）---
 GET {{host}}/home/blog/admin/list?limit=10&after=REPLACE_WITH_END_CURSOR
 Content-Type: application/json
 x-action-token: {{dbToken}}
 
-### --- 管理员文章列表（游标分页 — 上一页） ---
+### --- 管理员文章列表（游标分页 — 上一页）---
 GET {{host}}/home/blog/admin/list?limit=10&before=REPLACE_WITH_START_CURSOR
 Content-Type: application/json
 x-action-token: {{dbToken}}
 
-### --- 管理员文章列表（未鉴权 — 应返回 403） ---
+### --- 管理员文章列表（未鉴权 — 应返回 403）---
 GET {{host}}/home/blog/admin/list
 Content-Type: application/json
 
-### --- 管理员强制上架（draft → published） ---
+### --- 管理员强制上架（draft → published）---
+### 说明：上下架通过 _id 直接操作，与语言无关
 PUT {{host}}/home/blog/admin/{{blogId}}/status
 Content-Type: application/json
 x-action-token: {{dbToken}}
@@ -314,7 +430,7 @@ x-action-token: {{dbToken}}
     "status": "published"
 }
 
-### --- 管理员强制下架（published → draft） ---
+### --- 管理员强制下架（published → draft）---
 PUT {{host}}/home/blog/admin/{{blogId}}/status
 Content-Type: application/json
 x-action-token: {{dbToken}}
@@ -323,14 +439,14 @@ x-action-token: {{dbToken}}
     "status": "draft"
 }
 
-### --- 管理员修改状态（校验失败：缺少 status） ---
+### --- 管理员修改状态（校验失败：缺少 status）---
 PUT {{host}}/home/blog/admin/{{blogId}}/status
 Content-Type: application/json
 x-action-token: {{dbToken}}
 
 {}
 
-### --- 管理员修改状态（校验失败：无效 blogId） ---
+### --- 管理员修改状态（校验失败：无效 blogId）---
 PUT {{host}}/home/blog/admin/invalid-id/status
 Content-Type: application/json
 x-action-token: {{dbToken}}
@@ -339,7 +455,7 @@ x-action-token: {{dbToken}}
     "status": "published"
 }
 
-### --- 管理员修改状态（不存在的文章） ---
+### --- 管理员修改状态（不存在的文章）---
 PUT {{host}}/home/blog/admin/65f1a2b3c4d5e6f7a8b9c0d1/status
 Content-Type: application/json
 x-action-token: {{dbToken}}
@@ -348,7 +464,7 @@ x-action-token: {{dbToken}}
     "status": "published"
 }
 
-### --- 管理员修改状态（未鉴权 — 应返回 403） ---
+### --- 管理员修改状态（未鉴权 — 应返回 403）---
 PUT {{host}}/home/blog/admin/{{blogId}}/status
 Content-Type: application/json
 
@@ -362,7 +478,7 @@ Content-Type: application/json
 ### ============================================================
 ### 以下测试验证 /home/blog/admin/* 不会被 /home/blog/:blogId 截获
 
-### --- 验证：admin/list 应匹配管理端路由（不是 blogId=admin） ---
+### --- 验证：admin/list 应匹配管理端路由（不是 blogId=admin）---
 GET {{host}}/home/blog/admin/list
 Content-Type: application/json
 x-action-token: {{dbToken}}
