@@ -339,7 +339,7 @@ const canDelete = resources.some(p => matchResource(p, 'DELETE:/api/users/123'))
 
 > ⚠️ **FileAdapter 生产注意**：容器化部署需挂载数据卷；Serverless 环境不适用；多进程部署（PM2 cluster）各进程独立副本，需改用 `MonSQLizeAdapter`。
 >
-> 🔮 **后期首选**：`permia-monsqlize-adapter` 基于 [monSQLize](https://github.com/AkiraBit/monSQLize) ORM，支持 MongoDB 持久化 + 多实例部署，是生产环境多进程场景的首选方案。
+> 🔮 **后期首选**：`permia-monsqlize-adapter` 基于 [monSQLize](https://github.com/vextjs/monSQLize) ORM，支持 MongoDB 持久化 + 多实例部署，是生产环境多进程场景的首选方案。
 
 ---
 
