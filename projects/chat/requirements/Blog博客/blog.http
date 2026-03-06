@@ -18,7 +18,7 @@
 @host = http://127.0.0.1:10020
 @token = eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTdkOGJhODJhOWE4Nzg5YWQyMjQ1NiIsImFjY291bnQiOiJyb2NreXNoaTE5OTNAZ21haWwuY29tIiwibmlja19uYW1lIjoiUm9ja3kgc2hpIiwidXNlcl90eXBlIjoyLCJpYXQiOjE3NzIyNjU1NDIsImV4cCI6MTc3Mjg3MDM0Mn0.u5-uQcg-nNcXI3CtNImg89wwSG_wkQVknrcdP9l4rcQaEm22QxHtQbiqYSpdTwVhgWjeIJoOt7SjMVSsi0XN-E33fMZYOIK9A9S1qMwOSIXwL2LvmMP9F6D-Z6pyKJLw0LIp0CQ3W3OOrAkhscCSPReoVJSRuIL-MGNinQM1Za4
 @dbToken = QVJUSUNMRV9XUklURV9UT0tFTl8yYzdlOGM5NDQwMGVjNDVjYTUwMGRiNjBjNWE3MzM0NDNhYWY0ODY4ZTQzNDg0N2Y=
-@blogId = 69aa55ab1f6d873672944056
+@blogId = 69aa927263c6f5443dacedec
 @authorId = 68a7d8ba82a9a8789ad22456
 
 ### ============================================================
@@ -491,3 +491,93 @@ x-action-token: {{dbToken}}
 {
     "status": "draft"
 }
+
+
+### ============================================================
+### 🆕 跳页测试（page 参数 — 服务端 monsqlize 书签跳页）
+### ============================================================
+### 说明：
+###   - page 与 after/before 互斥，不能同时传入
+###   - page 从 1 开始，范围 1-10000
+###   - 响应 pageInfo 中额外包含 currentPage 字段
+###   - 服务端每 10 页自动缓存书签，跳页效率高
+### ============================================================
+
+### --- P01: Open 跳页 — 第 1 页（等同首页请求）---
+GET {{host}}/open/blog?limit=2&page=1
+Content-Type: application/json
+language: zh
+
+### --- P02: Open 跳页 — 第 2 页 ---
+GET {{host}}/open/blog?limit=2&page=2
+Content-Type: application/json
+language: zh
+
+### --- P03: Open 跳页 — 第 3 页（超出数据范围，items 应为空或少于 limit）---
+GET {{host}}/open/blog?limit=2&page=3
+Content-Type: application/json
+language: zh
+
+### --- P04: Open 跳页 — 英文第 1 页 ---
+GET {{host}}/open/blog?limit=2&page=1
+Content-Type: application/json
+language: en
+
+### --- P05: Open 跳页 + 关键词过滤 ---
+GET {{host}}/open/blog?limit=2&page=1&keyword=旅行
+Content-Type: application/json
+language: zh
+
+### --- P06: Open 跳页 + 标签过滤 ---
+GET {{host}}/open/blog?limit=2&page=1&tag=攻略
+Content-Type: application/json
+language: zh
+
+### --- P07: Open 跳页 — 校验失败：page=0（最小值 1）---
+GET {{host}}/open/blog?limit=2&page=0
+Content-Type: application/json
+language: zh
+
+### --- P08: Open 跳页 — 校验失败：page 超上限 ---
+GET {{host}}/open/blog?limit=2&page=10001
+Content-Type: application/json
+language: zh
+
+### --- P09: Open 跳页 — 互斥校验：page + after 同时传入（应报错）---
+GET {{host}}/open/blog?limit=2&page=1&after=REPLACE_WITH_END_CURSOR
+Content-Type: application/json
+language: zh
+
+### --- P10: Admin 跳页 — 第 1 页（全语言）---
+GET {{host}}/home/blog/admin/list?limit=5&page=1
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- P11: Admin 跳页 — 第 2 页 ---
+GET {{host}}/home/blog/admin/list?limit=5&page=2
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- P12: Admin 跳页 — 第 3 页 ---
+GET {{host}}/home/blog/admin/list?limit=5&page=3
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- P13: Admin 跳页 + 语言过滤 ---
+GET {{host}}/home/blog/admin/list?limit=2&page=1&lang=zh
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- P14: Admin 跳页 + 状态过滤 ---
+GET {{host}}/home/blog/admin/list?limit=5&page=1&status=draft
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- P15: Admin 跳页 — 校验失败：page=0 ---
+GET {{host}}/home/blog/admin/list?limit=5&page=0
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- P16: Admin 跳页 — 未鉴权 ---
+GET {{host}}/home/blog/admin/list?limit=5&page=1
+Content-Type: application/json
