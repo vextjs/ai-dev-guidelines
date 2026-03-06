@@ -1,0 +1,377 @@
+### ============================================================
+### Blog 博客接口测试文件
+### ============================================================
+### 使用说明：
+### 1. 替换 {{host}} 为实际服务地址（如 http://localhost:7001）
+### 2. 替换 {{token}} 为用户 JWT token
+### 3. 替换 {{dbToken}} 为管理端 x-action-token
+### 4. 替换 {{blogId}} 为实际文章 ID
+### 5. 替换 {{authorId}} 为实际作者用户 ID
+### ============================================================
+
+@host = http://127.0.0.1:10020
+@token = Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTdkOGJhODJhOWE4Nzg5YWQyMjQ1NiIsImFjY291bnQiOiJyb2NreXNoaTE5OTNAZ21haWwuY29tIiwibmlja19uYW1lIjoiUm9ja3kgc2hpIiwidXNlcl90eXBlIjoyLCJpYXQiOjE3NzIyNjU1NDIsImV4cCI6MTc3Mjg3MDM0Mn0.u5-uQcg-nNcXI3CtNImg89wwSG_wkQVknrcdP9l4rcQaEm22QxHtQbiqYSpdTwVhgWjeIJoOt7SjMVSsi0XN-E33fMZYOIK9A9S1qMwOSIXwL2LvmMP9F6D-Z6pyKJLw0LIp0CQ3W3OOrAkhscCSPReoVJSRuIL-MGNinQM1Za4
+@dbToken = QVJUSUNMRV9XUklURV9UT0tFTl8yYzdlOGM5NDQwMGVjNDVjYTUwMGRiNjBjNWE3MzM0NDNhYWY0ODY4ZTQzNDg0N2Y=
+@blogId = 000000000000000000000000
+@authorId = 000000000000000000000000
+
+### ============================================================
+### Open 接口（无需鉴权）
+### ============================================================
+
+### --- 公开文章列表（默认参数） ---
+GET {{host}}/open/blog
+Content-Type: application/json
+
+### --- 公开文章列表（指定分页数量） ---
+GET {{host}}/open/blog?limit=10
+Content-Type: application/json
+
+### --- 公开文章列表（关键词搜索） ---
+GET {{host}}/open/blog?keyword=旅行&limit=20
+Content-Type: application/json
+
+### --- 公开文章列表（按标签过滤） ---
+GET {{host}}/open/blog?tag=攻略&limit=20
+Content-Type: application/json
+
+### --- 公开文章列表（按作者过滤） ---
+GET {{host}}/open/blog?author_id={{authorId}}&limit=20
+Content-Type: application/json
+
+### --- 公开文章列表（组合过滤：关键词 + 标签） ---
+GET {{host}}/open/blog?keyword=旅行&tag=攻略&limit=10
+Content-Type: application/json
+
+### --- 公开文章列表（游标分页 — 下一页，替换 after 值为上一次返回的 endCursor） ---
+GET {{host}}/open/blog?limit=10&after=REPLACE_WITH_END_CURSOR
+Content-Type: application/json
+
+### --- 公开文章列表（游标分页 — 上一页，替换 before 值为上一次返回的 startCursor） ---
+GET {{host}}/open/blog?limit=10&before=REPLACE_WITH_START_CURSOR
+Content-Type: application/json
+
+### --- 公开文章列表（校验失败：limit 超出范围） ---
+GET {{host}}/open/blog?limit=999
+Content-Type: application/json
+
+### --- 公开文章列表（校验失败：author_id 格式不合法） ---
+GET {{host}}/open/blog?author_id=invalid-id
+Content-Type: application/json
+
+### --- 文章详情（正常） ---
+GET {{host}}/open/blog/{{blogId}}
+Content-Type: application/json
+
+### --- 文章详情（不存在的 ID） ---
+GET {{host}}/open/blog/65f1a2b3c4d5e6f7a8b9c0d1
+Content-Type: application/json
+
+### --- 文章详情（校验失败：无效 ObjectId） ---
+GET {{host}}/open/blog/not-a-valid-id
+Content-Type: application/json
+
+### --- 文章详情（多语言：英文） ---
+GET {{host}}/open/blog/65f1a2b3c4d5e6f7a8b9c0d1
+Content-Type: application/json
+Accept-Language: en-US
+
+### --- 文章详情（多语言：繁体中文） ---
+GET {{host}}/open/blog/65f1a2b3c4d5e6f7a8b9c0d1
+Content-Type: application/json
+Accept-Language: zh-HK
+
+
+### ============================================================
+### Home 用户端接口（需要 JWT 鉴权）
+### ============================================================
+
+### --- 创建文章（草稿） ---
+POST {{host}}/home/blog
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "测试文章标题",
+    "content": "这是一篇测试文章的正文内容，可以包含很长的文本。\n\n支持多段落内容。",
+    "summary": "这是文章摘要",
+    "cover_image": "https://example.com/cover.jpg",
+    "tags": ["测试", "博客"],
+    "status": "draft"
+}
+
+### --- 创建文章（直接发布） ---
+POST {{host}}/home/blog
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "直接发布的文章",
+    "content": "这篇文章创建后直接发布，published_at 会自动写入。",
+    "tags": ["发布测试"],
+    "status": "published"
+}
+
+### --- 创建文章（最小参数 — 仅必填字段，summary 自动截取） ---
+POST {{host}}/home/blog
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "最小参数文章",
+    "content": "只填写标题和内容，其他字段使用默认值。summary 会自动截取前 200 字符。"
+}
+
+### --- 创建文章（校验失败：缺少标题） ---
+POST {{host}}/home/blog
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "content": "没有标题的文章"
+}
+
+### --- 创建文章（校验失败：缺少内容） ---
+POST {{host}}/home/blog
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "没有内容的文章"
+}
+
+### --- 创建文章（校验失败：标题超长） ---
+POST {{host}}/home/blog
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "这是一个超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级超级长的标题",
+    "content": "正文"
+}
+
+### --- 创建文章（业务校验失败：标签超过10个） ---
+POST {{host}}/home/blog
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "标签超限文章",
+    "content": "正文内容",
+    "tags": ["标签1", "标签2", "标签3", "标签4", "标签5", "标签6", "标签7", "标签8", "标签9", "标签10", "标签11"]
+}
+
+### --- 创建文章（未鉴权 — 应返回 401） ---
+POST {{host}}/home/blog
+Content-Type: application/json
+
+{
+    "title": "未鉴权文章",
+    "content": "应该返回 401"
+}
+
+### --- 更新文章（修改标题和内容） ---
+PUT {{host}}/home/blog/{{blogId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "更新后的标题",
+    "content": "更新后的正文内容"
+}
+
+### --- 更新文章（仅修改状态：草稿 → 发布） ---
+PUT {{host}}/home/blog/{{blogId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "status": "published"
+}
+
+### --- 更新文章（仅修改标签） ---
+PUT {{host}}/home/blog/{{blogId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "tags": ["新标签1", "新标签2", "旅行"]
+}
+
+### --- 更新文章（修改封面图和摘要） ---
+PUT {{host}}/home/blog/{{blogId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "summary": "更新后的摘要",
+    "cover_image": "https://example.com/new-cover.jpg"
+}
+
+### --- 更新文章（校验失败：无效 blogId） ---
+PUT {{host}}/home/blog/invalid-id
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "更新标题"
+}
+
+### --- 更新文章（不存在的文章） ---
+PUT {{host}}/home/blog/65f1a2b3c4d5e6f7a8b9c0d1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "更新不存在的文章"
+}
+
+### --- 删除文章（软删除） ---
+DELETE {{host}}/home/blog/{{blogId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### --- 删除文章（幂等：重复删除同一篇文章应返回成功） ---
+DELETE {{host}}/home/blog/{{blogId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### --- 删除文章（校验失败：无效 blogId） ---
+DELETE {{host}}/home/blog/invalid-id
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### --- 删除文章（不存在的文章） ---
+DELETE {{host}}/home/blog/65f1a2b3c4d5e6f7a8b9c0d1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### ============================================================
+### Home 管理端接口（需要 dbToken 鉴权）
+### ============================================================
+
+### --- 管理员文章列表（默认参数） ---
+GET {{host}}/home/blog/admin/list
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- 管理员文章列表（指定分页数量） ---
+GET {{host}}/home/blog/admin/list?limit=50
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- 管理员文章列表（按状态过滤：仅草稿） ---
+GET {{host}}/home/blog/admin/list?status=draft
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- 管理员文章列表（按状态过滤：仅已发布） ---
+GET {{host}}/home/blog/admin/list?status=published
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- 管理员文章列表（按删除状态过滤：已删除） ---
+GET {{host}}/home/blog/admin/list?del_flag=1
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- 管理员文章列表（按作者过滤） ---
+GET {{host}}/home/blog/admin/list?author_id={{authorId}}
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- 管理员文章列表（关键词搜索） ---
+GET {{host}}/home/blog/admin/list?keyword=测试
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- 管理员文章列表（组合过滤） ---
+GET {{host}}/home/blog/admin/list?status=published&del_flag=0&keyword=旅行&limit=20
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- 管理员文章列表（游标分页 — 下一页） ---
+GET {{host}}/home/blog/admin/list?limit=10&after=REPLACE_WITH_END_CURSOR
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- 管理员文章列表（游标分页 — 上一页） ---
+GET {{host}}/home/blog/admin/list?limit=10&before=REPLACE_WITH_START_CURSOR
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- 管理员文章列表（未鉴权 — 应返回 403） ---
+GET {{host}}/home/blog/admin/list
+Content-Type: application/json
+
+### --- 管理员强制上架（draft → published） ---
+PUT {{host}}/home/blog/admin/{{blogId}}/status
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+{
+    "status": "published"
+}
+
+### --- 管理员强制下架（published → draft） ---
+PUT {{host}}/home/blog/admin/{{blogId}}/status
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+{
+    "status": "draft"
+}
+
+### --- 管理员修改状态（校验失败：缺少 status） ---
+PUT {{host}}/home/blog/admin/{{blogId}}/status
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+{}
+
+### --- 管理员修改状态（校验失败：无效 blogId） ---
+PUT {{host}}/home/blog/admin/invalid-id/status
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+{
+    "status": "published"
+}
+
+### --- 管理员修改状态（不存在的文章） ---
+PUT {{host}}/home/blog/admin/65f1a2b3c4d5e6f7a8b9c0d1/status
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+{
+    "status": "published"
+}
+
+### --- 管理员修改状态（未鉴权 — 应返回 403） ---
+PUT {{host}}/home/blog/admin/{{blogId}}/status
+Content-Type: application/json
+
+{
+    "status": "published"
+}
+
+
+### ============================================================
+### 🔴 路由冲突验证
+### ============================================================
+### 以下测试验证 /home/blog/admin/* 不会被 /home/blog/:blogId 截获
+
+### --- 验证：admin/list 应匹配管理端路由（不是 blogId=admin） ---
+GET {{host}}/home/blog/admin/list
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+### --- 验证：/home/blog/admin/{blogId}/status 应匹配管理端路由 ---
+PUT {{host}}/home/blog/admin/{{blogId}}/status
+Content-Type: application/json
+x-action-token: {{dbToken}}
+
+{
+    "status": "draft"
+}
