@@ -56,19 +56,21 @@
     - 不阻塞阶段 4 执行，但应在最终状态更新前完成提示
 
 🆕 Commit Message 规范:
-  格式: Conventional Commits（类型前缀英文，描述正文中文）
-  模式: <type>(<scope>): <中文描述>
+  格式: Conventional Commits（类型前缀英文，描述正文默认英文）
+  模式: <type>(<scope>): <English description>
   示例:
-    ✅ feat(cli): 添加 vext create 脚手架命令
-    ✅ fix(test): 修复 vitest MockInstance 类型兼容性
-    ✅ docs: 新增文档站 rspress 骨架
-    ✅ refactor(adapter): 重构 Hono adapter 请求解析逻辑
-    ✅ chore: 更新依赖版本
-    ❌ feat(cli): add vext create scaffolding command  ← 禁止纯英文描述
+    ✅ feat(cli): add vext create scaffolding command
+    ✅ fix(test): fix vitest MockInstance type compatibility
+    ✅ docs: add docs-site rspress skeleton
+    ✅ refactor(adapter): refactor Hono adapter request parsing logic
+    ✅ chore: update dependencies
+    ❌ 更新代码                              ← missing type prefix
+    ❌ fix bug                              ← no Conventional Commits format
   type 可选值: feat / fix / docs / refactor / test / chore / perf / ci / build / style
   scope: 可选，标识影响范围（如 cli / adapter / test / config）
-  body: 中文（可选，复杂变更建议补充详细说明）
+  body: English (default); project-level override available for Chinese
   多文件变更: 建议按关注点拆分多个 commit，每个 commit 聚焦单一目的
+  项目级覆盖: 如需中文描述，可在 projects/<project>/profile/ 中声明 commit_language: zh-CN
 ```
 
 ### 3. 方案选择需确认

@@ -98,12 +98,14 @@
 ### Commit Message 格式
 
 ```
-<type>(<scope>): <subject>
+<type>(<scope>): <English description>
 
-<body>
+<body (optional, English)>
 
-<footer>
+<footer（可选）>
 ```
+
+> 🔴 **语言规范（默认）**：`type` 和 `scope` 使用英文，描述（subject）和正文（body）**默认使用英文**。项目可通过 `projects/<project>/profile/` 中的规范覆盖为中文。
 
 ### Type 类型
 
@@ -118,21 +120,64 @@
   test: 测试相关
   chore: 构建/工具变更
   ci: CI 配置变更
+  build: 构建系统变更
+```
+
+### 语言规范细则
+
+```yaml
+格式: Conventional Commits（类型前缀英文，描述正文默认英文）
+模式: <type>(<scope>): <English description>
+
+✅ 正确示例:
+  feat(user): add user registration
+  fix(auth): fix JWT token not refreshed on expiry
+  docs: add API reference documentation
+  refactor(adapter): refactor request parsing logic
+  chore: update dependencies
+  test(login): add login timeout edge case tests
+
+❌ 错误示例:
+  更新代码                              ← missing type prefix
+  fix bug                              ← no Conventional Commits format
+  WIP                                  ← meaningless description
+
+项目级覆盖:
+  如需使用中文描述，可在 projects/<project>/profile/ 中声明覆盖:
+    commit_language: zh-CN
+  覆盖后示例:
+    feat(user): 添加用户注册功能
+    fix(auth): 修复 JWT token 过期未刷新的问题
+```
+
+### 正文（body）规范
+
+```yaml
+使用场景: complex changes, explaining reasons or scope of impact
+语言: English (default); project-level override available
+格式:
+  - each change point starts with "- "
+  - explain "what" and "why"
+  - reference Issue numbers (Closes #123)
 ```
 
 ### 示例
 
 ```bash
-# 好的提交信息
-feat(user): 添加用户注册功能
+# ✅ Good commit message (simple change)
+feat(user): add user registration
 
-- 实现邮箱验证流程
-- 添加密码强度检查
-- 集成验证码服务
+# ✅ Good commit message (complex change with body)
+feat(middleware): add API rate limiting
+
+- Add rate-limit.ts middleware with sliding window algorithm
+- Add Redis storage support
+- Add rate limit config options in config.ts (RATE_LIMIT_*)
+- Return 429 status code when rate limit exceeded
 
 Closes #123
 
-# 不好的提交信息
+# ❌ Bad commit messages
 fix bug
 update code
 WIP
@@ -202,7 +247,7 @@ WIP
 场景1 - 提交代码:
   🔔 即将执行 Git 操作:
   操作: git commit
-  信息: "feat(auth): 添加 JWT 验证中间件"
+  信息: "feat(auth): add JWT authentication middleware"
   变更: 3 个文件 (+156, -12)
   
   确认继续? [Y/N]
@@ -324,25 +369,25 @@ AI 根据代码变更自动生成 commit message：
   5. 列出详细变更点（body）
 
 输出格式:
-  <type>(<scope>): <一句话总结>
+  <type>(<scope>): <one-line summary>
   
-  - 变更点 1
-  - 变更点 2
-  - 变更点 3
+  - Change point 1
+  - Change point 2
+  - Change point 3
 ```
 
 ### AI 生成 Commit Message 示例
 
 ```bash
-# 输入: git diff 显示修改了 rate-limit.ts 和 config.ts
+# Input: git diff shows changes to rate-limit.ts and config.ts
 
-# AI 生成:
-feat(middleware): 添加 API 限流功能
+# AI generated:
+feat(middleware): add API rate limiting
 
-- 新增 rate-limit.ts 中间件，实现滑动窗口限流
-- 添加 Redis 存储支持
-- config.ts 新增限流配置项（RATE_LIMIT_*）
-- 限流触发时返回 429 状态码
+- Add rate-limit.ts middleware with sliding window algorithm
+- Add Redis storage support
+- Add rate limit config options in config.ts (RATE_LIMIT_*)
+- Return 429 status code when rate limit exceeded
 ```
 
 ### AI 辅助 PR 描述
