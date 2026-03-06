@@ -2,7 +2,7 @@
 
 > AI 执行任务时的速查手册
 
-**版本**: v2.13.0  
+**版本**: v2.14.0  
 **最后更新**: 2026-03-06
 
 ---
@@ -19,13 +19,36 @@
 6. 📝 记忆已创建: [projects/<project>/.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN (🔄)] ← 🔴 阶段0 硬性阻塞
 ```
 
-> 💡 **tool call 顺序约束**: 会话的前三个 tool call 必须是 `now()` → `list_directory(ai-dev-guidelines/projects/<project>/.ai-memory/...)` → `edit_file(记忆文件)`，完成前禁止执行任何分析性文件读取
+### 💡 **会话的前三个 tool call 必须严格按以下顺序执行，完成前禁止执行任何分析性文件读取：**
+
+1. `now()` — 获取真实日期时间
+2. `list_directory(ai-dev-guidelines/projects/<project>/.ai-memory/clients/<agent>/tasks/)` — 扫描记忆目录
+3. `edit_file(记忆文件)` — 创建/追加今日记忆文件（阶段0硬性阻塞）
+
+> ❌ `read_file(QUICK-REFERENCE.md)` **不得作为前三个 tool call 之一**
 
 ### 🏷️ Agent 标识速查
 
-| 编辑器 + AI | 标识值 | 检测线索 |
+> 🔴 **检测优先级**：结构特征检测（最可靠）→ 关键字检测（兜底）→ 用户明确提及 → `unknown-agent`
+
+**第一优先：结构特征检测（优先于关键字，更可靠）**
+
+| 检测目标 | 特征 | 结论 |
+|---------|------|------|
+| 编辑器 = Zed | 系统提示词含 `## System Information` + `## Model Information` 块（Zed Agent 面板独有注入格式） | 编辑器 → Zed |
+| 编辑器 = Zed | 用户消息含 `@文件名` 引用语法（格式：`[@xxx](file:///...)`） | 编辑器 → Zed |
+| 编辑器 = Zed | 用户消息含 `zed:///` URL scheme | 编辑器 → Zed |
+| Service = Copilot | `.github/copilot-instructions.md` 内容被注入到系统提示词（无论底层模型是 GPT/Claude/Gemini） | Service → GitHub Copilot |
+| Service = Cline | `.clinerules` 内容被注入到系统提示词 | Service → Cline |
+| Service = Claude Code | `CLAUDE.md` 内容被注入到系统提示词 | Service → Claude Code |
+
+> 编辑器 + Service 合并推断标识值，例：Zed + Copilot → `zed-copilot`
+
+**第二优先：关键字检测（兜底，结构特征未命中时使用）**
+
+| 编辑器 + AI | 标识值 | 关键字线索（兜底） |
 |------------|--------|----------|
-| Zed + GitHub Copilot | `zed-copilot` | 系统提示词含 "Zed"；或用户消息含 `zed:///` URL scheme |
+| Zed + GitHub Copilot | `zed-copilot` | 系统提示词含 "Zed" |
 | WebStorm + GitHub Copilot | `webstorm-copilot` | 系统提示词含 "JetBrains" / "WebStorm" |
 | VS Code + GitHub Copilot | `vscode-copilot` | 系统提示词含 "VS Code" / "Visual Studio Code" |
 | Cursor | `cursor` | 系统提示词含 "Cursor" |
@@ -33,7 +56,7 @@
 | Windsurf | `windsurf` | 系统提示词含 "Windsurf" |
 | 其他 | `<editor>-<ai-provider>` | — |
 
-> 🔴 **禁止默认猜测 Agent（FIX-012）**：必须通过系统提示词关键字、用户明确提及、或已有记忆目录来确定 Agent。
+> 🔴 **禁止默认猜测 Agent（FIX-012）**：必须通过结构特征或关键字检测、用户明确提及、或已有记忆目录来确定 Agent。
 > **无法确定时必须使用 `unknown-agent` 并立即提示用户确认，禁止基于"VS Code 最常见"而默认推断。**
 > 详见 [00-pre-check/README.md §Step 4](./workflows/00-pre-check/README.md) / [task-memory/multi-agent.md](./workflows/common/task-memory/multi-agent.md)
 

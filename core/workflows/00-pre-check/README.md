@@ -145,10 +145,10 @@
      产物: ai-dev-guidelines/projects/chat/optimizations/创建项目AI标题异步化/"
 ```
 
-### Step 4: Agent 标识（🆕 v2.5.0 / 更新 v2.12.0）
+### Step 4: Agent 标识（🆕 v2.5.0 / 更新 v2.12.0 / 更新 v2.14.0）
 
 ```yaml
-执行: 检测当前编辑器 + AI 组合，确定 Agent 标识
+执行: 检测当前编辑器 + AI Service 组合，确定 Agent 标识
 
 🏷️ Agent 标识表:
   | 编辑器 + AI        | 标识值              |
@@ -162,16 +162,41 @@
   | 其他              | <editor>-<provider> |
 
 🔴 强制检测方法（按优先级执行，必须至少命中一项才能确定 Agent）:
-  1. 系统提示词/工具签名检测:
+
+  Step 0 — 系统提示词结构特征检测（最高优先级，优先于关键字匹配）:
+    编辑器识别:
+      - 系统提示词含 "## System Information" + "## Model Information" 块
+        → 编辑器 = Zed（Zed Agent 面板独有注入格式）
+      - 用户消息含 @文件名 引用语法（格式：[@xxx](file:///...)）
+        → 编辑器 = Zed
+      - 用户消息含 zed:/// URL scheme
+        → 编辑器 = Zed
+    AI Service 识别:
+      - .github/copilot-instructions.md 内容被注入到系统提示词
+        → Service = GitHub Copilot（无论底层模型是 GPT/Claude/Gemini）
+      - .clinerules 内容被注入到系统提示词
+        → Service = Cline
+      - CLAUDE.md 内容被注入到系统提示词
+        → Service = Claude Code
+    合并推断: 编辑器 + Service → 标识值（例：Zed + Copilot → zed-copilot）
+
+  Step 1 — 系统提示词关键字检测（兜底，Step 0 未命中时使用）:
      - 系统提示词中包含 "Zed" 关键字 → zed-copilot
      - 系统提示词中包含 "JetBrains" / "WebStorm" / "IntelliJ" → webstorm-copilot
      - 系统提示词中包含 "Cursor" → cursor
      - 系统提示词中包含 "Windsurf" → windsurf
      - 系统提示词中包含 "Cline" → vscode-cline
-  2. 对话历史中用户明确提及的编辑器名称
-  3. 当前 Agent 记忆目录已有记录（同一会话内不会切换编辑器）:
+     - 系统提示词中包含 "VS Code" / "Visual Studio Code"（且无 Cline）→ vscode-copilot
+
+  Step 2 — 对话历史中用户明确提及的编辑器名称:
+     - 用户说"我在 Zed 中" → zed-copilot
+     - 用户说"WebStorm" → webstorm-copilot
+     - 等等
+
+  Step 3 — 当前 Agent 记忆目录已有记录（同一会话内不会切换编辑器）:
      - 若本次会话已在某 Agent 目录下创建/更新过记忆，后续会话沿用该 Agent
-  4. 无法确定时 → 使用 unknown-agent 并立即提示用户确认
+
+  Step 4 — 无法确定时 → 使用 unknown-agent 并立即提示用户确认
 
 🔴 禁止行为（已发生事故 — FIX-012 v2.12.0）:
   - ❌ 禁止基于"训练数据中 VS Code 最常见"而默认推断为 vscode-copilot
@@ -183,7 +208,9 @@
   原因: AI 多次将 Zed 编辑器误判为 vscode-copilot，导致记忆和报告写入错误目录
   根因: 规范仅定义了"检测优先级"，缺少具体可执行的检测方法，AI 在无法确定时
         默认选择了训练数据中最常见的 VS Code，而非使用 unknown-agent 并询问用户
-  修复: 增加强制检测方法 + 禁止默认猜测规则 + 事故记录
+  修复（FIX-012）: 增加强制检测方法 + 禁止默认猜测规则 + 事故记录
+  修复（FIX-016）: 新增 Step 0 结构特征检测（最高优先级），原关键字检测降为 Step 1 兜底；
+                   新增编辑器注入格式识别（Zed）+ AI Service 注入文件识别（Copilot/Cline/Claude Code）
 
 输出: "4. Agent: zed-copilot"
 ```

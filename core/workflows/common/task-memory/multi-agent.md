@@ -75,12 +75,29 @@
 
 ---
 
-## Agent 检测方法（🆕 更新 v2.12.0）
+## Agent 检测方法（🆕 更新 v2.12.0 / 更新 v2.14.0）
 
 ```yaml
 🔴 强制检测步骤（按优先级执行，必须至少命中一项才能确定 Agent）:
 
-  Step 1 — 系统提示词/工具签名检测（最可靠）:
+  Step 0 — 系统提示词结构特征检测（最高优先级，优先于关键字匹配）:
+    编辑器识别:
+      - 系统提示词含 "## System Information" + "## Model Information" 块
+        → 编辑器 = Zed（Zed Agent 面板独有注入格式）
+      - 用户消息含 @文件名 引用语法（格式：[@xxx](file:///...)）
+        → 编辑器 = Zed
+      - 用户消息含 zed:/// URL scheme
+        → 编辑器 = Zed
+    AI Service 识别:
+      - .github/copilot-instructions.md 内容被注入到系统提示词
+        → Service = GitHub Copilot（无论底层模型是 GPT/Claude/Gemini）
+      - .clinerules 内容被注入到系统提示词
+        → Service = Cline
+      - CLAUDE.md 内容被注入到系统提示词
+        → Service = Claude Code
+    合并推断: 编辑器 + Service → 标识值（例：Zed + Copilot → zed-copilot）
+
+  Step 1 — 系统提示词关键字检测（兜底，Step 0 未命中时使用）:
     - 系统提示词中包含 "Zed" 关键字 → zed-copilot
     - 系统提示词中包含 "JetBrains" / "WebStorm" / "IntelliJ" → webstorm-copilot
     - 系统提示词中包含 "VS Code" / "Visual Studio Code"（且无 Cline）→ vscode-copilot
@@ -123,12 +140,25 @@
 根因: 规范仅定义了"检测优先级"列表，缺少具体可执行的检测方法。
       AI 在无法从环境中确定编辑器时，基于训练数据分布默认选择了
       最常见的 VS Code，而非按规范使用 unknown-agent 并询问用户。
-修复:
+修复（FIX-012）:
   1. 增加强制检测步骤（系统提示词关键字匹配 → 用户提及 → 已有记忆 → unknown-agent）
   2. 增加 🔴 禁止行为（禁止默认猜测）
   3. QUICK-REFERENCE.md Agent 速查表增加"检测线索"列
   4. CONSTRAINTS.md 约束10 增加 Agent 禁止猜测子约束
   5. 本文件增加事故记录
+
+修复（FIX-016 — 2026-03-06）:
+  现象: 关键字检测对 Zed 完全失效（Zed 系统提示词不含 "Zed" 字样），
+        AI 无法通过结构特征自动识别编辑器和 AI Service，需要用户引导才能得出正确标识
+  根因: 检测方法仅依赖关键字匹配，缺少对系统提示词注入结构的识别能力；
+        底层模型名称（如 Claude Sonnet 4.6）不等于 AI Service（GitHub Copilot 也可调用 Claude）
+  修复:
+    1. 新增 Step 0 结构特征检测（最高优先级）：
+       - 系统提示词注入格式识别（## System Information + ## Model Information → Zed）
+       - 用户消息语法识别（@文件名引用 / zed:/// URL → Zed）
+       - AI Service 注入文件识别（copilot-instructions.md → Copilot / .clinerules → Cline / CLAUDE.md → Claude Code）
+    2. 原关键字检测（Step 1）降为兜底，Step 0 命中时跳过
+    3. QUICK-REFERENCE.md / 00-pre-check/README.md / CONSTRAINTS.md 同步更新
 ```
 
 ---
