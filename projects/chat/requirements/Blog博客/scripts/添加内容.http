@@ -33,7 +33,7 @@ language: en
 POST {{host}}/home/blog
 Content-Type: application/json
 Authorization: Bearer {{token}}
-language: zh-hk
+language: hk
 
 {
     "title": "2026中國醫療旅遊：為海外患者提供AI驅動的醫療服務 | DVGO",
