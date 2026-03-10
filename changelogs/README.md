@@ -10,6 +10,8 @@
 changelogs/
 ├── README.md                              # 本说明文档
 ├── REFACTOR-SUMMARY.md                    # 重构摘要
+├── v3.0.0.md                             # v3.0.0 详细变更（🎉 重大重构）
+├── v2.13.0.md                            # v2.13.0 详细变更
 ├── v2.12.0.md                            # v2.12.0 详细变更
 ├── v2.11.0.md                            # v2.11.0 详细变更
 ├── v2.10.0.md                            # v2.10.0 详细变更
@@ -31,25 +33,26 @@ changelogs/
 └── v1x-10-WORKFLOW-TRANSITIONS.md        # v1.x 存档（原 workflows/10）
 ```
 
-> **模板位置**: `templates/common/changelogs/TEMPLATE.md`
+> **变更文档模板**（v2 归档）: `version/v2/core/templates/common/changelogs/TEMPLATE.md`
 
 ---
 
 ## 📝 如何创建新的变更文档
 
-### 步骤1: 复制模板
+### 步骤1: 创建版本文件
 
 ```bash
-cp templates/common/changelogs/TEMPLATE.md changelogs/v{版本号}.md
+# 在 changelogs/ 下新建版本文件
+touch changelogs/v{版本号}.md
 ```
 
 ### 步骤2: 填写内容
 
-根据模板章节填写变更信息
+参考已有版本文件（如 `v3.0.0.md`）的格式，填写变更信息。
 
 ### 步骤3: 更新主 CHANGELOG
 
-在项目根目录的 `CHANGELOG.md` 版本概览表中添加新行，链接指向新创建的文件
+在项目根目录的 `CHANGELOG.md` 版本概览表中添加新行，链接指向新创建的文件。
 
 ### 步骤4: 提交变更
 
@@ -62,9 +65,10 @@ git commit -m "docs: 发布 v{版本号}"
 
 ## 📎 相关文档
 
-- [主 CHANGELOG](../CHANGELOG.md) - 版本概览
-- [变更文档模板](../core/templates/common/changelogs/TEMPLATE.md) - 模板
+- [主 CHANGELOG](../CHANGELOG.md) — 版本概览
+- [v3 核心规范](../version/v3/RULES.md) — v3 唯一权威规范
+- [v2 变更文档模板](../version/v2/core/templates/common/changelogs/TEMPLATE.md) — v2 归档模板
 
 ---
 
-**最后更新**: 2026-02-27
+**最后更新**: 2026-03-10

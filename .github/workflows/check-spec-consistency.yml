@@ -8,14 +8,12 @@ on:
   pull_request:
     branches: [main, master]
     paths:
-      - 'core/**'
-      - 'docs/**'
-      - 'changelogs/**'
-      - '.github/copilot-instructions.md'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - 'META.yaml'
-      - 'projects/*/profile/**'
+      - "version/v3/**"
+      - "tools/**"
+      - "changelogs/**"
+      - ".github/copilot-instructions.md"
+      - "README.md"
+      - "CHANGELOG.md"
   # 支持手动触发
   workflow_dispatch:
 
@@ -31,19 +29,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Run bump-version.js (check mode)
-        run: node core/tools/bump-version.js
+        run: node tools/bump-version.js
         # bump-version.js 默认以 check 模式运行（不带 --apply 参数）
         # 检测到不一致时返回非零退出码，CI 自动标记失败
 
       - name: Report result
         if: failure()
         run: |
-          echo "::error::规范一致性检查失败！请运行 'node core/tools/bump-version.js --apply' 修复不一致，或手动检查 CROSS-VALIDATION.md 中的检查清单。"
+          echo "::error::规范一致性检查失败！请运行 'node tools/bump-version.js --apply' 修复不一致，或手动检查相关文件。"
           echo ""
           echo "常见修复步骤："
-          echo "  1. 修改 META.yaml 中的版本号/约束条数"
-          echo "  2. 运行 node core/tools/bump-version.js --apply"
+          echo "  1. 修改 version/v3/RULES.md 中的版本号/日期"
+          echo "  2. 运行 node tools/bump-version.js --apply"
           echo "  3. 检查 diff 并提交"

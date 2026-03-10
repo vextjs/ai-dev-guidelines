@@ -2,10 +2,10 @@
 
 > **AI 工作操作系统** — 给 AI Agent 一个完整的工程任务执行框架
 
-[![版本](https://img.shields.io/badge/版本-v2.13.0-blue)]()
+[![版本](https://img.shields.io/badge/版本-v3.0.0-blue)]()
 [![约束](https://img.shields.io/badge/约束-22_条-red)]()
-[![工作流](https://img.shields.io/badge/工作流-11_种-green)]()
-[![模板](https://img.shields.io/badge/模板-29_个-orange)]()
+[![路由](https://img.shields.io/badge/路由-6_种-green)]()
+[![模板](https://img.shields.io/badge/模板-8_个-orange)]()
 
 ---
 
@@ -15,12 +15,12 @@
 
 | 能力 | 说明 | 对应模块 |
 |------|------|---------|
-| **标准化工作流** | 11 种开发场景（需求/Bug/优化/安全...），AI 按步骤执行 | `core/workflows/` |
-| **持久化记忆** | 跨会话记忆 + 多 Agent 协同，告别每次从零开始 | `.ai-memory/` + `reports/` |
-| **行为约束** | 22 条护栏规则，防止 AI 未经确认执行破坏性操作 | `core/CONSTRAINTS.md` |
-| **文档模板** | 29 个结构化模板（小需求精简/大需求完整），输出格式统一 | `core/templates/` |
-| **规范自修复** | AI 检测规范冲突并自动修复，系统自维护 | `core/self-fix/` |
-| **防复现机制** | META 单一真相源 + 自动同步工具，同类 Bug 不再重复 | `core/tools/` |
+| **标准化工作流** | 6 种路由（dev/fix/analyze/audit/chat/resume），含子类型变体 | `version/v3/workflows/` |
+| **持久化记忆** | 消息驱动 5+1 阶段跨会话记忆 + 多 Agent 协同 | `.ai-memory/` + `reports/` |
+| **行为约束** | 22 条护栏规则（P0/P1 分级），防止 AI 未经确认执行破坏性操作 | `version/v3/RULES.md §4` |
+| **文档模板** | 8 个结构化模板，输出格式统一 | `version/v3/templates/` |
+| **规范自修复** | N13 双层合规检查（FC+SC），不通过则自动修复 | `version/v3/RULES.md §11` |
+| **意图识别** | 三问判断法，语义理解驱动路由，不依赖关键词匹配 | `version/v3/RULES.md §2` |
 
 ## 它不是什么
 
@@ -46,17 +46,26 @@ ai-dev-guidelines:
 
 多个 AI（Copilot / Claude / GPT）可以在同一项目上并行工作，通过目录隔离和记忆共享避免冲突。
 
-### 📐 三层递进架构
+### 📐 单文件权威规范架构
 
-控制 Token 成本，按需加载信息：
+v3 采用**单文件权威规范**设计，降低认知负担和 Token 成本：
 
 ```
-第 1 层: 入口指引（~39 行）  → 每次必读
-第 2 层: 速查手册（~420 行） → 日常执行
-第 3 层: 完整规范（4000+ 行）→ 按需加载
+RULES.md（~530 行，一次全文读取）
+├── §1 消息管线（N01~N14 全流程 Mermaid 流程图）
+├── §2 意图识别（三问判断法 + 多任务检测）
+├── §3 确认点（CP1→CP2→CP3 + FIX-015 防护）
+├── §4 核心约束（22 条，P0/P1 分级）
+├── §5 记忆规则（消息驱动 5+1 阶段）
+├── §6 报告规则（N12 四步闭环 + 自检清单）
+├── §7 输出路径
+├── §8 Agent 协同（标识检测 + 隔离规则）
+├── §9 Token 管理（三级防护 · 128k 上下文）
+├── §10 工作流路由表（dev/fix/analyze/audit/chat/resume）
+└── §11 规范自修复（N13 双层合规检查）
 ```
 
-AI 日常只需加载 ~460 行即可执行大部分任务。
+工作流和模板按需加载，AI 日常只需读取 RULES.md 即可执行大部分任务。
 
 ---
 
@@ -64,17 +73,23 @@ AI 日常只需加载 ~460 行即可执行大部分任务。
 
 ```
 ai-dev-guidelines/
-├── core/              # 🤖 AI 规范内核
-│   ├── workflows/     #    11 种工作流
-│   ├── templates/     #    29 个文档模板
-│   ├── standards/     #    9 个开发规范
-│   ├── tools/         #    7 个自动化工具
-│   ├── self-fix/      #    规范自修复机制
-│   └── ...            #    约束、速查手册等
-├── docs/              # 📖 用户文档
-├── projects/          # 📂 项目规范与产出
-└── changelogs/        # 📜 版本变更详情
+├── .github/           # 🚪 入口文件
+│   └── copilot-instructions.md  # AI 入口指引（v3.0.0）
+├── version/           # 📦 版本化规范目录
+│   ├── v3/            # 🤖 v3 规范体系（活跃）
+│   │   ├── RULES.md   #    唯一权威规范（~530 行）
+│   │   ├── workflows/ #    6 种路由的工作流定义
+│   │   └── templates/ #    8 个文档模板
+│   └── v2/            # 📦 v2 归档
+│       ├── core/      #    v2 规范内核（22 条约束 + 13 种工作流 + 29 个模板）
+│       └── docs/      #    v2 用户文档
+├── tools/             # 🔧 自动化工具（bump-version.js 等）
+├── changelogs/        # 📜 版本变更详情
+├── CHANGELOG.md       # 📋 版本概览索引
+└── README.md          # 📖 本文件
 ```
+
+> 项目工作产出（记忆/报告/需求文档）存放在工作目录的 `projects/<project>/` 下，与规范仓库分离。
 
 ## 🚀 快速开始
 
@@ -82,24 +97,21 @@ ai-dev-guidelines/
 
 1. 将 `ai-dev-guidelines/` 放入你的 workspace
 2. 在 `.github/copilot-instructions.md` 中添加入口指引（参考本项目示例）
-3. AI 会自动读取规范并按流程执行
-
-### 用户入门
-
-- 📖 [快速入门指南](./docs/getting-started.md) — 5 分钟了解全貌
-- 🏗️ [设计理念](./docs/DESIGN-PHILOSOPHY.md) — 架构哲学与演进路线
-- 📋 [AI 执行手册](./core/README.md) — AI 视角的完整参考
+3. AI 会自动读取 `version/v3/RULES.md` 并按流程执行
 
 ### 新项目接入
 
 ```bash
-# 1. 复制项目模板
-cp -r projects/_template projects/<your-project>
+# 1. 在工作目录创建项目产出目录
+mkdir -p projects/<your-project>/profile
 
-# 2. 编辑项目规范
+# 2. 复制项目模板
+cp version/v3/templates/project-profile.md projects/<your-project>/profile/README.md
+
+# 3. 编辑项目规范
 # 填写 projects/<your-project>/profile/README.md
 
-# 3. AI 自动识别
+# 4. AI 自动识别
 # AI 在收到任务时会自动读取对应项目规范
 ```
 
@@ -111,11 +123,9 @@ cp -r projects/_template projects/<your-project>
 |------|------|
 | **AI 是第一用户** | 所有设计以"AI 能否无歧义执行"为标准 |
 | **有状态 > 无状态** | 消息驱动记忆，AI 拥有跨会话工作记忆 |
-| **防复现 > 事后修复** | META 单一真相源 + 自动同步，消除同类 Bug |
+| **单文件 > 多文件** | 单文件权威规范消除交叉验证痛点 |
 | **约束是护栏不是枷锁** | 22 条约束防止 AI 犯人类会犯的错 |
-| **按需加载** | 三层递进架构控制 Token 成本 |
-
-> 详见 [设计理念文档](./docs/DESIGN-PHILOSOPHY.md)
+| **意图驱动 > 关键词匹配** | 三问判断法做语义理解，不依赖关键词触发 |
 
 ---
 
@@ -123,15 +133,22 @@ cp -r projects/_template projects/<your-project>
 
 | 指标 | 数据 |
 |------|------|
-| 当前版本 | v2.13.0 |
-| 规范文件 | ~4000 行 |
-| 工作流 | 11 种 |
-| 模板 | 29 个 |
-| 约束 | 22 条 |
-| 工具脚本 | 7 个 |
+| 当前版本 | v3.0.0 |
+| 核心规范 | RULES.md（~530 行） |
+| 路由 | 6 种（含子类型变体） |
+| 模板 | 8 个 |
+| 约束 | 22 条（P0×13 / P1×9） |
 | 接入项目 | 5+ 个 |
 
-> 详见 [项目状态](./core/STATUS.md) · [变更日志](./CHANGELOG.md)
+### 版本演进
+
+| 版本 | 架构 | 特点 |
+|------|------|------|
+| v1.x | 基础框架 | 核心工作流 + 确认点机制 |
+| v2.x | 多文件分散 | 三层递进架构 · 13 种工作流 · 29 个模板 · 22 条约束 |
+| **v3.0** | **单文件权威** | **RULES.md 单文件 · 6 种路由 · 8 个模板 · 三问判断法 · 全流程 Mermaid 流程图** |
+
+> 详见 [变更日志](./CHANGELOG.md)
 
 ## 📄 License
 
