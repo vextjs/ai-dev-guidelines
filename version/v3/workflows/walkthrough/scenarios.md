@@ -5,7 +5,7 @@
 > ⚠️ 用例中出现的工具名（如 `list_directory` / `edit_file` / `now()`）为 Zed Copilot 示例，具体名称因客户端而异，验证时以操作意图为准。
 
 **版本**: v3.0.0
-**最后更新**: 2026-03-10
+**最后更新**: 2026-03-12
 
 ---
 
@@ -233,7 +233,7 @@
   source_ref: "RULES.md§1 N01"
   simulated_input: "帮我看看 package.json 有什么问题"
   expected_behavior:
-    - "1. 获取当前时间（now() 优先；不可用时降级为终端命令 Get-Date/date；🔴禁止跳过或编造）"
+    - "1. 获取当前时间（系统上下文注入优先；不可用时 now()；再不可用时终端命令 Get-Date/date；🔴禁止跳过或编造）"
     - "2. list_directory 逐层进入 .ai-memory（🔴 禁止 glob）"
     - "3. 读取项目 profile/README.md"
     - "4. 检测 Agent 标识"
@@ -713,6 +713,8 @@
 
 ---
 
+## D — 工作流边界验证
+
 > 🆕 本分组专门验证工作流之间的边界判定（D26③ — fix CP 差异场景验证 + 其他边界验证）
 
 ### B01 — fix vs build 边界：小 Bug vs 大改动
@@ -873,7 +875,7 @@
 
 ```yaml
 通用检查项:
-  - "获取了当前时间？（now() 优先，不可用时 → 终端命令，🔴禁止跳过或编造）"
+  - "获取了当前时间？（系统上下文注入优先 → now() → 终端命令，🔴禁止跳过或编造）"
   - "list_directory 扫描了 .ai-memory？（非 glob/find_path）"
   - "读取了 profile/README.md？（涉及代码操作时）"
   - "检测了 Agent 标识？"

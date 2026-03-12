@@ -51,7 +51,7 @@ ai-dev-guidelines:
 v3 采用**单文件权威规范**设计，降低认知负担和 Token 成本：
 
 ```
-RULES.md（~530 行，一次全文读取）
+RULES.md（~570 行，一次全文读取）
 ├── §1 消息管线（N01~N14 全流程 Mermaid 流程图）
 ├── §2 意图识别（三问判断法 + 多任务检测）
 ├── §3 确认点（CP1→CP2→CP3 + FIX-015 防护）
@@ -77,7 +77,7 @@ ai-dev-guidelines/
 │   └── copilot-instructions.md  # AI 入口指引（v3.0.0）
 ├── version/           # 📦 版本化规范目录
 │   ├── v3/            # 🤖 v3 规范体系（活跃）
-│   │   ├── RULES.md   #    唯一权威规范（~530 行）
+│   │   ├── RULES.md   #    唯一权威规范（~570 行）
 │   │   ├── workflows/ #    6 种路由的工作流定义
 │   │   └── templates/ #    8 个文档模板
 │   └── v2/            # 📦 v2 归档
@@ -134,7 +134,7 @@ cp version/v3/templates/project-profile.md projects/<your-project>/profile/READM
 | 指标 | 数据 |
 |------|------|
 | 当前版本 | v3.0.0 |
-| 核心规范 | RULES.md（~530 行） |
+| 核心规范 | RULES.md（~570 行） |
 | 路由 | 6 种（含子类型变体） |
 | 模板 | 8 个 |
 | 约束 | 22 条（P0×13 / P1×9） |

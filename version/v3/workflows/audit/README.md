@@ -4,14 +4,13 @@
 > 适用意图：`audit`（规范审查、健康检查、spec audit、一致性验证）
 
 **版本**: v3.0.0
-**最后更新**: 2026-03-10
+**最后更新**: 2026-03-12
 
 ---
 
 ## 流程图
 
 ```mermaid
-%%{init: {'theme': 'dark'}}%%
 flowchart TD
     ENTRY(("N06 路由<br/>意图=audit")) --> A1
 
