@@ -77,7 +77,7 @@ flowchart TD
 
 | 步骤 | 内容 | 输出 |
 |:----:|------|------|
-| ④ | 识别工作区 → 确定 `<project>` | 项目名 |
+| ④ | 识别工作区 → 确定 `<project>` → 🔴验证 `projects/<project>/` 存在，不存在则立即创建（含 `.ai-memory/clients/<agent>/tasks/` 子目录） | 项目名 |
 | ⑤ | 检测 Agent 标识 → 确定 `<agent>` | Agent ID（详见 §8） |
 | ⑥ | 任务类型（初步判断） | dev/fix/analyze/audit/chat |
 | ⑦ | 输出位置（构建两条路径） | 产物路径 + 报告路径；🔴构建后必须对照 §7 目录树验证：①根 = `projects/<project>/`？②一级目录 ∈ {requirements/bugs/optimizations/reports/.ai-memory}？③`<中文描述>` 描述本任务目标？ |
@@ -404,6 +404,28 @@ projects/<project>/
 | WebStorm (JetBrains) | Copilot | `webstorm-copilot` |
 | Cursor | — | `cursor` |
 | 未知 | 未知 | `unknown-agent` |
+
+**🔴 显式判定流程（必须逐步执行，禁止凭印象跳步）：**
+
+```text
+IF 系统提示含 "## System Information" + "## Model Information"
+  → 编辑器 = Zed
+ELSE IF 系统提示含 "<environment_info>" AND 系统提示含 "JetBrains"
+  → 编辑器 = WebStorm
+ELSE IF 系统提示含 "<environment_info>" AND 系统提示不含 "JetBrains"
+  → 编辑器 = VSCode（⚠️ 含 <environment_info> 不等于 WebStorm，必须同时含 JetBrains）
+ELSE IF 系统提示含 "Cursor"
+  → 编辑器 = Cursor
+ELSE
+  → 编辑器 = 未知
+
+IF .github/copilot-instructions.md 被注入 → Service = Copilot
+ELSE IF .clinerules 被注入 → Service = Cline
+ELSE IF CLAUDE.md 被注入 → Service = Claude Code
+ELSE → Service = 未知
+
+最终标识 = 映射表[编辑器][Service]，未命中 → unknown-agent
+```
 
 **第二优先：关键字兜底** — 系统提示含 "JetBrains"→`webstorm-copilot` / "Cursor"→`cursor` / "VS Code"→`vscode-copilot` 等
 
