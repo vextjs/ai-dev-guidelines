@@ -234,7 +234,9 @@ T1 → T2 → T3
 | `03-实施方案/` | 实施方案目录（CP3 内容的持久化） |
 | `IMPLEMENTATION-PLAN.md` | 实施计划（含最终任务状态） |
 
-**存放位置：** `projects/<project>/requirements/<中文描述>/`
+**存放位置（按 §7 子类型路由）：**
+- 新需求 / 重构 / 数据库 / 项目初始化：`projects/<project>/requirements/<中文描述>/`
+- 性能优化：`projects/<project>/optimizations/<中文描述>/`
 
 ### 退出到 N12
 

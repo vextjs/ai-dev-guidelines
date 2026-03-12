@@ -155,4 +155,4 @@
 
 > **模板版本**: v3.0.0 (2026-03-10)
 > **适用工作流**: `build`（所有子类型）
-> **存放位置**: `projects/<project>/requirements/<中文描述>/01-需求定义.md`
+> **存放位置**: `projects/<project>/requirements/<中文描述>/01-需求定义.md`（性能优化子类型改为 `optimizations/<中文描述>/`）

@@ -196,7 +196,7 @@
   4. IMPLEMENTATION-PLAN.md（🔴 强制）
 
   ## 存放位置
-  projects/<project>/requirements/<描述>/
+  按 §7 路由: projects/<project>/{requirements|optimizations|bugs}/<描述>/
 
   ❓ 文档是否确认？
 

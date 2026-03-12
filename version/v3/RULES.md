@@ -80,7 +80,7 @@ flowchart TD
 | ④ | 识别工作区 → 确定 `<project>` | 项目名 |
 | ⑤ | 检测 Agent 标识 → 确定 `<agent>` | Agent ID（详见 §8） |
 | ⑥ | 任务类型（初步判断） | dev/fix/analyze/audit/chat |
-| ⑦ | 输出位置（构建两条路径） | 产物路径 + 报告路径 |
+| ⑦ | 输出位置（构建两条路径） | 产物路径 + 报告路径；🔴构建后必须对照 §7 目录树验证：①根 = `projects/<project>/`？②一级目录 ∈ {requirements/bugs/optimizations/reports/.ai-memory}？③`<中文描述>` 描述本任务目标？ |
 | ⑧ | 上次记忆状态 | 🔄/✅/⚠️无 |
 
 ### N02 预检查完成
@@ -340,19 +340,43 @@ reports/<子目录>/<agent>/YYYYMMDD/NN-<类型>-<简述>.md
 ## §7 输出路径
 
 > 🔴 所有路径以 `projects/<project>/` 为根，禁止写入项目源码目录
+> 🔴 禁止在 `projects/<project>/` 下创建下方目录树之外的一级目录
 
 ```text
 projects/<project>/
-├── requirements/<中文描述>/          # 需求产物
+├── requirements/<中文描述>/          # 需求产物（dev 默认）
 │   ├── 01-需求定义.md
 │   ├── 02-技术方案.md
 │   ├── 03-实施方案/
-│   └── IMPLEMENTATION-PLAN.md       # 🔴 强制
-├── bugs/<中文描述>/                  # Bug 修复产物
-├── optimizations/<中文描述>/         # 优化产物
+│   ├── IMPLEMENTATION-PLAN.md       # 🔴 强制
+│   └── scripts/                     # 辅助脚本（如有）
+├── bugs/<中文描述>/                  # Bug 修复产物（fix）
+│   ├── 01-需求定义.md
+│   ├── 02-技术方案.md
+│   ├── 03-实施方案/
+│   └── IMPLEMENTATION-PLAN.md       # 🔴 ≥5 文件时强制
+├── optimizations/<中文描述>/         # 优化产物（dev > 性能优化）
+│   ├── 01-需求定义.md
+│   ├── 02-技术方案.md
+│   ├── 03-实施方案/
+│   ├── IMPLEMENTATION-PLAN.md       # 🔴 强制
+│   └── scripts/                     # 测试/压测脚本（如有）
 ├── reports/<子目录>/<agent>/YYYYMMDD/ # 报告
-└── .ai-memory/clients/<agent>/tasks/ # 记忆
+├── .ai-memory/clients/<agent>/tasks/ # 记忆
+├── profile/                          # 项目规范（项目上下文）
+│   └── README.md
+├── TASK-INDEX.md                     # 任务索引（约束 #22 引用）
+└── README.md                        # 项目说明
 ```
+
+### 🔴 产物目录规则
+
+| 规则 | 说明 |
+|------|------|
+| 目录命名 | `<中文描述>` 必须描述本任务的目标，禁止复用其他任务的目录 |
+| 任务隔离 | 每个 `<中文描述>/` 目录只服务一个明确任务，禁止混放不同任务的产物 |
+| 禁止非规范路径 | `projects/<project>/` 下只允许上述目录树中的一级目录 |
+| 文件清理 | 产物位置迁移时，必须删除旧位置文件并在记忆中标注迁移记录 |
 
 ---
 
