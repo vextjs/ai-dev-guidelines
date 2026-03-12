@@ -1,9 +1,10 @@
 # [分析标题]
 
-> **日期**: YYYY-MM-DD
-> **Agent**: [zed-copilot / vscode-copilot / ...]
 > **项目**: [项目名]
-> **任务类型**: 分析（analyze）
+> **类型**: 分析（analyze）
+> **创建日期**: YYYY-MM-DD
+> **Agent**: [zed-copilot / vscode-copilot / ...]
+> **状态**: 📝 进行中 / ✅ 已完成
 > **关联记忆**: [.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN]
 
 ---

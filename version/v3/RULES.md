@@ -54,15 +54,24 @@ flowchart TD
 
 ### N01 预检查+初始化（🔴 完成前禁止任何分析性读取）
 
-**前三个 tool call 必须严格按序执行：**
+**前三步必须严格按序执行（具体工具名因客户端而异，按意图选择对应工具）：**
 
 | 步骤 | 动作 | 说明 |
 |:----:|------|------|
-| ① | `now()` | 获取真实日期时间 |
-| ② | `list_directory(.ai-memory/clients/<agent>/tasks/)` | 扫描记忆目录（🔴禁止 glob/find_path） |
-| ③ | `edit_file(记忆文件)` | 创建/追加 `YYYYMMDD.md §会话NN` — 🔴**阶段0硬性阻塞** |
+| ① | 在终端获取当前时间 | 🔴禁止编造或跳过，降级优先级见下表 |
+| ② | 逐层列出 `projects/<project>/.ai-memory/clients/<agent>/tasks/` 目录内容 | 扫描记忆目录（🔴禁止 glob/find） |
+| ③ | 创建或编辑记忆文件 | 创建/追加 `YYYYMMDD.md §会话NN` — 🔴**阶段0硬性阻塞** |
 
-> ❌ `read_file(RULES.md)` 不得作为前三个 tool call 之一（copilot-instructions.md 已提供最小规则集，RULES.md 全文在前三步完成后读取）
+**步骤①时间获取降级表：**
+
+| 优先级 | 方式 | 适用条件 |
+|:------:|------|---------|
+| 1 | `now()` | 原生工具可用时 |
+| 2 | `run_in_terminal("Get-Date -Format 'yyyy-MM-dd HH:mm:ss'")` | PowerShell 环境 |
+| 3 | `run_in_terminal("date '+%Y-%m-%d %H:%M:%S'")` | Bash/Zsh 环境 |
+| ❌ | 编造日期 / 使用 YYYY-MM-DD 占位符 / 跳过步骤 | 🔴**任何情况下禁止** |
+
+> ❌ 读取 RULES.md 不得作为前三步之一（copilot-instructions.md 已提供最小规则集，RULES.md 全文在前三步完成后读取）
 
 **步骤 ④~⑧ 在前三个 tool call 完成后执行：**
 
@@ -117,6 +126,17 @@ flowchart TD
 
 > 🔴 任一问题指向变更 → `dev` 或 `fix`；三问全部指向分析才走 `analyze`
 
+**边界示例：**
+
+| 用户消息 | Q1 | Q2 | Q3 | 结论 |
+|---------|:--:|:--:|:--:|------|
+| "分析一下这个代码然后修复" | 变更 | 手段 | 是 | → `fix`（分析是修复的前置步骤） |
+| "帮我看看这段代码有没有问题" | 结论 | 目的 | 否 | → `analyze`（只看不改） |
+| "深度分析规范文件，找出问题" | 结论 | 目的 | 否 | → `audit`（对象是规范文件，非项目代码） |
+| "检查并修复规范中的不一致" | 变更 | 手段 | 是 | → `fix`（最终要改文件） |
+
+> ⚠️ **analyze vs audit 区分**：对象是项目代码 → `analyze`；对象是规范文件（ai-dev-guidelines） → `audit`
+
 ### 意图类型
 
 | 意图 | 触发关键词（辅助，不依赖） | 路由目标 |
@@ -147,14 +167,16 @@ flowchart TD
 
 ### CP 总览
 
-| CP | 时机 | 性质 | 确认后唯一合法下一步 |
-|:--:|------|:----:|-------------------|
-| CP1 | 需求理解后 | 🔴强制 | 生成技术方案 → 等待 CP2 |
-| CP2 | 技术方案后 | 🔴强制 | 生成实施方案+IMPL-PLAN → 等待 CP3 |
-| CP3 | 实施方案后 | 🔴强制 | 🟢 **代码执行授权** — 按方案逐文件执行 |
-| CP4 | 测试完成后 | 按需 | 进入文档生成 |
-| CP5 | 文档生成后 | 按需 | 完成任务 |
-| CP6 | 文档同步后 | 按需 | 完成任务（涉及代码变更时触发） |
+| CP | 时机 | 性质 | 适用工作流 | 确认后唯一合法下一步 |
+|:--:|------|:----:|:--------:|-------------------|
+| CP1 | 需求理解后 | 🔴强制 | build · fix | 生成技术方案 → 等待 CP2 |
+| CP2 | 技术方案后 | 🔴强制 | build · fix | build: 生成实施方案+IMPL-PLAN → 等待 CP3 · fix: 🟢 直接执行修复 |
+| CP3 | 实施方案后 | 🔴强制 | build | 🟢 **代码执行授权** — 按方案逐文件执行 |
+| CP4 | 测试完成后 | 按需 | build · fix | 进入文档生成 |
+| CP5 | 文档生成后 | 按需 | build · fix | 完成任务 |
+| CP6 | 文档同步后 | 按需 | build · fix | 完成任务（涉及代码变更时触发） |
+
+> ⚠️ fix 工作流不经过 CP3：CP2 确认后直接执行修复（修复通常是小范围精确变更）。如果修复涉及大范围改动（≥5 文件），建议切换到 `dev` 工作流。
 
 ### 🔴 CP 强制规则
 
@@ -178,7 +200,7 @@ flowchart TD
 
 ## §4 核心约束（22 条）
 
-> 🔴P0 = 违反即事故 · 🟡P1 = 必须执行 · 💡P2 = 推荐执行
+> 🔴P0 = 违反即事故 · 🟡P1 = 必须执行 · 💡P2 = 推荐执行（预留，暂无条目）
 
 ### 🔴 P0（13 条）
 
@@ -298,10 +320,10 @@ reports/<子目录>/<agent>/YYYYMMDD/NN-<类型>-<简述>.md
 
 ### N12 四步闭环
 
-1. `edit_file()` 写入报告
+1. 写入报告文件
 2. 二次验证：回读报告 → 逐条核实问题真实性 → 标注验证状态
-3. `open(报告绝对路径)` — 自动打开（🔴不询问，直接调用；编辑器如有安全机制会通过 UI 按钮让用户确认）
-4. `edit_file()` 更新记忆 → 追加报告链接
+3. 打开报告文件 — 自动打开（🔴不询问，直接调用；如客户端不支持自动打开，输出文件路径让用户手动打开）
+4. 更新记忆文件 → 追加报告链接
 
 ### 🔴 报告自检清单（写入前逐项确认）
 
@@ -344,13 +366,22 @@ projects/<project>/
 |------|------|
 | 系统提示含 `## System Information` + `## Model Information` | 编辑器 = Zed |
 | 用户消息含 `[@文件名](file:///...)` 或 `zed:///` | 编辑器 = Zed |
+| 系统提示含 `<environment_info>` + `JetBrains` | 编辑器 = WebStorm（JetBrains IDE） |
 | `.github/copilot-instructions.md` 被注入系统提示 | Service = Copilot |
 | `.clinerules` 被注入系统提示 | Service = Cline |
 | `CLAUDE.md` 被注入系统提示 | Service = Claude Code |
 
-> 编辑器 + Service 合并 → 标识值（如 Zed + Copilot → `zed-copilot`）
+**编辑器 + Service 合并映射表：**
 
-**第二优先：关键字兜底** — 系统提示含 "JetBrains"→`webstorm-copilot` / "Cursor"→`cursor` 等
+| 编辑器 | Service | 标识值 |
+|--------|---------|--------|
+| Zed | Copilot | `zed-copilot` |
+| VSCode | Copilot | `vscode-copilot` |
+| WebStorm (JetBrains) | Copilot | `webstorm-copilot` |
+| Cursor | — | `cursor` |
+| 未知 | 未知 | `unknown-agent` |
+
+**第二优先：关键字兜底** — 系统提示含 "JetBrains"→`webstorm-copilot` / "Cursor"→`cursor` / "VS Code"→`vscode-copilot` 等
 
 **🔴 无法确定时必须使用 `unknown-agent` 并立即提示用户确认，禁止猜测**
 
@@ -377,11 +408,13 @@ projects/<project>/
 
 | 级别 | 阈值 | 行为 |
 |:----:|------|------|
-| 🟡预警 | ~70% | `📊 Token: ~NNk/128k (NN%)` — **自动写编码检查点** · 进入节约模式 · 通知用户 |
+| 🟡预警 | ~70% | `📊 Token: ~NNk/上限 (NN%)` — **自动写编码检查点** · 进入节约模式 · 通知用户 |
 | 🔴防护 | ~85% | 立即写完整记忆 · 停止大型读写 · 建议开新会话 |
 | 🔴硬性 | ≥15轮 且 ≥5文件待改 | 强制触发防护（无需精确估算） |
 
 ### 启发式辅助（无法精确估算时）
+
+> 1 轮 = 1 次用户消息 + 1 次 AI 回复
 
 - 对话超 10 轮 → 进入关注区
 - 已读/写文件总行数超 3000 → 加密检查点
@@ -504,6 +537,7 @@ projects/<project>/
 
 | 异常场景 | 处理策略 |
 |---------|---------|
+| 工具不可用（如 `now()`） | 按步骤①降级表执行（终端命令），🔴禁止跳过预检查 |
 | 记忆文件损坏 | 创建新文件，旧文件 `.bak` |
 | 工作流文件缺失 | 用 §10 路由表内联精简规则 |
 | 模板文件缺失 | 内置最小模板格式 |
@@ -517,7 +551,7 @@ projects/<project>/
 | 类型 | 时机 | 文件 |
 |:----:|------|------|
 | 🔴核心 | N01 | `RULES.md`（全文，本文件） |
-| 🔴核心 | N06 后 | `workflows/<type>/README.md`（五选一） |
+| 🔴核心 | N06 后 | `workflows/<type>/README.md`（四选一） |
 | 🔴核心 | N12 | `templates/report-*.md`（四选一） |
 | 🟡按需 | N01 | `templates/memory-session.md`（记忆不存在时） |
 | 🟡按需 | N01 | `.ai-memory/clients/<agent>/tasks/YYYYMMDD.md` |

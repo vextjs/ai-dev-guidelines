@@ -108,7 +108,7 @@
 
 ```yaml
 触发时机: 实施方案生成后，执行代码修改前
-适用工作流: build · fix
+适用工作流: build（fix 不经过 CP3，CP2 确认后直接执行修复；≥5 文件建议切 dev）
 前置条件: CP2 已确认 + 03-实施方案/ 和 IMPLEMENTATION-PLAN.md 已生成（🔴 FIX-015 硬阻塞）
 
 必须展示:

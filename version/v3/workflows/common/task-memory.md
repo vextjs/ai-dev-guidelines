@@ -66,7 +66,7 @@
 ### 目录结构
 
 ```text
-ai-dev-guidelines/projects/<project>/
+projects/<project>/
 ├── reports/                              # 🔴 AI 会话报告
 │   ├── analysis/                         # 分析报告
 │   ├── diagnostics/                      # 诊断报告
@@ -114,7 +114,7 @@ ai-dev-guidelines/projects/<project>/
 | ❌ 工作区根目录（如 `Workspace/.ai-memory/`） | 禁止 |
 | ❌ `ai-dev-guidelines/` 根目录 | 禁止 |
 | ❌ 业务项目源码目录（如 `schema-dsl/.ai-memory/`） | 禁止 |
-| ✅ `ai-dev-guidelines/projects/<project>/.ai-memory/` | 唯一正确 |
+| ✅ `projects/<project>/.ai-memory/` | 唯一正确 |
 
 > 事故参考：Agent 在工作区根目录创建记忆文件，导致记忆与项目脱钩、其他 Agent 无法恢复上下文。
 
@@ -166,7 +166,7 @@ ai-dev-guidelines/projects/<project>/
 **执行步骤：**
 
 1. 确定当前 Agent 标识（预检查第 4 项已获取）
-2. 用 `list_directory` 逐层进入 `.ai-memory/clients/<agent>/tasks/`（🔴 禁止 glob）
+2. 逐层列出 `.ai-memory/clients/<agent>/tasks/` 目录内容（🔴 禁止 glob）
 3. 检查当天是否已有记忆文件 `YYYYMMDD.md`
    - 已存在 → 读取已有会话数 → 追加 `## 会话 NN+1`
    - 不存在 → 创建新文件 → 写入 `## 会话 01`
@@ -521,8 +521,8 @@ ai-dev-guidelines/projects/<project>/
 ```text
 扫描逻辑:
   1. 确定当前 Agent 标识（预检查第 4 项已获取）
-  2. list_directory 逐层进入 .ai-memory/clients/<agent>/tasks/
-     🔴 禁止使用 find_path/glob 扫描（glob 引擎跳过隐藏目录）
+  2. 逐层列出 .ai-memory/clients/<agent>/tasks/ 目录内容
+     🔴 禁止使用 glob 扫描（glob 引擎跳过隐藏目录）
   3. 按文件名日期排序（YYYYMMDD 自然排序）
   4. 取最新日期的文件
   5. 读取该文件末尾最新会话段落，提取状态字段
@@ -631,7 +631,7 @@ Token 即将耗尽时:
 | #7 | 阶段 2 | 报告文件命名规则 `NN-<类型>-<简述>.md` |
 | #8 | 阶段 2 | 报告 NN 仅扫描当前 agent/日期目录 |
 | #9 | 阶段 3 | 编码检查点（≥3 文件变更时） |
-| #10 | 阶段 0 | Agent 标识检测 + 目录隔离 |
+| #6 | 阶段 0 | Agent 标识检测 + 目录隔离 |
 | #12 | 阶段 4 | 任务完成验证（声称完成前必须执行） |
 | #20 | 阶段 2 | 报告超 500 行必须拆分 |
 

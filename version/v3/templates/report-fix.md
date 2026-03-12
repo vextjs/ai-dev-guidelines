@@ -1,9 +1,10 @@
 # 修复报告
 
-> **日期**: YYYY-MM-DD
-> **Agent**: [zed-copilot / vscode-copilot / ...]
 > **项目**: [项目名]
-> **任务类型**: fix
+> **类型**: fix
+> **创建日期**: YYYY-MM-DD
+> **Agent**: [zed-copilot / vscode-copilot / ...]
+> **状态**: 📝 进行中 / ✅ 已完成
 > **关联记忆**: [.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN]
 
 ---

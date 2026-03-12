@@ -219,5 +219,5 @@
 ---
 
 > **模板版本**: v3.0.0 (2026-03-10)
-> **使用说明**: 复制本模板到 `ai-dev-guidelines/projects/<project>/profile/README.md`，
+> **使用说明**: 复制本模板到 `projects/<project>/profile/README.md`，
 > 将所有 `[占位符]` 替换为实际内容，删除不适用的章节和示例注释。

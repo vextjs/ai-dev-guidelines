@@ -118,14 +118,15 @@ flowchart TD
 
 | 修改了... | 必须检查... |
 |----------|-----------|
-| `RULES.md` | 所有 `workflows/` 文件 · `copilot-instructions.md` |
+| `RULES.md` | 所有 `workflows/` 文件 · `copilot-instructions.md`（工作区 + 仓库副本） |
 | `workflows/common/confirmation-points.md` | `RULES.md§3` · 各 workflow README |
 | `workflows/common/document-sync.md` | `RULES.md§4`（#14/#21/#22） |
 | `workflows/build/README.md` | `RULES.md§10` 路由表 |
 | `workflows/fix/README.md` | `RULES.md§10` 路由表 |
 | `workflows/analyze/README.md` | `RULES.md§10` 路由表 |
 | `workflows/audit/README.md` | `RULES.md§10` 路由表 |
-| `copilot-instructions.md` | `RULES.md` 入口引用 |
+| `copilot-instructions.md`（工作区） | `RULES.md` 入口引用 · 仓库副本 `ai-dev-guidelines/.github/copilot-instructions.md` |
+| `copilot-instructions.md`（仓库副本） | 工作区 `.github/copilot-instructions.md`（两者必须内容一致） |
 
 ### 阶段 4 — 修复衔接
 

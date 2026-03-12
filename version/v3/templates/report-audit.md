@@ -1,10 +1,10 @@
 # [审查报告标题]
 
-> **日期**: YYYY-MM-DD
-> **Agent**: [zed-copilot / vscode-copilot / ...]
-> **项目**: [项目名]
 > **任务类型**: audit（规范审查）
-> **关联记忆**: [.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN]
+> **类型**: audit（规范审查）
+> **创建日期**: YYYY-MM-DD
+> **Agent**: [zed-copilot / vscode-copilot / ...]
+> **状态**: 📝 进行中 / ✅ 已完成
 > **审查类型**: [全面体检 / 定向审查 / 事件驱动]
 > **触发方式**: [用户主动 / 事件触发(修改了XX文件) / N13衔接]
 

@@ -1,10 +1,11 @@
 # [标题：简述本次开发任务]
 
-> **日期**: YYYY-MM-DD
-> **Agent**: [zed-copilot / vscode-copilot / ...]
 > **项目**: [项目名]
-> **任务类型**: 开发（dev）
+> **类型**: 开发（dev）
 > **子类型**: [新需求 / 重构 / 数据库 / 项目初始化 / 性能优化]
+> **创建日期**: YYYY-MM-DD
+> **Agent**: [zed-copilot / vscode-copilot / ...]
+> **状态**: 📝 进行中 / ✅ 已完成
 > **关联记忆**: [.ai-memory/clients/<agent>/tasks/YYYYMMDD.md §会话NN]
 
 ---
