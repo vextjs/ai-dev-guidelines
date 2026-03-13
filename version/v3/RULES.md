@@ -46,7 +46,7 @@ flowchart TD
 > **🔗 仓库耦合提示**：上方 Mermaid `click` URL 硬编码了仓库地址 `vextjs/ai-dev-guidelines`。Fork 或仓库重命名时须全局替换，详见 [维护指南](https://github.com/vextjs/ai-dev-guidelines#-维护指南)。
 
 > **⚡ 贯穿式约束（全流程生效）**: 🔴#10 Token防护 · 🔴#9 消息驱动5+1阶段 · 🔴#6 Agent目录隔离 · 🔴#4 输出中文
-> **📏 节点标注**: `#N` = 触发的约束编号，对应 §4 的 22 条约束
+> **📏 节点标注**: `#N` = 触发的约束编号，对应 §4 的 23 条约束
 
 ---
 

@@ -322,7 +322,7 @@ reports/analysis/<agent>/YYYYMMDD/NN-analysis-场景化走查.md
 - `workflows/walkthrough/scenarios.md` — 完整走查用例定义
 - `workflows/audit/README.md` — 规范审查（上游，文档一致性）
 - `workflows/audit/self-fix.md` — 自修复规则（走查发现问题时衔接）
-- `RULES.md§4` — 核心约束（22 条）
+- `RULES.md§4` — 核心约束（23 条）
 - `RULES.md§11` — 规范自修复触发条件
 
 ---

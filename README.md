@@ -3,7 +3,7 @@
 > **AI 工作操作系统** — 给 AI Agent 一个完整的工程任务执行框架
 
 [![版本](https://img.shields.io/badge/版本-v3.0.0-blue)]()
-[![约束](https://img.shields.io/badge/约束-22_条-red)]()
+[![约束](https://img.shields.io/badge/约束-23_条-red)]()
 [![路由](https://img.shields.io/badge/路由-6_种-green)]()
 [![模板](https://img.shields.io/badge/模板-8_个-orange)]()
 
@@ -17,16 +17,38 @@
 |------|------|---------|
 | **标准化工作流** | 6 种路由（dev/fix/analyze/audit/chat/resume），含子类型变体 | `version/v3/workflows/` |
 | **持久化记忆** | 消息驱动 5+1 阶段跨会话记忆 + 多 Agent 协同 | `.ai-memory/` + `reports/` |
-| **行为约束** | 22 条护栏规则（P0/P1 分级），防止 AI 未经确认执行破坏性操作 | `version/v3/RULES.md §4` |
+| **行为约束** | 23 条护栏规则（P0/P1 分级），防止 AI 未经确认执行破坏性操作 | `version/v3/RULES.md §4` |
 | **文档模板** | 8 个结构化模板，输出格式统一 | `version/v3/templates/` |
 | **规范自修复** | N13 双层合规检查（FC+SC），不通过则自动修复 | `version/v3/RULES.md §11` |
 | **意图识别** | 三问判断法，语义理解驱动路由，不依赖关键词匹配 | `version/v3/RULES.md §2` |
 
 ## 它不是什么
 
+- ❌ **不是 Vibe Coding** — Vibe Coding 追求"忘记代码的存在"，本项目追求 **AI 在工程化护栏内的可控、可追溯、可恢复的执行**
 - ❌ **不是提示词模板** — 不是几条规则让 AI 照做，而是完整的执行框架
 - ❌ **不是编码规范** — 不是 ESLint/Prettier 那样约束代码风格
 - ❌ **不是项目管理工具** — 不是 Jira/Linear 的替代品
+
+## 它是 SOP
+
+**ai-dev-guidelines 是一套 AI 辅助开发的 SOP（标准操作程序）。**
+
+| 传统 SOP（面向人） | ai-dev-guidelines（面向 AI Agent） |
+|-------------------|-----------------------------------|
+| 纸质/文档化的操作步骤 | Markdown 编码的执行规范（AI 可直接解析） |
+| 人阅读 → 人执行 | AI 读取 → AI 执行 → 人确认关键决策 |
+| 靠培训和监督确保合规 | 靠 N13 双层合规检查 + 23 条约束自动确保 |
+| 出错靠事后审计发现 | 出错靠规范自修复（§11）实时修正 |
+
+**SOP 五要素对照**：
+
+| SOP 要素 | 对应模块 | 说明 |
+|---------|---------|------|
+| **目的** | README + §1 | 让 AI Agent 在工程化护栏内执行任务 |
+| **范围** | §2 意图识别 | 6 种意图路由覆盖开发全场景 |
+| **步骤** | §1 消息管线 + workflows/ | N01→N14 完整流程 + CP1→CP2→CP3 确认点 |
+| **职责** | §8 Agent 协同 | 多 Agent 目录隔离 + 标识检测 |
+| **记录** | §5 记忆 + §6 报告 | 5+1 阶段跨会话记忆 + 报告自动生成 |
 
 ## 核心特性
 
@@ -51,11 +73,11 @@ ai-dev-guidelines:
 v3 采用**单文件权威规范**设计，降低认知负担和 Token 成本：
 
 ```
-RULES.md（~570 行，一次全文读取）
+RULES.md（~620 行，一次全文读取）
 ├── §1 消息管线（N01~N14 全流程 Mermaid 流程图）
 ├── §2 意图识别（三问判断法 + 多任务检测）
 ├── §3 确认点（CP1→CP2→CP3 + FIX-015 防护）
-├── §4 核心约束（22 条，P0/P1 分级）
+├── §4 核心约束（23 条，P0/P1 分级）
 ├── §5 记忆规则（消息驱动 5+1 阶段）
 ├── §6 报告规则（N12 四步闭环 + 自检清单）
 ├── §7 输出路径
@@ -77,7 +99,7 @@ ai-dev-guidelines/
 │   └── copilot-instructions.md  # AI 入口指引（v3.0.0）
 ├── version/           # 📦 版本化规范目录
 │   ├── v3/            # 🤖 v3 规范体系（活跃）
-│   │   ├── RULES.md   #    唯一权威规范（~570 行）
+│   │   ├── RULES.md   #    唯一权威规范（~620 行）
 │   │   ├── workflows/ #    6 种路由的工作流定义
 │   │   └── templates/ #    8 个文档模板
 │   └── v2/            # 📦 v2 归档
@@ -152,8 +174,10 @@ find version/v3 -name "*.md" -exec sed -i 's|github.com/vextjs/ai-dev-guidelines
 
 ```powershell
 # Windows PowerShell
+# ⚠️ 注意：PowerShell 5.1 的 Set-Content 默认使用系统区域编码（非 UTF-8），
+# 会破坏中文字符。建议在 PowerShell 7+ 中执行，或使用编辑器工具逐文件替换。
 Get-ChildItem -Path version/v3 -Filter *.md -Recurse | ForEach-Object {
-    (Get-Content $_.FullName -Raw) -replace 'github\.com/vextjs/ai-dev-guidelines/blob/main', 'github.com/<NEW_OWNER>/<NEW_REPO>/blob/<NEW_BRANCH>' | Set-Content $_.FullName
+    (Get-Content $_.FullName -Raw -Encoding UTF8) -replace 'github\.com/vextjs/ai-dev-guidelines/blob/main', 'github.com/<NEW_OWNER>/<NEW_REPO>/blob/<NEW_BRANCH>' | Set-Content $_.FullName -Encoding UTF8
 }
 ```
 
@@ -166,7 +190,7 @@ Get-ChildItem -Path version/v3 -Filter *.md -Recurse | ForEach-Object {
 | **AI 是第一用户** | 所有设计以"AI 能否无歧义执行"为标准 |
 | **有状态 > 无状态** | 消息驱动记忆，AI 拥有跨会话工作记忆 |
 | **单文件 > 多文件** | 单文件权威规范消除交叉验证痛点 |
-| **约束是护栏不是枷锁** | 22 条约束防止 AI 犯人类会犯的错 |
+| **约束是护栏不是枷锁** | 23 条约束防止 AI 犯人类会犯的错 |
 | **意图驱动 > 关键词匹配** | 三问判断法做语义理解，不依赖关键词触发 |
 
 ---
@@ -176,10 +200,10 @@ Get-ChildItem -Path version/v3 -Filter *.md -Recurse | ForEach-Object {
 | 指标 | 数据 |
 |------|------|
 | 当前版本 | v3.0.0 |
-| 核心规范 | RULES.md（~570 行） |
+| 核心规范 | RULES.md（~620 行） |
 | 路由 | 6 种（含子类型变体） |
 | 模板 | 8 个 |
-| 约束 | 22 条（P0×13 / P1×9） |
+| 约束 | 23 条（P0×13 / P1×10） |
 | 接入项目 | 5+ 个 |
 
 ### 版本演进
