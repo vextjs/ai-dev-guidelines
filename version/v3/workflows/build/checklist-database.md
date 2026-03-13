@@ -155,7 +155,7 @@ projects/<project>/requirements/<中文描述>/
 ├── 01-需求定义.md
 ├── 02-技术方案.md
 ├── 03-实施方案/
-├── IMPLEMENTATION-PLAN.md
+├── 04-实施计划.md
 └── scripts/
     ├── migration.sql          # 正向迁移脚本
     ├── rollback.sql           # 回滚脚本

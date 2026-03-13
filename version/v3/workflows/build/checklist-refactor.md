@@ -189,7 +189,7 @@ projects/<project>/requirements/<中文描述>/
 │   │   ├── README.md
 │   │   └── ...
 │   └── ...
-├── IMPLEMENTATION-PLAN.md     # 全局实施计划（跨阶段任务追踪）
+├── 04-实施计划.md     # 全局实施计划（跨阶段任务追踪）
 └── docs/
     ├── architecture.md        # 架构对比文档（可选）
     └── migration-guide.md     # 迁移指南（如有接口变更，可选）

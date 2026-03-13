@@ -22,7 +22,7 @@ flowchart TD
     A1B --> A2
 
     subgraph PHASE2["阶段 2 — 执行审查"]
-        A2["逐维度扫描<br/>read_file · grep · list_directory<br/>📏 #15 输出验证"]
+        A2["逐维度扫描<br/>读取文件 · 搜索文本 · 列出目录<br/>📏 #15 输出验证"]
         A2 --> A2B["分级问题清单<br/>🔴必须修复 · 🟡建议修复 · 💡观察项"]
     end
 
@@ -100,7 +100,7 @@ flowchart TD
 - 每个问题必须基于**实际文件内容**验证，禁止凭记忆或推测
 - 问题必须精确到文件路径 + 行号（或章节标题）
 - 必须附带三项验证列（约束 #15）
-- 问题分类必须使用四级标签：🔴 Bug · 🟡 待改进 · 💡 建议 · ❌ 误报
+- 问题分类必须使用四级标签：🔴 Bug · 🟡 待改进 · 💡 建议 · ❌ 误报/不适用
 
 ### 阶段 3 — 交叉验证（约束 #11）
 
@@ -126,8 +126,8 @@ flowchart TD
 | `workflows/fix/README.md` | `RULES.md§10` 路由表 |
 | `workflows/analyze/README.md` | `RULES.md§10` 路由表 |
 | `workflows/audit/README.md` | `RULES.md§10` 路由表 |
-| `copilot-instructions.md`（工作区） | `RULES.md` 入口引用 · 仓库副本 `ai-dev-guidelines/.github/copilot-instructions.md` |
-| `copilot-instructions.md`（仓库副本） | 工作区 `.github/copilot-instructions.md`（两者必须内容一致） |
+| `copilot-instructions.md`（工作区） | `RULES.md` 入口引用 |
+| `copilot-instructions.md`（仓库副本，如存在） | 工作区 `.github/copilot-instructions.md`（两者如共存须内容一致） |
 
 ### 阶段 4 — 修复衔接
 

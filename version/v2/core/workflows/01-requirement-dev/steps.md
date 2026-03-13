@@ -79,7 +79,7 @@ projects/
             ├── 03-实施方案/              # 实施方案目录（>= 5 文件时）
             │   ├── README.md            # 实施总索引
             │   └── <模块名>.md          # 各变更文件的完整代码
-            ├── IMPLEMENTATION-PLAN.md   # 🔴 实施计划（强制）
+            ├── 04-实施计划.md   # 🔴 实施计划（强制）
             ├── 04-接口文档.md            # 接口文档（可选）
             └── scripts/                 # 脚本目录
                 ├── install.sh
@@ -891,7 +891,7 @@ await writeFile(outputPath, implementationDoc);
   - ✅ 01-需求定义.md 已生成
   - ✅ 02-技术方案.md 已生成
   - ✅ 03-实施方案/ 已生成（>= 5 文件时生成目录）
-  - ✅ IMPLEMENTATION-PLAN.md 已生成
+  - ✅ 04-实施计划.md 已生成
   - ✅ scripts/ 目录已创建（如需要）
   - ✅ 安装脚本已创建（如需要）
 ```
@@ -971,7 +971,7 @@ AI 应向用户报告：
 - 📄 需求文档: projects/user-service/requirements/REQ-user-20260211-rate-limit/01-requirement.md
 - 📄 技术方案: projects/user-service/requirements/REQ-user-20260211-rate-limit/02-technical.md
 - 📄 实施方案: projects/user-service/requirements/REQ-user-20260211-rate-limit/03-实施方案/README.md
-- 📄 实施计划: projects/user-service/requirements/REQ-user-20260211-rate-limit/IMPLEMENTATION-PLAN.md
+- 📄 实施计划: projects/user-service/requirements/REQ-user-20260211-rate-limit/04-实施计划.md
 - 🔧 安装脚本: projects/user-service/requirements/REQ-user-20260211-rate-limit/scripts/install.sh
 
 ✅ 验证结果:

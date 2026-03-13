@@ -13,13 +13,13 @@
 ❌ 绝对禁止的行为：
   - CP1 需求确认后直接创建全量文件（跳过 CP2/CP3）
   - 不输出技术方案（项目结构设计）就开始创建文件
-  - 不生成 IMPLEMENTATION-PLAN.md 就开始执行
+  - 不生成 04-实施计划.md 就开始执行
   - 会话报告/任务产物存放在非标准路径（如 reports/init/）
 
 ✅ 正确的执行顺序：
   收到需求 → 输出需求理解 → 等待 CP1 确认
            → 输出项目结构设计（技术方案） → 等待 CP2 确认
-           → 输出文件创建计划（实施方案）+ IMPLEMENTATION-PLAN → 等待 CP3 确认
+           → 输出文件创建计划（实施方案）+ 实施计划 → 等待 CP3 确认
            → 按 PLAN 顺序逐批创建文件
 ```
 
@@ -34,7 +34,7 @@
   需求定义: projects/<project>/requirements/<中文描述>/01-需求定义.md
   技术方案: projects/<project>/requirements/<中文描述>/02-技术方案.md
   实施方案: projects/<project>/requirements/<中文描述>/03-实施方案/（文件数 >= 5 时）
-  实施计划: projects/<project>/requirements/<中文描述>/IMPLEMENTATION-PLAN.md
+  实施计划: projects/<project>/requirements/<中文描述>/04-实施计划.md
   注意: <中文描述> 为项目初始化的简要描述，如"项目初始化"
 
 会话报告（不提交 git）:
@@ -57,7 +57,7 @@
 ```
 阶段 1: 需求定义          →  CP1 确认
 阶段 2: 项目结构设计      →  CP2 确认
-阶段 3: 文件创建计划      →  CP3 确认（含 IMPLEMENTATION-PLAN）
+阶段 3: 文件创建计划      →  CP3 确认（含 实施计划）
 阶段 4: 执行创建          →  按 PLAN 顺序逐批创建
 阶段 5: 发布准备 + 报告   →  完成检查 + 会话报告
 ```
@@ -159,13 +159,13 @@
 1. 基于项目结构设计，列出所有需要创建的文件
 2. 为每个文件写明核心内容概要（不是完整代码，是"这个文件要包含什么"）
 3. 按依赖顺序排列创建步骤
-4. 生成 IMPLEMENTATION-PLAN.md
+4. 生成 04-实施计划.md
 
-**🔴 IMPLEMENTATION-PLAN.md（强制生成）**:
+**🔴 04-实施计划.md（强制生成）**:
 
-> 详见 [01-requirement-dev §阶段 3 IMPLEMENTATION-PLAN 规则](../01-requirement-dev/README.md)
+> 详见 [01-requirement-dev §阶段 3 实施计划 规则](../01-requirement-dev/README.md)
 
-开源项目初始化通常涉及 15+ 个文件，属于大需求，IMPLEMENTATION-PLAN 必须包含：
+开源项目初始化通常涉及 15+ 个文件，属于大需求，实施计划 必须包含：
 1. 总体进度看板（批次/百分比/状态）
 2. 任务编号表（编号/文件名/操作/内容概要/状态 🔲/✅）
 3. 创建顺序（按依赖分批）
@@ -209,7 +209,7 @@
 ```markdown
 📋 文件创建计划:
 
-## IMPLEMENTATION-PLAN 概要
+## 实施计划 概要
 | # | 任务 | 文件 | 操作 | 状态 |
 |---|------|------|------|:----:|
 | 1.1 | 项目配置 | package.json | 新建 | 🔲 |
@@ -240,20 +240,20 @@
 ```
 
 **⏸️ CP3 确认点（绝对强制）**:
-> 🔴 **用户确认 IMPLEMENTATION-PLAN + 文件创建计划后才开始执行。**
+> 🔴 **用户确认 实施计划 + 文件创建计划后才开始执行。**
 > 🔴 **确认后才创建实际文件，禁止在 CP3 之前创建任何业务文件。**
 
 ---
 
 ### 阶段 4: 执行创建
 
-**目标**: 按 IMPLEMENTATION-PLAN 顺序，逐批创建文件
+**目标**: 按 实施计划 顺序，逐批创建文件
 
-**前置条件**: CP3 已确认 + IMPLEMENTATION-PLAN 已生成
+**前置条件**: CP3 已确认 + 实施计划 已生成
 
 **执行步骤**:
 1. 按批次顺序创建文件
-2. 每完成一个批次，报告进度并更新 IMPLEMENTATION-PLAN 状态
+2. 每完成一个批次，报告进度并更新 实施计划 状态
 3. 触发编码检查点（约束 #18），同步更新记忆文件
 
 **批次执行顺序**:
@@ -290,7 +290,7 @@
 
 **Token 不够时**:
 - 因编码检查点已在每批完成时同步更新记忆，中断后新会话可精确恢复
-- 下次会话: 用户说"继续"时，读记忆 📦 编码检查点 → 读 IMPLEMENTATION-PLAN → 从断点续接
+- 下次会话: 用户说"继续"时，读记忆 📦 编码检查点 → 读 实施计划 → 从断点续接
 
 ---
 
@@ -794,7 +794,7 @@ jobs:
 - [ ] .gitignore 配置
 - [ ] lib/ 源代码目录
 - [ ] 至少 1 个测试文件
-- [ ] IMPLEMENTATION-PLAN.md 已生成且全部 ✅
+- [ ] 04-实施计划.md 已生成且全部 ✅
 
 ### 推荐项 ⭐
 
@@ -822,7 +822,7 @@ jobs:
 - [确认点机制](../common/confirmation-points.md) — CP 详细定义
 - [会话报告规范](../common/temp-reports.md) — 报告命名与存储
 - [任务记忆机制](../common/task-memory.md) — 记忆写入规则
-- [IMPLEMENTATION-PLAN 规则](../01-requirement-dev/README.md) — §阶段 3 IMPLEMENTATION-PLAN 强制生成规则
+- [实施计划 规则](../01-requirement-dev/README.md) — §阶段 3 实施计划 强制生成规则
 - [npm 发布指南](https://docs.npmjs.com/packages-and-modules)
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - [TypeScript 声明文件](https://www.typescriptlang.org/docs/handbook/declaration-files/introduction.html)

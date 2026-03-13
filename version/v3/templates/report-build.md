@@ -111,7 +111,7 @@
 | 需求定义 | `projects/<project>/requirements/<描述>/01-需求定义.md` | ✅ / ⬜ |
 | 技术方案 | `projects/<project>/requirements/<描述>/02-技术方案.md` | ✅ / ⬜ |
 | 实施方案 | `projects/<project>/requirements/<描述>/03-实施方案/` | ✅ / ⬜ |
-| 实施计划 | `projects/<project>/requirements/<描述>/IMPLEMENTATION-PLAN.md` | ✅ / ⬜ |
+| 实施计划 | `projects/<project>/requirements/<描述>/04-实施计划.md` | ✅ / ⬜ |
 
 ---
 

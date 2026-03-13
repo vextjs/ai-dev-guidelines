@@ -37,7 +37,7 @@
     ├── 02-技术方案.md           # 技术方案
     ├── 03-实施方案/             # 实施方案（目录）
     │   └── README.md
-    ├── IMPLEMENTATION-PLAN.md  # 实施计划（🔴 强制生成）
+    ├── 04-实施计划.md           # 实施计划（🔴 强制生成）
     └── scripts/
 └── code-changes/              # 代码变更
     ├── before/                # 变更前
@@ -103,7 +103,7 @@ const docs = [
   'outputs/01-需求定义.md',
   'outputs/02-技术方案.md',
   'outputs/03-实施方案/README.md',
-  'outputs/IMPLEMENTATION-PLAN.md'
+  'outputs/04-实施计划.md'
 ];
 for (const doc of docs) {
   const content = await read_file(`core/examples/requirement-example/${doc}`);

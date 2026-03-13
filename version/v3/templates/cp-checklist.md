@@ -143,8 +143,8 @@ CP2 [✅确认 / ✏️修正 / ❌取消] — [时间戳]
 ```text
 📋 CP3 — 实施方案确认 🟢
 
-📄 IMPLEMENTATION-PLAN.md 已生成:
-  路径: [projects/<project>/requirements/<描述>/IMPLEMENTATION-PLAN.md]
+📄 04-实施计划.md 已生成:
+  路径: [projects/<project>/requirements/<描述>/04-实施计划.md]
 
 📋 实施步骤（按依赖顺序）:
   | # | 任务 | 文件 | 状态 | 说明 |

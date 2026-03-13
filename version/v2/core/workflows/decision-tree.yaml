@@ -462,7 +462,7 @@ output_paths:
       - "01-需求定义.md"
       - "02-技术方案.md"
       - "03-实施方案/"
-      - "IMPLEMENTATION-PLAN.md"
+      - "04-实施计划.md"
       - "scripts/"
 
   bug:

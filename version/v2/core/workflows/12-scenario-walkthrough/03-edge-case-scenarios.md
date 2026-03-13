@@ -133,14 +133,14 @@
 
   expected_behavior:
     - "任务产物文件名使用中文（与 copilot-instructions.md '所有输出使用中文' 一致）"
-    - "正确：requirements/用户积分功能/、01-需求定义.md、02-技术方案.md、IMPLEMENTATION-PLAN.md（保持英文）"
+    - "正确：requirements/用户积分功能/、01-需求定义.md、02-技术方案.md、04-实施计划.md（保持英文）"
     - "错误：requirements/user-points/、01-requirement.md、20260304-user-points/"
     - "报告文件名简述部分使用中文：✅ 01-req-用户积分功能.md"
 
   checkpoints:
     - "requirements/ 目录名使用中文"
     - "文档文件名使用中文（01-需求定义.md 而非 01-requirement.md）"
-    - "IMPLEMENTATION-PLAN.md 保持英文（技术术语）"
+    - "04-实施计划.md 保持英文（技术术语）"
     - "报告文件的简述部分使用中文"
     - "scripts/ 目录和脚本文件名保持英文（代码文件）"
     - "api.http 文件名保持英文（固定命名）"

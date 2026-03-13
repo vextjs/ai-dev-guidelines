@@ -372,7 +372,7 @@ Mermaid 示例:
   ✅ requirements/用户限流功能/01-需求定义.md
   ✅ requirements/用户限流功能/02-技术方案.md
   ✅ requirements/用户限流功能/03-实施方案/README.md
-  ✅ requirements/用户限流功能/IMPLEMENTATION-PLAN.md
+  ✅ requirements/用户限流功能/04-实施计划.md
   ❌ requirements/20260212-rate-limit/01-requirement.md  ← 旧格式（英文+日期前缀）
 
 原因:

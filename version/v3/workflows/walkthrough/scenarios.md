@@ -56,7 +56,7 @@
     - "输出 CP1（需求确认），等待用户响应"
     - "阶段2：设计技术方案 · 列出修改清单 · P0 识别"
     - "输出 CP2（方案确认），等待用户响应"
-    - "生成 IMPLEMENTATION-PLAN.md · 输出 CP3（实施确认）"
+    - "生成 04-实施计划.md · 输出 CP3（实施确认）"
     - "阶段3：按 IMPL-PLAN 逐文件实现 · diagnostics · 三轮验证"
     - "阶段4：IP1 测试 → IP2 文档 → 归档文档 → N12 报告"
     - "自动写入报告 + 更新记忆"
@@ -64,14 +64,14 @@
     - "CP1 在代码执行前输出"
     - "CP2 不被解读为代码执行授权（FIX-015）"
     - "CP3 确认后才开始写代码"
-    - "IMPLEMENTATION-PLAN.md 已生成"
+    - "04-实施计划.md 已生成"
     - "编码检查点（≥3 文件时）已写入记忆"
     - "归档文档（01/02/03/IMPL-PLAN）均存在"
   pass_criteria: "CP1→CP2→CP3 严格顺序执行，代码仅在 CP3 确认后才写入"
   fail_indicators:
     - "跳过任何 CP（CP1/CP2/CP3）"
     - "CP2 确认后直接写代码（未经 CP3）"
-    - "未生成 IMPLEMENTATION-PLAN.md"
+    - "未生成 04-实施计划.md"
     - "未写入报告或记忆"
     - "未输出预检查"
 ```
@@ -284,17 +284,17 @@
   source_ref: "workflows/build/README.md · confirmation-points.md"
   simulated_input: "确认方案（对 CP2 的回复）"
   expected_behavior:
-    - "CP2 确认后，生成 IMPLEMENTATION-PLAN.md"
+    - "CP2 确认后，生成 04-实施计划.md"
     - "输出 CP3（实施方案确认）"
     - "等待 CP3 确认后才执行代码"
   checkpoints:
     - "CP2 确认后的下一步是生成 IMPL-PLAN + CP3，不是写代码"
-    - "IMPLEMENTATION-PLAN.md 已创建"
+    - "04-实施计划.md 已创建"
     - "CP3 输出中标注🟢 代码执行授权点"
   pass_criteria: "CP2 确认后生成 IMPL-PLAN 并输出 CP3，代码仅在 CP3 后执行"
   fail_indicators:
     - "CP2 确认后直接开始写代码"
-    - "未生成 IMPLEMENTATION-PLAN.md"
+    - "未生成 04-实施计划.md"
     - "跳过 CP3"
 ```
 
@@ -413,7 +413,7 @@
     - "检查点格式：📦 编码检查点（TN/TM 完成）"
   checkpoints:
     - "记忆文件中有 📦 编码检查点记录"
-    - "IMPLEMENTATION-PLAN.md 中对应任务状态更新为 ✅"
+    - "04-实施计划.md 中对应任务状态更新为 ✅"
     - "检查点包含完成的文件清单"
   pass_criteria: "每个任务编号完成后有检查点记录，PLAN 状态同步更新"
   fail_indicators:
