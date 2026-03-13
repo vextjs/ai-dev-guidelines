@@ -3,7 +3,7 @@
 > N07 节点的完整执行规格。适用于 `dev` 意图：新需求、重构、数据库变更、项目初始化、性能优化。
 
 **版本**: v3.0.0
-**最后更新**: 2026-03-12
+**最后更新**: 2026-03-13
 
 ---
 
@@ -33,9 +33,11 @@ flowchart TD
     S3 --> S4["阶段4 产物交付<br/>IP1测试询问 → CP4<br/>IP2文档询问 → CP5<br/>归档文档生成"]
     S4 --> EXIT(("→ N12 报告输出"))
 
-    click CP1 "../common/confirmation-points.md"
-    click CP2 "../common/confirmation-points.md"
-    click CP3 "../common/confirmation-points.md"
+    %% click URLs（GitHub 浏览跳转用，AI 读取文件请查 §10 路由表）
+    %% 仓库基准: https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/
+    click CP1 "https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/workflows/common/confirmation-points.md"
+    click CP2 "https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/workflows/common/confirmation-points.md"
+    click CP3 "https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/workflows/common/confirmation-points.md"
 ```
 
 ---

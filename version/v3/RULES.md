@@ -3,7 +3,7 @@
 > AI 执行任务时的唯一权威规范入口。会话开始时全文读取，后续节点不重复读。
 
 **版本**: v3.0.0
-**最后更新**: 2026-03-12
+**最后更新**: 2026-03-13
 
 ---
 
@@ -33,16 +33,17 @@ flowchart TD
     GIT --> N13["N13 合规自检(出口门禁)<br/>📏 #12#13#9(阶段4.5)"]
     N13 --> N14["N14 收尾<br/>📏 #10#16#9(阶段4)"]
     N10 --> N14 --> DONE(("✅ 回复完毕"))
-    click N01 "#§1-消息管线"
-    click N04 "#§2-意图识别"
-    click N06 "#§10-工作流路由表"
-    click N07 "workflows/build/README.md"
-    click N08 "workflows/fix/README.md"
-    click N09 "workflows/analyze/README.md"
-    click N09A "workflows/audit/README.md"
-    click N12A "workflows/common/document-sync.md"
-    click GIT "workflows/common/document-sync.md"
+    %% click URLs（GitHub 浏览跳转用，AI 读取文件请查 §10 路由表）
+    %% 仓库基准: https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/
+    click N07 "https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/workflows/build/README.md"
+    click N08 "https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/workflows/fix/README.md"
+    click N09 "https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/workflows/analyze/README.md"
+    click N09A "https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/workflows/audit/README.md"
+    click N12A "https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/workflows/common/document-sync.md"
+    click GIT "https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/workflows/common/document-sync.md"
 ```
+
+> **🔗 仓库耦合提示**：上方 Mermaid `click` URL 硬编码了仓库地址 `vextjs/ai-dev-guidelines`。Fork 或仓库重命名时须全局替换，详见 [维护指南](https://github.com/vextjs/ai-dev-guidelines#-维护指南)。
 
 > **⚡ 贯穿式约束（全流程生效）**: 🔴#10 Token防护 · 🔴#9 消息驱动5+1阶段 · 🔴#6 Agent目录隔离 · 🔴#4 输出中文
 > **📏 节点标注**: `#N` = 触发的约束编号，对应 §4 的 22 条约束
@@ -198,7 +199,7 @@ flowchart TD
 
 ---
 
-## §4 核心约束（22 条）
+## §4 核心约束（23 条）
 
 > 🔴P0 = 违反即事故 · 🟡P1 = 必须执行 · 💡P2 = 推荐执行（预留，暂无条目）
 
@@ -220,7 +221,7 @@ flowchart TD
 | 12 | 任务完成验证 | 声称完成前 5 项验证：文件存在+结构完整+记忆更新+关联一致+文档产物 |
 | 13 | 回复自检+自修复 | N13 双层检查（FC1~5 + SC1~5），不通过则自动修复（详见 §11） |
 
-### 🟡 P1（9 条）
+### 🟡 P1（10 条）
 
 | # | 约束 | 一句话定义 |
 |:-:|------|----------|
@@ -233,6 +234,7 @@ flowchart TD
 | 20 | 文件过大必须拆分 | AI 新建 .md 超 500 行必须拆分（已有文件豁免） |
 | 21 | Git 提交规范 | `<type>(<scope>): <description>`；涉及源码变更时主动触发 |
 | 22 | 文档同步 | 涉及代码变更时检查 STATUS/CHANGELOG/TASK-INDEX，CP6 确认 |
+| 23 | 文件编码安全 | 🔴禁止终端命令批量修改中文文件（`Set-Content`/`sed -i` 会破坏 UTF-8 编码），必须使用编辑器工具逐文件修改 |
 
 ---
 
@@ -472,14 +474,14 @@ ELSE → Service = 未知
 
 ### N06 路由映射
 
-| 意图 | 工作流文件 | 说明 |
-|------|----------|------|
-| `dev` | `workflows/build/README.md` | 4 阶段 · CP1→CP2→CP3 · 编码检查点 |
-| `fix` | `workflows/fix/README.md` | 3 阶段 · CP1→CP2 · 修复后三步扫描 |
-| `analyze` | `workflows/analyze/README.md` | 4 阶段 · 🔴禁止修改代码 · 三项验证 |
-| `audit` | `workflows/audit/README.md` | 15 维度 · 衔接 self-fix · 交叉验证 |
-| `chat` | §1 N10 | 对话模式（记忆✅ 报告❌） |
-| `resume` | §5 N11 | 任务恢复 |
+| 意图 | 工作流文件 | 🔴读取指令 | 说明 |
+|------|----------|:--------:|------|
+| `dev` | `workflows/build/README.md` | 全文读取 | 4 阶段 · CP1→CP2→CP3 · 编码检查点 |
+| `fix` | `workflows/fix/README.md` | 全文读取 | 3 阶段 · CP1→CP2 · 修复后三步扫描 |
+| `analyze` | `workflows/analyze/README.md` | 全文读取 | 4 阶段 · 🔴禁止修改代码 · 三项验证 |
+| `audit` | `workflows/audit/README.md` | 全文读取 | 15 维度 · 衔接 self-fix · 交叉验证 |
+| `chat` | §1 N10 | — | 对话模式（记忆✅ 报告❌） |
+| `resume` | §5 N11 | — | 任务恢复 |
 
 ### dev 子类型
 
@@ -596,16 +598,19 @@ ELSE → Service = 未知
 
 ## AI 读取策略
 
-| 类型 | 时机 | 文件 |
-|:----:|------|------|
-| 🔴核心 | N01 | `RULES.md`（全文，本文件） |
-| 🔴核心 | N06 后 | `workflows/<type>/README.md`（四选一） |
-| 🔴核心 | N12 | `templates/report-*.md`（四选一） |
-| 🟡按需 | N01 | `templates/memory-session.md`（记忆不存在时） |
-| 🟡按需 | N01 | `.ai-memory/clients/<agent>/tasks/YYYYMMDD.md` |
-| 🟡按需 | N01 | `projects/<project>/profile/README.md` |
-| 🟡按需 | N07~N09 | `workflows/<type>/checklist-*.md` |
-| 🟡按需 | N09A | `workflows/audit/dimensions.md` / `self-fix.md` |
+> 🔴必读 = 每次会话必须 · 🟠路由必读 = 进入对应工作流后必须 · 🟡条件按需 = 满足条件时读取
+
+| 级别 | 时机 | 文件 | 触发条件 |
+|:----:|------|------|---------|
+| 🔴必读 | N01 | `RULES.md`（全文，本文件） | 每次会话 |
+| 🔴必读 | N01 | `.ai-memory/clients/<agent>/tasks/YYYYMMDD.md` | 每次会话（步骤②③硬性阻塞） |
+| 🟠路由必读 | N06 后 | `workflows/<type>/README.md`（四选一） | 进入 dev/fix/analyze/audit |
+| 🟠路由必读 | N07/N08 | `projects/<project>/profile/README.md` | 进入 dev/fix（涉及代码修改） |
+| 🟠路由必读 | N09A | `workflows/audit/dimensions.md` | 进入 audit |
+| 🟠路由必读 | N12 | `templates/report-*.md`（四选一） | 需要写报告时（chat 模式豁免） |
+| 🟡条件按需 | N01 | `templates/memory-session.md` | 记忆文件不存在时 |
+| 🟡条件按需 | N07~N09 | `workflows/<type>/checklist-*.md` | 识别到子类型变体时 |
+| 🟡条件按需 | N09A | `workflows/audit/self-fix.md` | audit 发现 🔴 级问题时 |
 
 > 每次按需读取须有明确目的，禁止无目的批量读取。
 

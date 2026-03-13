@@ -117,6 +117,48 @@ cp version/v3/templates/project-profile.md projects/<your-project>/profile/READM
 
 ---
 
+## 🔧 维护指南
+
+### Mermaid click URL 仓库耦合
+
+v3 的 Mermaid 流程图中使用了完整 GitHub URL（而非相对路径），以解决 GitHub Mermaid 渲染器不支持相对路径跳转的问题。
+
+**当前仓库基准**：`https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/`
+
+**涉及文件**（5 个）：
+
+| 文件 | click 数量 |
+|------|:--------:|
+| `version/v3/RULES.md` | 6 |
+| `version/v3/workflows/build/README.md` | 3 |
+| `version/v3/workflows/fix/README.md` | 2 |
+| `version/v3/workflows/analyze/README.md` | 1 |
+| `version/v3/workflows/audit/README.md` | 2 |
+
+**以下场景须执行全局替换**：
+
+| 场景 | 操作 |
+|------|------|
+| Fork 仓库 | 替换 `vextjs/ai-dev-guidelines` 为新的 `<owner>/<repo>` |
+| 仓库重命名 | 替换旧仓库名为新仓库名 |
+| 默认分支变更 | 替换 `/blob/main/` 为 `/blob/<new-branch>/` |
+
+**快速替换命令**：
+
+```bash
+# Linux/macOS
+find version/v3 -name "*.md" -exec sed -i 's|github.com/vextjs/ai-dev-guidelines/blob/main|github.com/<NEW_OWNER>/<NEW_REPO>/blob/<NEW_BRANCH>|g' {} +
+```
+
+```powershell
+# Windows PowerShell
+Get-ChildItem -Path version/v3 -Filter *.md -Recurse | ForEach-Object {
+    (Get-Content $_.FullName -Raw) -replace 'github\.com/vextjs/ai-dev-guidelines/blob/main', 'github.com/<NEW_OWNER>/<NEW_REPO>/blob/<NEW_BRANCH>' | Set-Content $_.FullName
+}
+```
+
+---
+
 ## 💡 设计理念
 
 | 原则 | 说明 |

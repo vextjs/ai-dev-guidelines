@@ -4,7 +4,7 @@
 > 适用意图：`fix`（修复、Bug、报错、异常、事故、安全漏洞）
 
 **版本**: v3.0.0
-**最后更新**: 2026-03-12
+**最后更新**: 2026-03-13
 
 ---
 
@@ -43,8 +43,10 @@ flowchart TD
 
     P3B --> N12["→ N12 报告输出"]
 
-    click CP1 "workflows/common/confirmation-points.md"
-    click CP2 "workflows/common/confirmation-points.md"
+    %% click URLs（GitHub 浏览跳转用，AI 读取文件请查 §10 路由表）
+    %% 仓库基准: https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/
+    click CP1 "https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/workflows/common/confirmation-points.md"
+    click CP2 "https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/workflows/common/confirmation-points.md"
 ```
 
 ---

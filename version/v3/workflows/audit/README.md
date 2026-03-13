@@ -4,7 +4,7 @@
 > 适用意图：`audit`（规范审查、健康检查、spec audit、一致性验证）
 
 **版本**: v3.0.0
-**最后更新**: 2026-03-12
+**最后更新**: 2026-03-13
 
 ---
 
@@ -47,8 +47,10 @@ flowchart TD
 
     OUT(("→ N12 报告输出"))
 
-    click A1B "workflows/audit/dimensions.md"
-    click SF "workflows/audit/self-fix.md"
+    %% click URLs（GitHub 浏览跳转用，AI 读取文件请查 §10 路由表）
+    %% 仓库基准: https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/
+    click A1B "https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/workflows/audit/dimensions.md"
+    click SF "https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/workflows/audit/self-fix.md"
 ```
 
 ---

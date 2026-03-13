@@ -4,7 +4,7 @@
 > 🔴 **核心原则：分析流程禁止修改项目源码。** 产出是报告和结论，不是代码变更。
 
 **版本**: v3.0.0
-**最后更新**: 2026-03-12
+**最后更新**: 2026-03-13
 
 ---
 
@@ -44,7 +44,9 @@ flowchart TD
 
     S4A --> EXIT(("→ N12 报告输出"))
 
-    click S3A "../../RULES.md#§4-核心约束"
+    %% click URLs（GitHub 浏览跳转用，AI 读取文件请查 §10 路由表）
+    %% 仓库基准: https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/
+    click S3A "https://github.com/vextjs/ai-dev-guidelines/blob/main/version/v3/RULES.md"
 ```
 
 > ⚠️ **注意**：分析流程**没有 CP 确认点**。原因：分析不涉及代码变更，无需授权确认。如果分析过程中发现需要修改代码，必须建议用户开启新的 `dev` 或 `fix` 任务。
